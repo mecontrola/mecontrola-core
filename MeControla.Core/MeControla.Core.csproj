@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <Company>Me Controla</Company>
+    <Authors>Rafael Almeida de Oliveira</Authors>
+    <Product>MeControla.Core</Product>
+    <Copyright>Me Controla</Copyright>
+    <RepositoryUrl>https://github.com/mecontrola/mecontrola.core</RepositoryUrl>
+    <PackageProjectUrl>http://mecontrola.com</PackageProjectUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
