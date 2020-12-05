@@ -16,7 +16,7 @@ dotnet test %~dp0MeControla.Core.sln ^
             --no-build ^
             /p:CollectCoverage=true ^
             /p:CoverletOutput="%~dp0BuildReports/Coverage/" ^
-            /p:CoverletOutputFormat=opencover ^
+            /p:CoverletOutputFormat=cobertura ^
             /p:Exclude="[xunit.*]*
 
 REM dotnet reportgenerator ^
