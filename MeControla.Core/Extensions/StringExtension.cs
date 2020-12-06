@@ -8,19 +8,13 @@ namespace MeControla.Core.Extensions
     public static class StringExtensions
     {
         public static Guid ToGuid(this string str)
-        {
-            return Guid.Parse(str);
-        }
+            => Guid.Parse(str);
 
         public static DateTime ToDateTime(this string str)
-        {
-            return DateTime.Parse(str);
-        }
+            => DateTime.Parse(str);
 
         public static string ToPascalCase(this string value)
-        {
-            return value.ToTitleCase().Replace(" ", string.Empty);
-        }
+            => value.ToTitleCase().Replace(" ", string.Empty);
 
         public static string ToCamelCase(this string value)
         {
@@ -52,8 +46,6 @@ namespace MeControla.Core.Extensions
         }
 
         public static string OnlyNumbers(this string value)
-        {
-            return Regex.Replace(value, @"\D+", string.Empty);
-        }
+            => Regex.Replace(value, @"\D+", string.Empty);
     }
 }
