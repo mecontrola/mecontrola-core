@@ -1,10 +1,11 @@
-﻿namespace MeControla.Core.Extensions
+﻿using System.Diagnostics;
+
+namespace MeControla.Core.Extensions
 {
     public static class IntegerExtension
     {
+        [DebuggerStepThrough]
         public static string Pad(this int number, int length)
-        {
-            return number.ToString($"D{length}");
-        }
+            => number.ToString($"D{length}");
     }
 }

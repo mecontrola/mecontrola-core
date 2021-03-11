@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System.Diagnostics;
 
 namespace MeControla.Core.Extensions
 {
     public static class ConfigurationExtension
     {
+        [DebuggerStepThrough]
         public static T Load<T>(this IConfiguration configuration)
             where T : new()
         {
