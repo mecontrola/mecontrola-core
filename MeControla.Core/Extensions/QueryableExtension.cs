@@ -1,6 +1,5 @@
 ﻿using MeControla.Core.Repositories;
 using System;
-using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -24,17 +23,5 @@ namespace MeControla.Core.Extensions
             => predicate == null
              ? query
              : query.Where(predicate);
-
-        [DebuggerStepThrough]
-        public static IQueryable<TEntity> SetIncludes<TEntity>(this IQueryable<TEntity> query, params Expression<Func<TEntity, object>>[] includeProperties)
-        {
-            if (includeProperties == null)
-                return query;
-
-            foreach (var includeProperty in includeProperties)
-                query.Include(includeProperty);
-
-            return query;
-        }
     }
 }
