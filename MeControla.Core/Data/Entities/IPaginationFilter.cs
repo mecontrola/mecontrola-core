@@ -1,4 +1,4 @@
-﻿namespace MeControla.Core.Repositories
+﻿namespace MeControla.Core.Data.Entities
 {
     public interface IPaginationFilter
     {
