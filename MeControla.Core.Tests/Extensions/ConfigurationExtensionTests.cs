@@ -1,4 +1,7 @@
-﻿using MeControla.Core.Extensions;
+﻿using FluentAssertions;
+using MeControla.Core.Extensions;
+using MeControla.Core.Tests.Mocks;
+using MeControla.Core.Tests.Mocks.Datas.Configurations;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using Xunit;
@@ -7,17 +10,14 @@ namespace MeControla.Core.Tests.Extensions
 {
     public class ConfigurationExtensionTests
     {
-        private const string CONFIG_VALUE_1 = "value1";
-        private const string CONFIG_VALUE_2 = "value2";
-
         private readonly IConfiguration configuration;
 
         public ConfigurationExtensionTests()
         {
             var inMemorySettings = new Dictionary<string, string>
             {
-                { $"{nameof(TestConfig)}:{nameof(TestConfig.SomeKey)}" , CONFIG_VALUE_1 },
-                { $"{nameof(TestConfig)}:{nameof(TestConfig.SomeOtherKey)}" , CONFIG_VALUE_2 }
+                { $"{nameof(TestConfig)}:{nameof(TestConfig.SomeKey)}" , DataMock.CONFIG_VALUE_1 },
+                { $"{nameof(TestConfig)}:{nameof(TestConfig.SomeOtherKey)}" , DataMock.CONFIG_VALUE_2 }
             };
 
             configuration = new ConfigurationBuilder().AddInMemoryCollection(inMemorySettings).Build();
@@ -28,8 +28,8 @@ namespace MeControla.Core.Tests.Extensions
         {
             var config = configuration.Load<TestConfig>();
 
-            Assert.Equal(CONFIG_VALUE_1, config.SomeKey);
-            Assert.Equal(CONFIG_VALUE_2, config.SomeOtherKey);
+            config.SomeKey.Should().Be(DataMock.CONFIG_VALUE_1);
+            config.SomeOtherKey.Should().Be(DataMock.CONFIG_VALUE_2);
         }
 
         [Fact(DisplayName = "[Configuration.Load] Deve carrega null quando não existir a configuração.")]
@@ -37,15 +37,7 @@ namespace MeControla.Core.Tests.Extensions
         {
             var config = configuration.Load<TestConfigNotFound>();
 
-            Assert.Null(config);
+            config.Should().BeNull();
         }
     }
-
-    class TestConfig
-    {
-        public string SomeKey { get; set; }
-        public string SomeOtherKey { get; set; }
-    }
-
-    class TestConfigNotFound { }
 }

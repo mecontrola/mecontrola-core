@@ -5,8 +5,11 @@ using System.Linq.Expressions;
 
 namespace MeControla.Core.Extensions
 {
-    public static class QueryableExtension
+    public static class QueryableExtensions
     {
+#if !DEBUG
+        [System.Diagnostics.DebuggerStepThrough]
+#endif
         public static IQueryable<TEntity> SetPagination<TEntity>(this IQueryable<TEntity> query, IPaginationFilter paginationFilter)
         {
             if (paginationFilter == null)
@@ -18,6 +21,9 @@ namespace MeControla.Core.Extensions
         private static int GetSkip(IPaginationFilter paginationFilter)
            => (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;
 
+#if !DEBUG
+        [System.Diagnostics.DebuggerStepThrough]
+#endif
         public static IQueryable<TEntity> SetPredicate<TEntity>(this IQueryable<TEntity> query, Expression<Func<TEntity, bool>> predicate)
         {
             if (predicate == null)

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using MeControla.Core.Mappers;
+using MeControla.Core.Tests.Mocks.Datas.Dtos;
+using MeControla.Core.Tests.Mocks.Datas.Entities;
 using MeControla.Core.Tests.Mocks.Dtos;
 using MeControla.Core.Tests.Mocks.Entities;
 using System.Collections.Generic;

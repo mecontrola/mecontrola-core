@@ -1,4 +1,5 @@
-﻿using MeControla.Core.Extensions;
+﻿using FluentAssertions;
+using MeControla.Core.Extensions;
 using System.Collections.Generic;
 using Xunit;
 
@@ -11,7 +12,7 @@ namespace MeControla.Core.Tests.Extensions
         {
             var arr = (Dictionary<string, string>)null;
 
-            Assert.False(arr.HasAny());
+            arr.HasAny().Should().BeFalse();
         }
 
         [Fact(DisplayName = "[DictionaryExtension.HasAny] Deve retornar false quando o Dictionary estiver vazio.")]
@@ -19,7 +20,7 @@ namespace MeControla.Core.Tests.Extensions
         {
             var arr = new Dictionary<string, string>();
 
-            Assert.False(arr.HasAny());
+            arr.HasAny().Should().BeFalse();
         }
 
         [Fact(DisplayName = "[DictionaryExtension.HasAny] Deve retornar true quando o Dictionary estiver preenchido.")]
@@ -27,7 +28,7 @@ namespace MeControla.Core.Tests.Extensions
         {
             var arr = new Dictionary<string, string> { { "TKey", "TValue" } };
 
-            Assert.True(arr.HasAny());
+            arr.HasAny().Should().BeTrue();
         }
     }
 }
