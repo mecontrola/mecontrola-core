@@ -1,17 +1,20 @@
-﻿using MeControla.Core.Data.Entities;
-using System;
+﻿using System;
 
 namespace MeControla.Core.Builders
 {
+#if !DEBUG
+        [System.Diagnostics.DebuggerStepThrough]
+#endif
     public abstract class BaseBuilder<TBuilder, TObject> : IBuilder<TObject>
         where TBuilder : class, new()
-        where TObject : IEntity
+        where TObject : class
     {
         private static TBuilder instance;
 
         protected TObject obj;
 
-        protected abstract void Initialize();
+        protected virtual void Initialize()
+        { }
 
         public BaseBuilder()
             => Initialize();

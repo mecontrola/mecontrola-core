@@ -1,0 +1,59 @@
+name: Create Package
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Extract Tag version
+      id: app-version
+      shell: bash
+      run: echo "::set-output name=version::${GITHUB_REF#refs/tags/v}"
+
+    - name: Create Release v${{ steps.app-version.outputs.version }}
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: v${{ steps.app-version.outputs.version  }}
+        draft: false
+        prerelease: false
+
+    outputs:
+      app-version: ${{ steps.app-version.outputs.version }}
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+
+  publish:
+    needs: release
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '6.0.x' ]
+        build-configuration: [ 'Release' ]
+    env:
+      app-version: ${{ needs.release.outputs.app-version }}
+      app-package-name: 'Agile Manager'
+      path-publish: './publish'
+      upload_url: ${{ needs.release.outputs.upload_url }}
+    steps:
+    - name: Checkout v${{ env.app-version }}
+      uses: actions/checkout@master
+      
+    - name: Setup .NET ${{ matrix.dotnet-version }}
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+
+    - name: Build and Create Package
+      run: dotnet publish --nologo -c ${{ matrix.build-configuration }} -p:DebugType=None -p:DebugSymbols=false -p:Optimize=true -p:AssemblyVersion=${{ env.app-version }} -p:FileVersion=${{ env.app-version }} -p:Version=${{ env.app-version }}
+      
+    - name: Push to NuGet
+      run: dotnet nuget push "*.nupkg" --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json

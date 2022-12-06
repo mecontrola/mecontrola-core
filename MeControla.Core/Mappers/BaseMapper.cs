@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace MeControla.Core.Mappers
 {
+#if !DEBUG
+        [System.Diagnostics.DebuggerStepThrough]
+#endif
     public abstract class BaseMapper<TParam, TResult> : IMapper<TParam, TResult>
          where TParam : class
          where TResult : class
@@ -11,12 +14,19 @@ namespace MeControla.Core.Mappers
         private readonly AutoMapper.IMapper mapper;
 
         protected BaseMapper()
+            => mapper = new MapperConfiguration(cfg => CreateMap(cfg)).CreateMapper();
+
+        protected IMappingExpression<TParam, TResult> CreateMap(IMapperConfigurationExpression cfg)
         {
-            mapper = new MapperConfiguration(cfg => CreateMap(cfg)).CreateMapper();
+            var map = cfg.CreateMap<TParam, TResult>();
+
+            MapFields(map);
+
+            return map;
         }
 
-        protected virtual IMappingExpression<TParam, TResult> CreateMap(IMapperConfigurationExpression cfg)
-            => cfg.CreateMap<TParam, TResult>();
+        protected virtual void MapFields(IMappingExpression<TParam, TResult> map)
+        { }
 
         public TResult ToMap(TParam obj)
             => mapper.Map<TResult>(obj);

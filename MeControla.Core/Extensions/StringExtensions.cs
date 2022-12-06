@@ -122,7 +122,7 @@ namespace MeControla.Core.Extensions
             {
                 return Convert.ToDateTime(value);
             }
-            catch (Exception)
+            catch (FormatException)
             {
                 return null;
             }
