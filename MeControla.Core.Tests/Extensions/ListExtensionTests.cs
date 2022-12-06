@@ -1,4 +1,5 @@
-﻿using MeControla.Core.Extensions;
+﻿using FluentAssertions;
+using MeControla.Core.Extensions;
 using System.Collections.Generic;
 using Xunit;
 
@@ -11,7 +12,7 @@ namespace MeControla.Core.Tests.Extensions
         {
             var list = (List<string>)null;
 
-            Assert.True(list.IsNullOrEmpty());
+            list.IsNullOrEmpty().Should().BeTrue();
         }
 
         [Fact(DisplayName = "[ListExtension.IsNullOrEmpty] Deve retornar true quando a lista estiver vazia.")]
@@ -19,7 +20,7 @@ namespace MeControla.Core.Tests.Extensions
         {
             var list = new List<string> { };
 
-            Assert.True(list.IsNullOrEmpty());
+            list.IsNullOrEmpty().Should().BeTrue();
         }
 
         [Fact(DisplayName = "[ListExtension.IsNullOrEmpty] Deve retornar false quando a lista estiver preenchido.")]
@@ -27,7 +28,7 @@ namespace MeControla.Core.Tests.Extensions
         {
             var list = new List<string> { "Teste" };
 
-            Assert.False(list.IsNullOrEmpty());
+            list.IsNullOrEmpty().Should().BeFalse();
         }
 
         [Fact(DisplayName = "[ListExtension.IsNotNullAndAny] Deve retornar false quando a lista for nula.")]
@@ -35,7 +36,7 @@ namespace MeControla.Core.Tests.Extensions
         {
             var list = (List<string>)null;
 
-            Assert.False(list.IsNotNullAndAny());
+            list.IsNotNullAndAny().Should().BeFalse();
         }
 
         [Fact(DisplayName = "[ListExtension.IsNotNullAndAny] Deve retornar false quando a lista estiver vazia.")]
@@ -43,7 +44,7 @@ namespace MeControla.Core.Tests.Extensions
         {
             var list = new List<string> { };
 
-            Assert.False(list.IsNotNullAndAny());
+            list.IsNotNullAndAny().Should().BeFalse();
         }
 
         [Fact(DisplayName = "[ListExtension.IsNotNullAndAny] Deve retornar true quando a lista estiver preenchido.")]
@@ -51,7 +52,7 @@ namespace MeControla.Core.Tests.Extensions
         {
             var list = new List<string> { "Teste" };
 
-            Assert.True(list.IsNotNullAndAny());
+            list.IsNotNullAndAny().Should().BeTrue();
         }
 
         [Fact(DisplayName = "[ListExtension.ToListOrNull] Deve retornar null quando a lista for nula.")]
@@ -59,7 +60,7 @@ namespace MeControla.Core.Tests.Extensions
         {
             var list = (List<string>)null;
 
-            Assert.Null(list.ToListOrNull());
+            list.ToListOrNull().Should().BeNull();
         }
 
         [Fact(DisplayName = "[ListExtension.ToListOrNull] Deve retornar null quando a lista estiver vazia.")]
@@ -67,7 +68,7 @@ namespace MeControla.Core.Tests.Extensions
         {
             var list = new List<string> { };
 
-            Assert.Null(list.ToListOrNull());
+            list.ToListOrNull().Should().BeNull();
         }
 
         [Fact(DisplayName = "[ListExtension.ToListOrNull] Deve retornar a lista quando a lista estiver preenchido.")]
@@ -75,7 +76,7 @@ namespace MeControla.Core.Tests.Extensions
         {
             var list = new List<string> { "Teste" };
 
-            Assert.NotNull(list.ToListOrNull());
+            list.ToListOrNull().Should().NotBeNull();
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace MeControla.Core.Tools.HtmlParse
 {
+#if !DEBUG
+        [System.Diagnostics.DebuggerStepThrough]
+#endif
     public class HTMLAttributes : Dictionary<string, string>
     {
         public new bool ContainsValue(string value)
@@ -15,9 +17,8 @@ namespace MeControla.Core.Tools.HtmlParse
                    .FirstOrDefault();
 
         public bool ExistsAllKeys(HTMLAttributes parameters)
-            => parameters == null
-             ? false
-             : Keys.Intersect(parameters.Keys).Count() == parameters.Keys.Count;
+            => parameters != null
+            && Keys.Intersect(parameters.Keys).Count() == parameters.Keys.Count;
 
         public bool ExistsAllValues(HTMLAttributes parameters)
         {

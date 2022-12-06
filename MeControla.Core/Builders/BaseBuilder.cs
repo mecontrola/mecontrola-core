@@ -2,6 +2,9 @@
 
 namespace MeControla.Core.Builders
 {
+#if !DEBUG
+        [System.Diagnostics.DebuggerStepThrough]
+#endif
     public abstract class BaseBuilder<TBuilder, TObject> : IBuilder<TObject>
         where TBuilder : class, new()
         where TObject : class
@@ -10,7 +13,8 @@ namespace MeControla.Core.Builders
 
         protected TObject obj;
 
-        protected abstract void Initialize();
+        protected virtual void Initialize()
+        { }
 
         public BaseBuilder()
             => Initialize();
