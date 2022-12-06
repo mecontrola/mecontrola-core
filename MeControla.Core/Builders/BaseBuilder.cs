@@ -1,11 +1,10 @@
-﻿using MeControla.Core.Data.Entities;
-using System;
+﻿using System;
 
 namespace MeControla.Core.Builders
 {
     public abstract class BaseBuilder<TBuilder, TObject> : IBuilder<TObject>
         where TBuilder : class, new()
-        where TObject : IEntity
+        where TObject : class
     {
         private static TBuilder instance;
 

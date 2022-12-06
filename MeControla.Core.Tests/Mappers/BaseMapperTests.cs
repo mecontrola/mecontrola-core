@@ -77,13 +77,11 @@ namespace MeControla.Core.Tests.Mappers
 
     class UserEntityToDtoMapper : BaseMapper<User, UserDto>
     {
-        protected override IMappingExpression<User, UserDto> CreateMap(IMapperConfigurationExpression cfg)
-        {
-            return cfg.CreateMap<User, UserDto>()
-                      .ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Uuid))
-                      .ForMember(dest => dest.Name, opt => opt.MapFrom(source => source.Name));
-        }
+        protected override void MapFields(IMappingExpression<User, UserDto> map)
+            => map.ForMember(dest => dest.Id, opt => opt.MapFrom(source => source.Uuid))
+                  .ForMember(dest => dest.Name, opt => opt.MapFrom(source => source.Name));
     }
 
-    class UserDtoToDtoMapper : BaseMapper<UserDto, UserDto> { }
+    class UserDtoToDtoMapper : BaseMapper<UserDto, UserDto>
+    { }
 }

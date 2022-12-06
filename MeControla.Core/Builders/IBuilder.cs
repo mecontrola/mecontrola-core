@@ -3,7 +3,7 @@
 namespace MeControla.Core.Builders
 {
     public interface IBuilder<TObject>
-        where TObject : IEntity
+        where TObject : class
     {
         TObject ToBuild();
     }

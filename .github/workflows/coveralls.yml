@@ -1,0 +1,58 @@
+name: Coveralls
+
+on:
+  push:
+    branches: [ main, develop ]
+env:
+  path-tests: './BuildReports/UnitTests'
+  path-lcov: './BuildReports/Coverage'
+  filename-lcov: 'lcov.info'
+  filename-tmp-xml: 'cobertura.xml'
+
+jobs:
+  cover-publish:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '6.0.x' ]
+
+    steps:
+    - name: Checkout Branch
+      uses: actions/checkout@master
+    
+    - name: Setup .NET ${{ matrix.dotnet-version }}
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+
+    - name: Restore Dependencies
+      run: dotnet restore --nologo --verbosity=minimal --force
+
+    - name: Build Solution
+      run: dotnet build --nologo --verbosity=minimal --no-restore
+      
+    - name: Generate Coverage Report
+      run: dotnet test --results-directory "${{ env.path-tests }}" --collect:"XPlat Code Coverage" --nologo --no-restore --no-build --verbosity=minimal /p:CollectCoverage=true /p:CoverletOutput="${{ env.path-lcov }}" /p:CoverletOutputFormat=cobertura /p:Exclude="[xunit.*]*"
+
+    - name: Merge Coverage Report Projects
+      run: |
+        dotnet new tool-manifest
+        dotnet tool install dotnet-reportgenerator-globaltool --tool-path tools
+        dotnet tool restore
+        
+        $reportgenerator = ".\tools\reportgenerator.exe"
+        
+        & $reportgenerator -reports:${{ env.path-tests }}/**/*.${{ env.filename-tmp-xml }} -targetdir:${{ env.path-lcov }} -assemblyfilters:"-xunit*" -reporttypes:lcov
+
+    - name: Check Lcov File Existence
+      id: check_files
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "${{ env.path-lcov }}/${{ env.filename-lcov }}"
+    
+    - name: Publish coverage report to coveralls.io
+      if: steps.check_files.outputs.files_exists == 'true'
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: ${{ env.path-lcov }}/${{ env.filename-lcov }}
