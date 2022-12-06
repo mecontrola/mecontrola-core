@@ -44,13 +44,12 @@ namespace MeControla.Core.Tests.Extensions.Newtonsoft
             public bool Equals(ClsTest item1, ClsTest item2)
             {
                 if (ReferenceEquals(item1, item2))
-                {
                     return true;
-                }
 
-                return item1 is null || item2 is null
-                    ? false
-                    : item1.Date == item2.Date && item1.Name == item2.Name;
+                return item1 is not null
+                    && item2 is not null
+                    && item1.Date == item2.Date
+                    && item1.Name == item2.Name;
             }
 
             public int GetHashCode(ClsTest item)

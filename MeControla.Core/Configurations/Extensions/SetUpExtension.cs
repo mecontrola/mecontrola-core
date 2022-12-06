@@ -39,7 +39,23 @@ namespace MeControla.Core.Configurations.Extensions
             {
                 return AppDomain.CurrentDomain.Load(assemblyName);
             }
-            catch
+            catch (ArgumentException)
+            {
+                return null;
+            }
+            catch (FileNotFoundException)
+            {
+                return null;
+            }
+            catch (BadImageFormatException)
+            {
+                return null;
+            }
+            catch (AppDomainUnloadedException)
+            {
+                return null;
+            }
+            catch (FileLoadException)
             {
                 return null;
             }

@@ -8,14 +8,10 @@ namespace MeControla.Core.Extensions.Newtonsoft
     {
         [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
         public static T ToAnonymousType<T>(this JObject source, T template)
-        {
-            return source.ToObject<T>();
-        }
+            => source.ToObject<T>();
 
         [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
         public static T ToAnonymousType<T>(this JObject source, T template, JsonSerializer jsonSerializer)
-        {
-            return source.ToObject<T>(jsonSerializer);
-        }
+            => source.ToObject<T>(jsonSerializer);
     }
 }

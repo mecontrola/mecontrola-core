@@ -7,44 +7,25 @@ namespace MeControla.Core.Tools.HtmlParse
     public class HTMLAttributes : Dictionary<string, string>
     {
         public new bool ContainsValue(string value)
-        {
-            return !string.IsNullOrWhiteSpace(GetKeyByValue(value));
-        }
+            => !string.IsNullOrWhiteSpace(GetKeyByValue(value));
 
         public string GetKeyByValue(string value)
-        {
-            foreach (var key in Keys)
-            {
-                if (this[key].Split(" ").Contains(value))
-                {
-                    return key;
-                }
-            }
-
-            return string.Empty;
-        }
+            => this.Where(x => x.Value.Split(" ").Any(val => val.Contains(value)))
+                   .Select(x => x.Key)
+                   .FirstOrDefault();
 
         public bool ExistsAllKeys(HTMLAttributes parameters)
-        {
-            if (parameters == null)
-            {
-                return false;
-            }
-
-            return Keys.Intersect(parameters.Keys).Count() == parameters.Keys.Count;
-        }
+            => parameters == null
+             ? false
+             : Keys.Intersect(parameters.Keys).Count() == parameters.Keys.Count;
 
         public bool ExistsAllValues(HTMLAttributes parameters)
         {
             if (parameters == null)
-            {
                 return false;
-            }
 
             if (!ExistsAllKeys(parameters))
-            {
                 return false;
-            }
 
             var finded = true;
             foreach (var keyValuePair in parameters)
@@ -54,10 +35,9 @@ namespace MeControla.Core.Tools.HtmlParse
                        == valueExpected.Length;
 
                 if (!finded)
-                {
                     break;
-                }
             }
+
             return finded;
         }
     }
