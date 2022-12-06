@@ -6,18 +6,15 @@ namespace MeControla.Core.Builders
         [System.Diagnostics.DebuggerStepThrough]
 #endif
     public abstract class BaseBuilder<TBuilder, TObject> : IBuilder<TObject>
-        where TBuilder : class, new()
-        where TObject : class
+        where TBuilder : BaseBuilder<TBuilder, TObject>, new()
+        where TObject : class, new()
     {
         private static TBuilder instance;
 
         protected TObject obj;
 
         protected virtual void Initialize()
-        { }
-
-        public BaseBuilder()
-            => Initialize();
+            => obj = new TObject();
 
         protected TBuilder Set(Action<TObject> action)
         {
@@ -29,6 +26,11 @@ namespace MeControla.Core.Builders
             => obj;
 
         public static TBuilder GetInstance()
-            => instance = new();
+        {
+            instance = new();
+            instance.Initialize();
+
+            return instance;
+        }
     }
 }
