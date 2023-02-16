@@ -4,6 +4,6 @@ namespace MeControla.Core.Data.Dtos
 {
     public interface IDto
     {
-        Guid Id { get; }
+        Guid Id { get; set; }
     }
 }

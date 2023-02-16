@@ -4,7 +4,7 @@ namespace MeControla.Core.Data.Entities
 {
     public interface IModificationDateTimeEntity : IEntity
     {
-        DateTime CreatedAt { get; }
-        DateTime? UpdatedAt { get; }
+        DateTime CreatedAt { get; set; }
+        DateTime? UpdatedAt { get; set; }
     }
 }
