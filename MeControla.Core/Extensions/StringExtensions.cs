@@ -160,5 +160,17 @@ namespace MeControla.Core.Extensions
             => string.IsNullOrWhiteSpace(value)
              ? string.Empty
              : $"{value[0].ToString().ToUpper()}{value[1..]}";
+
+#if !DEBUG
+        [System.Diagnostics.DebuggerStepThrough]
+#endif
+        public static string GetConsonants(this string value)
+            => Regex.Replace(value, "[aeiou]", string.Empty, RegexOptions.IgnoreCase);
+
+#if !DEBUG
+        [System.Diagnostics.DebuggerStepThrough]
+#endif
+        public static string GetUpperLetters(this string value)
+            => string.Concat(value.Where(c => c >= 'A' && c <= 'Z'));
     }
 }

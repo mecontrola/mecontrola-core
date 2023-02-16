@@ -11,10 +11,16 @@ namespace MeControla.Core.Builders
     {
         private static TBuilder instance;
 
-        protected TObject obj;
+        private TObject obj;
 
-        protected virtual void Initialize()
-            => obj = new TObject();
+        protected void Initialize()
+        {
+            obj = new TObject();
+
+            FillDefaultValues(obj);
+        }
+
+        protected abstract void FillDefaultValues(TObject obj);
 
         protected TBuilder Set(Action<TObject> action)
         {
