@@ -1,11 +1,49 @@
-﻿using System.Diagnostics;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace MeControla.Core.Extensions.DataStorage
 {
     public static class StringExtension
     {
-        [DebuggerStepThrough]
-        public static string GetColumnName(this string str, string prefix)
-            => $"{prefix}_{str.ToSnakeCase()}";
+#if !DEBUG
+        [System.Diagnostics.DebuggerStepThrough]
+#endif
+        public static string GetColumnName(this string value, string prefix)
+            => $"{prefix}_{value.ToSnakeCase()}";
+
+#if !DEBUG
+        [System.Diagnostics.DebuggerStepThrough]
+#endif
+        public static string GetPrefixTable(this string value)
+        {
+            var valueTmp = value.ToTitleCase().TrimAll();
+            var words = valueTmp.Split(" ");
+            var prefix = string.Empty;
+
+            prefix = words.Length > 1
+                   ? string.Concat(words.Select(x => x[0])).ToLower()
+                   : (valueTmp[0] + valueTmp[1..].GetConsonants())[..2];
+
+            return prefix.ToLower();
+        }
+
+#if !DEBUG
+        [System.Diagnostics.DebuggerStepThrough]
+#endif
+        public static string GetPrefixColumn(this string value)
+        {
+            var valueTmp = value.ToTitleCase().TrimAll();
+            var words = valueTmp.Split(" ");
+            var prefix = string.Empty;
+
+            prefix = words.Length switch
+            {
+                >= 3 => valueTmp.GetUpperLetters(),
+                2 => string.Concat(words.Select(x => x[..1] + x[1..].GetConsonants()[..1])),
+                _ => (valueTmp[0] + valueTmp[1..].GetConsonants())[..3],
+            };
+
+            return prefix.ToLower();
+        }
     }
 }
