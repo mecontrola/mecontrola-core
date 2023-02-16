@@ -78,10 +78,9 @@ namespace MeControla.Core.Repositories
         {
             var local = dbSet.Local.FirstOrDefault(itm => itm.Id.Equals(entity.Id));
             var id = local?.Id ?? 0;
+
             if (id != 0)
-            {
                 context.Entry(local).State = EntityState.Detached;
-            }
 
             context.Entry(entity).State = entityState;
         }
