@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace MeControla.Core.Extensions
@@ -68,5 +69,16 @@ namespace MeControla.Core.Extensions
 #endif
         public static TimeSpan Average<TSource>(this IEnumerable<TSource> source, Func<TSource, TimeSpan> selector)
             => source.Sum(selector) / source.Count();
+
+#if !DEBUG
+        [System.Diagnostics.DebuggerStepThrough]
+#endif
+        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new ObservableCollection<T>(source);
+        }
     }
 }

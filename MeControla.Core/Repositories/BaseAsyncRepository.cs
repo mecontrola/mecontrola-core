@@ -3,6 +3,7 @@ using MeControla.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MeControla.Core.Repositories
 {
-    public abstract class BaseAsyncRepository<TEntity> : ContextRepository<TEntity>, IAsyncRepository<TEntity>
+    public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity> : ContextRepository<TEntity>, IAsyncRepository<TEntity>
          where TEntity : class, IEntity
     {
         protected BaseAsyncRepository(IDbContext context, DbSet<TEntity> dbSet)

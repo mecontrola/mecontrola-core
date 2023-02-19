@@ -1,10 +1,11 @@
 ﻿using MeControla.Core.Data.Entities;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MeControla.Core.Repositories
 {
-    public interface IManyAsyncRepository<TEntity, TRoot, TTarget>
+    public interface IManyAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity, TRoot, TTarget>
        where TEntity : IManyEntity<TRoot, TTarget>
        where TRoot : IEntity
        where TTarget : IEntity

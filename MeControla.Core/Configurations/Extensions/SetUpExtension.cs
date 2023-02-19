@@ -3,6 +3,7 @@ using MeControla.Core.IoC;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -11,14 +12,17 @@ namespace MeControla.Core.Configurations.Extensions
 {
     public static class SetUpExtension
     {
+        [RequiresUnreferencedCode("Calls System.Reflection.Assembly.ExportedTypes")]
         public static void AddApplicationServices(this IServiceCollection services)
             => LoadAssemblies<IInjector>().ForEach(installer => installer.RegisterServices(services));
 
-        private static IEnumerable<T> LoadAssemblies<T>()
+        [RequiresUnreferencedCode("Calls System.Reflection.Assembly.ExportedTypes")]
+        private static IEnumerable<T> LoadAssemblies<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>()
             => LoadAppAssemblies().Select(itm => GetClassFromType<T>(itm))
                                   .SelectMany(x => x);
 
-        private static IEnumerable<T> GetClassFromType<T>(Assembly assembly)
+        [RequiresUnreferencedCode("Calls System.Reflection.Assembly.ExportedTypes")]
+        private static IEnumerable<T> GetClassFromType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(Assembly assembly)
             => assembly.ExportedTypes
                        .Where(x => IsTypeOfClass<T>(x))
                        .Select(Activator.CreateInstance)
