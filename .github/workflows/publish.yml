@@ -41,8 +41,6 @@ jobs:
         build-configuration: [ 'Release' ]
     env:
       app-version: ${{ needs.release.outputs.app-version }}
-      app-package-name: 'Agile Manager'
-      path-publish: './publish'
       upload_url: ${{ needs.release.outputs.upload_url }}
     steps:
     - name: Checkout v${{ env.app-version }}
