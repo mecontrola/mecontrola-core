@@ -37,5 +37,9 @@ namespace MeControla.Core.Tests.Mocks
         public static long ID_DEV_3 { get; } = 3;
         public static Guid UUID_DEV_3 { get; } = Guid.Parse("50a5f162-5209-4bc8-bc40-07ae51454483");
         public static string NAME_DEV_3 { get; } = "Agatha Andrea Sebastiana Lima";
+
+        public static long ID_DEV_4 { get; } = 4;
+        public static Guid UUID_DEV_4 { get; } = Guid.Parse("7d95d4c6-c43c-43ac-9ddc-d0b43718bc32");
+        public static string NAME_DEV_4 { get; } = "Bryan Nicolas Marcos Vinicius Pires";
     }
 }

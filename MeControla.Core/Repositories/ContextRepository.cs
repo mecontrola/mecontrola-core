@@ -1,7 +1,6 @@
 ﻿using MeControla.Core.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MeControla.Core.Repositories
@@ -12,10 +11,10 @@ namespace MeControla.Core.Repositories
         protected readonly IDbContext context;
         protected readonly DbSet<TEntity> dbSet;
 
-        protected ContextRepository(IDbContext context, DbSet<TEntity> dbSet)
+        protected ContextRepository([NotNull] IDbContext context, [NotNull] DbSet<TEntity> dbSet)
         {
             this.context = context;
-            this.dbSet = dbSet ?? throw new ArgumentNullException(nameof(dbSet));
+            this.dbSet = dbSet;
         }
 
         public DatabaseFacade Database()

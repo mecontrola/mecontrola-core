@@ -18,14 +18,16 @@ namespace MeControla.Core.Repositories
             : base(context, dbSet)
         { }
 
-        public virtual async Task<long> Count(CancellationToken cancellationToken)
+        public virtual async Task<long> CountAsync(CancellationToken cancellationToken)
             => await dbSet.LongCountAsync(cancellationToken);
 
-        public virtual async Task<long> Count(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+        public virtual async Task<long> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
             => await dbSet.LongCountAsync(predicate, cancellationToken);
 
         public virtual async Task<TEntity> CreateAsync(TEntity obj, CancellationToken cancellationToken)
         {
+            Detach(obj, EntityState.Added);
+
             await ApplyAlterContextAsync(dbSet => dbSet.Add(obj), cancellationToken);
 
             return obj;
@@ -45,11 +47,11 @@ namespace MeControla.Core.Repositories
             return await ApplyAlterContextAsync(dbSet => dbSet.Remove(obj), cancellationToken);
         }
 
-        public virtual async Task<IList<TEntity>> FindAllPagedAsync(IPaginationFilter paginationFilter)
-            => await FindAllPagedAsync(paginationFilter, null);
+        public virtual async Task<IList<TEntity>> FindAllPagedAsync(IPaginationFilter paginationFilter, CancellationToken cancellationToken)
+            => await FindAllPagedAsync(paginationFilter, null, cancellationToken);
 
-        public virtual async Task<IList<TEntity>> FindAllPagedAsync(IPaginationFilter paginationFilter, Expression<Func<TEntity, bool>> predicate)
-            => await dbSet.SetPagination(paginationFilter).SetPredicate(predicate).ToListAsync();
+        public virtual async Task<IList<TEntity>> FindAllPagedAsync(IPaginationFilter paginationFilter, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+            => await dbSet.SetPagination(paginationFilter).SetPredicate(predicate).ToListAsync(cancellationToken);
 
         public virtual async Task<IList<TEntity>> FindAllAsync(CancellationToken cancellationToken)
             => await FindAllAsync(null, cancellationToken);

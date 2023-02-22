@@ -169,5 +169,18 @@ namespace MeControla.Core.Tests.Extensions
             => ACTUAL_LIST.Average(x => x)
                           .Should()
                           .Be(EXPECTED_AVERAGE);
+
+        [Fact(DisplayName = "[EnumerableExtension.ToObservableCollection] Deve retornar null quando o IEnumerable for null.")]
+        public void DeveRetornarNullQuandoIEnumerableNull()
+        {
+            var action = () => ((IEnumerable<int>)null).ToObservableCollection();
+            action.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact(DisplayName = "[EnumerableExtension.ToObservableCollection] Deve retornar ObservableCollection quando o IEnumerable estiver preenchido.")]
+        public void DeveRetornarObservableCollectionQuandoIEnumerablePreenchido()
+            => ACTUAL_LIST.ToObservableCollection()
+                          .Should()
+                          .NotBeEmpty();
     }
 }
