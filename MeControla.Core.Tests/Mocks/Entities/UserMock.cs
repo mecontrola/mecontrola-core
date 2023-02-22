@@ -40,6 +40,15 @@ namespace MeControla.Core.Tests.Mocks.Entities
             return dev;
         }
 
+        public static User CreateUser4()
+        {
+            var dev = BaseUser();
+            dev.Id = DataMock.ID_DEV_4;
+            dev.Uuid = DataMock.UUID_DEV_4;
+            dev.Name = DataMock.NAME_DEV_4;
+            return dev;
+        }
+
         private static User BaseUser()
             => new();
     }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Net5CodeAnalysis = System.Diagnostics.CodeAnalysis;
 
 namespace MeControla.Core.Repositories
 {
@@ -30,12 +31,12 @@ namespace MeControla.Core.Repositories
         EntityEntry Entry([NotNull] object entity);
         EntityEntry<TEntity> Entry<TEntity>([NotNull] TEntity entity) where TEntity : class;
         bool Equals(object obj);
-        TEntity Find<TEntity>([CanBeNull] params object[] keyValues) where TEntity : class;
-        object Find([NotNull] Type entityType, [CanBeNull] params object[] keyValues);
-        ValueTask<object> FindAsync([NotNull] Type entityType, [CanBeNull] object[] keyValues, CancellationToken cancellationToken);
-        ValueTask<object> FindAsync([NotNull] Type entityType, [CanBeNull] params object[] keyValues);
-        ValueTask<TEntity> FindAsync<TEntity>([CanBeNull] object[] keyValues, CancellationToken cancellationToken) where TEntity : class;
-        ValueTask<TEntity> FindAsync<TEntity>([CanBeNull] params object[] keyValues) where TEntity : class;
+        TEntity Find<[Net5CodeAnalysis.DynamicallyAccessedMembers(Net5CodeAnalysis.DynamicallyAccessedMemberTypes.PublicMethods)]TEntity>([CanBeNull] params object[] keyValues) where TEntity : class;
+        object Find([Net5CodeAnalysis.DynamicallyAccessedMembers(Net5CodeAnalysis.DynamicallyAccessedMemberTypes.PublicMethods), NotNull] Type entityType, [CanBeNull] params object[] keyValues);
+        ValueTask<object> FindAsync([Net5CodeAnalysis.DynamicallyAccessedMembers(Net5CodeAnalysis.DynamicallyAccessedMemberTypes.PublicMethods), NotNull] Type entityType, [CanBeNull] object[] keyValues, CancellationToken cancellationToken);
+        ValueTask<object> FindAsync([Net5CodeAnalysis.DynamicallyAccessedMembers(Net5CodeAnalysis.DynamicallyAccessedMemberTypes.PublicMethods), NotNull] Type entityType, [CanBeNull] params object[] keyValues);
+        ValueTask<TEntity> FindAsync<[Net5CodeAnalysis.DynamicallyAccessedMembers(Net5CodeAnalysis.DynamicallyAccessedMemberTypes.PublicMethods)] TEntity>([CanBeNull] object[] keyValues, CancellationToken cancellationToken) where TEntity : class;
+        ValueTask<TEntity> FindAsync<[Net5CodeAnalysis.DynamicallyAccessedMembers(Net5CodeAnalysis.DynamicallyAccessedMemberTypes.PublicMethods)] TEntity>([CanBeNull] params object[] keyValues) where TEntity : class;
         int GetHashCode();
         EntityEntry Remove([NotNull] object entity);
         EntityEntry<TEntity> Remove<TEntity>([NotNull] TEntity entity) where TEntity : class;
@@ -45,7 +46,7 @@ namespace MeControla.Core.Repositories
         int SaveChanges();
         Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default);
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
-        DbSet<TEntity> Set<TEntity>() where TEntity : class;
+        DbSet<TEntity> Set<[Net5CodeAnalysis.DynamicallyAccessedMembers(Net5CodeAnalysis.DynamicallyAccessedMemberTypes.All)] TEntity>() where TEntity : class;
         string ToString();
         EntityEntry Update([NotNull] object entity);
         EntityEntry<TEntity> Update<TEntity>([NotNull] TEntity entity) where TEntity : class;

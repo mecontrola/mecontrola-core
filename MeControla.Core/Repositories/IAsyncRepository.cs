@@ -12,10 +12,10 @@ namespace MeControla.Core.Repositories
         where TEntity : class, IEntity
     {
         DatabaseFacade Database();
-        Task<long> Count(CancellationToken cancellationToken);
-        Task<long> Count(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
-        Task<IList<TEntity>> FindAllPagedAsync(IPaginationFilter paginationFilter);
-        Task<IList<TEntity>> FindAllPagedAsync(IPaginationFilter paginationFilter, Expression<Func<TEntity, bool>> predicate);
+        Task<long> CountAsync(CancellationToken cancellationToken);
+        Task<long> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
+        Task<IList<TEntity>> FindAllPagedAsync(IPaginationFilter paginationFilter, CancellationToken cancellationToken);
+        Task<IList<TEntity>> FindAllPagedAsync(IPaginationFilter paginationFilter, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
         Task<IList<TEntity>> FindAllAsync(CancellationToken cancellationToken);
         Task<IList<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
         Task<TEntity> FindAsync(long id, CancellationToken cancellationToken);

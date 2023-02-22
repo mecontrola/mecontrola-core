@@ -3,6 +3,7 @@ using MeControla.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -10,21 +11,23 @@ using System.Threading.Tasks;
 
 namespace MeControla.Core.Repositories
 {
-    public abstract class BaseAsyncRepository<TEntity> : ContextRepository<TEntity>, IAsyncRepository<TEntity>
+    public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity> : ContextRepository<TEntity>, IAsyncRepository<TEntity>
          where TEntity : class, IEntity
     {
         protected BaseAsyncRepository(IDbContext context, DbSet<TEntity> dbSet)
             : base(context, dbSet)
         { }
 
-        public virtual async Task<long> Count(CancellationToken cancellationToken)
+        public virtual async Task<long> CountAsync(CancellationToken cancellationToken)
             => await dbSet.LongCountAsync(cancellationToken);
 
-        public virtual async Task<long> Count(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+        public virtual async Task<long> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
             => await dbSet.LongCountAsync(predicate, cancellationToken);
 
         public virtual async Task<TEntity> CreateAsync(TEntity obj, CancellationToken cancellationToken)
         {
+            Detach(obj, EntityState.Added);
+
             await ApplyAlterContextAsync(dbSet => dbSet.Add(obj), cancellationToken);
 
             return obj;
@@ -44,11 +47,11 @@ namespace MeControla.Core.Repositories
             return await ApplyAlterContextAsync(dbSet => dbSet.Remove(obj), cancellationToken);
         }
 
-        public virtual async Task<IList<TEntity>> FindAllPagedAsync(IPaginationFilter paginationFilter)
-            => await FindAllPagedAsync(paginationFilter, null);
+        public virtual async Task<IList<TEntity>> FindAllPagedAsync(IPaginationFilter paginationFilter, CancellationToken cancellationToken)
+            => await FindAllPagedAsync(paginationFilter, null, cancellationToken);
 
-        public virtual async Task<IList<TEntity>> FindAllPagedAsync(IPaginationFilter paginationFilter, Expression<Func<TEntity, bool>> predicate)
-            => await dbSet.SetPagination(paginationFilter).SetPredicate(predicate).ToListAsync();
+        public virtual async Task<IList<TEntity>> FindAllPagedAsync(IPaginationFilter paginationFilter, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+            => await dbSet.SetPagination(paginationFilter).SetPredicate(predicate).ToListAsync(cancellationToken);
 
         public virtual async Task<IList<TEntity>> FindAllAsync(CancellationToken cancellationToken)
             => await FindAllAsync(null, cancellationToken);
