@@ -18,10 +18,10 @@ jobs:
 
     steps:
     - name: Checkout Branch
-      uses: actions/checkout@master
+      uses: actions/checkout@v3
     
     - name: Setup .NET ${{ matrix.dotnet-version }}
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
 
@@ -46,7 +46,7 @@ jobs:
 
     - name: Check Lcov File Existence
       id: check_files
-      uses: andstor/file-existence-action@v1
+      uses: andstor/file-existence-action@v2
       with:
         files: "${{ env.path-lcov }}/${{ env.filename-lcov }}"
     
