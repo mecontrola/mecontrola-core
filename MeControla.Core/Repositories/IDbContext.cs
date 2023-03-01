@@ -31,7 +31,7 @@ namespace MeControla.Core.Repositories
         EntityEntry Entry([NotNull] object entity);
         EntityEntry<TEntity> Entry<TEntity>([NotNull] TEntity entity) where TEntity : class;
         bool Equals(object obj);
-        TEntity Find<[Net5CodeAnalysis.DynamicallyAccessedMembers(Net5CodeAnalysis.DynamicallyAccessedMemberTypes.PublicMethods)]TEntity>([CanBeNull] params object[] keyValues) where TEntity : class;
+        TEntity Find<[Net5CodeAnalysis.DynamicallyAccessedMembers(Net5CodeAnalysis.DynamicallyAccessedMemberTypes.PublicMethods)] TEntity>([CanBeNull] params object[] keyValues) where TEntity : class;
         object Find([Net5CodeAnalysis.DynamicallyAccessedMembers(Net5CodeAnalysis.DynamicallyAccessedMemberTypes.PublicMethods), NotNull] Type entityType, [CanBeNull] params object[] keyValues);
         ValueTask<object> FindAsync([Net5CodeAnalysis.DynamicallyAccessedMembers(Net5CodeAnalysis.DynamicallyAccessedMemberTypes.PublicMethods), NotNull] Type entityType, [CanBeNull] object[] keyValues, CancellationToken cancellationToken);
         ValueTask<object> FindAsync([Net5CodeAnalysis.DynamicallyAccessedMembers(Net5CodeAnalysis.DynamicallyAccessedMemberTypes.PublicMethods), NotNull] Type entityType, [CanBeNull] params object[] keyValues);

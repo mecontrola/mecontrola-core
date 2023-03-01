@@ -26,20 +26,23 @@ namespace MeControla.Core.Tests.Mocks
         public static string CONFIG_VALUE_1 { get; } = "value1";
         public static string CONFIG_VALUE_2 { get; } = "value2";
 
-        public static long ID_DEV_1 { get; } = 1;
-        public static Guid UUID_DEV_1 { get; } = Guid.Parse("d90034e8-f46f-481f-b7e7-2b6bb86b2b45");
-        public static string NAME_DEV_1 { get; } = "Diogo Henrique Teixeira";
+        public static long INT_ID_1 { get; } = 1;
+        public static long INT_ID_2 { get; } = 2;
+        public static long INT_ID_3 { get; } = 3;
+        public static long INT_ID_4 { get; } = 4;
 
-        public static long ID_DEV_2 { get; } = 2;
-        public static Guid UUID_DEV_2 { get; } = Guid.Parse("cc496a87-9a98-4a78-afab-cf53c04d0b65");
-        public static string NAME_DEV_2 { get; } = "Lucas Vicente Isaac Peixoto";
+        public static Guid UUID_USER_1 { get; } = Guid.Parse("d90034e8-f46f-481f-b7e7-2b6bb86b2b45");
+        public static Guid UUID_USER_2 { get; } = Guid.Parse("cc496a87-9a98-4a78-afab-cf53c04d0b65");
+        public static Guid UUID_USER_3 { get; } = Guid.Parse("50a5f162-5209-4bc8-bc40-07ae51454483");
+        public static Guid UUID_USER_4 { get; } = Guid.Parse("7d95d4c6-c43c-43ac-9ddc-d0b43718bc32");
+        public static Guid UUID_PERMISSION_1 { get; } = Guid.Parse("f4735182-2e2c-4036-a816-3d8d65ff2dfc");
+        public static Guid UUID_PERMISSION_2 { get; } = Guid.Parse("eca93db5-0a30-46f0-8599-06d55f70e1d4");
 
-        public static long ID_DEV_3 { get; } = 3;
-        public static Guid UUID_DEV_3 { get; } = Guid.Parse("50a5f162-5209-4bc8-bc40-07ae51454483");
-        public static string NAME_DEV_3 { get; } = "Agatha Andrea Sebastiana Lima";
-
-        public static long ID_DEV_4 { get; } = 4;
-        public static Guid UUID_DEV_4 { get; } = Guid.Parse("7d95d4c6-c43c-43ac-9ddc-d0b43718bc32");
-        public static string NAME_DEV_4 { get; } = "Bryan Nicolas Marcos Vinicius Pires";
+        public static string TEXT_USER_NAME_1 { get; } = "Diogo Henrique Teixeira";
+        public static string TEXT_USER_NAME_2 { get; } = "Lucas Vicente Isaac Peixoto";
+        public static string TEXT_USER_NAME_3 { get; } = "Agatha Andrea Sebastiana Lima";
+        public static string TEXT_USER_NAME_4 { get; } = "Bryan Nicolas Marcos Vinicius Pires";
+        public static string TEXT_PERMISSION_NAME_1 { get; } = "Administrator";
+        public static string TEXT_PERMISSION_NAME_2 { get; } = "User";
     }
 }

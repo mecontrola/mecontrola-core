@@ -11,11 +11,11 @@ namespace MeControla.Core.Tests.Builders
         public void DeveCriarUserComCampoNomePreenchido()
         {
             var actual = UserBuilder.GetInstance()
-                                    .SetName(DataMock.NAME_DEV_1)
+                                    .SetName(DataMock.TEXT_USER_NAME_1)
                                     .ToBuild();
 
             actual.Uuid.Should().NotBeEmpty();
-            actual.Name.Should().Be(DataMock.NAME_DEV_1);
+            actual.Name.Should().Be(DataMock.TEXT_USER_NAME_1);
         }
     }
 }

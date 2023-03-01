@@ -7,24 +7,24 @@ namespace MeControla.Core.Tests.Mocks.Dtos
         public static UserDto CreateUser1()
         {
             var obj = BaseUser();
-            obj.Id = DataMock.UUID_DEV_1;
-            obj.Name = DataMock.NAME_DEV_1;
+            obj.Id = DataMock.UUID_USER_1;
+            obj.Name = DataMock.TEXT_USER_NAME_1;
             return obj;
         }
 
         public static UserDto CreateUser2()
         {
             var obj = BaseUser();
-            obj.Id = DataMock.UUID_DEV_2;
-            obj.Name = DataMock.NAME_DEV_2;
+            obj.Id = DataMock.UUID_USER_2;
+            obj.Name = DataMock.TEXT_USER_NAME_2;
             return obj;
         }
 
         public static UserDto CreateUser3()
         {
             var obj = BaseUser();
-            obj.Id = DataMock.UUID_DEV_3;
-            obj.Name = DataMock.NAME_DEV_3;
+            obj.Id = DataMock.UUID_USER_3;
+            obj.Name = DataMock.TEXT_USER_NAME_3;
             return obj;
         }
 
