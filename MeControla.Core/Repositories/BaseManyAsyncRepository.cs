@@ -53,7 +53,7 @@ namespace MeControla.Core.Repositories
             context.Entry(entity).State = entityState;
         }
 
-        protected async Task<bool> ApplyAlterContextAsync(Action<DbSet<TEntity>> action, CancellationToken cancellationToken)
+        private async Task<bool> ApplyAlterContextAsync(Action<DbSet<TEntity>> action, CancellationToken cancellationToken)
         {
             action(dbSet);
 
