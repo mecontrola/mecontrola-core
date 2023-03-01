@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MeControla.Core.Tests.Mocks.Datas.Entities
 {
-    public class User : IEntity
+    public class Permission : IEntity
     {
         public long Id { get; set; }
         public Guid Uuid { get; set; }

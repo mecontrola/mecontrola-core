@@ -1,5 +1,4 @@
 ﻿using MeControla.Core.Data.Entities;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -11,7 +10,7 @@ namespace MeControla.Core.Repositories
     public interface IAsyncRepository<TEntity>
         where TEntity : class, IEntity
     {
-        DatabaseFacade Database();
+        IDbContextFacade Database();
         Task<long> CountAsync(CancellationToken cancellationToken);
         Task<long> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
         Task<IList<TEntity>> FindAllPagedAsync(IPaginationFilter paginationFilter, CancellationToken cancellationToken);

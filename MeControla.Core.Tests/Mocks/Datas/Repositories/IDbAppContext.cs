@@ -6,6 +6,8 @@ namespace MeControla.Core.Tests.Mocks.Datas.Repositories
 {
     public interface IDbAppContext : IDbContext
     {
+        DbSet<Permission> Permissions { get; }
         DbSet<User> Users { get; }
+        DbSet<UserPermission> UserPermissions { get; }
     }
 }

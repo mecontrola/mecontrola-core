@@ -3,19 +3,18 @@ using MeControla.Core.Tests.Mocks;
 using MeControla.Core.Tests.Mocks.Datas.Repositories;
 using MeControla.Core.Tests.Mocks.Entities;
 using MeControla.Core.Tests.Mocks.Repositories;
-using MeControla.Core.Tests.TestingTools;
 using Xunit;
 
 namespace MeControla.Core.Tests.Repositories
 {
-    public class BaseAsyncRepositoryTests : BaseAsyncMethods
+    public class BaseAsyncRepositoryTests : BaseRepository
     {
         private const long TOTAL_USERS = 3;
 
         private readonly IUserRepository userRepository;
 
         public BaseAsyncRepositoryTests()
-            => userRepository = UserRepositoryMock.Create();
+            => userRepository = new UserRepository(context);
 
         [Fact(DisplayName = "[BaseAsyncRepository.CountAsync] Deve retornar a quantidade total de registros na tabela do banco de dados.")]
         public async void DeveListarTodosUsuarios()
@@ -27,7 +26,7 @@ namespace MeControla.Core.Tests.Repositories
         [Fact(DisplayName = "[BaseAsyncRepository.CountAsync] Deve retornar a quantidade total de registros na tabela do banco de dados que coincidem com o criterio.")]
         public async void DeveListarTodosUsuariosDaCondicao()
         {
-            var actual = await userRepository.CountAsync(entity => entity.Id == DataMock.ID_DEV_1, GetCancellationToken());
+            var actual = await userRepository.CountAsync(entity => entity.Id == DataMock.INT_ID_1, GetCancellationToken());
             actual.Should().Be(1);
         }
 
@@ -47,7 +46,7 @@ namespace MeControla.Core.Tests.Repositories
         public async void DeveAtualizarUsuario()
         {
             var expected = UserMock.CreateUser3();
-            expected.Name = DataMock.NAME_DEV_4;
+            expected.Name = DataMock.TEXT_USER_NAME_4;
 
             await userRepository.UpdateAsync(expected, GetCancellationToken());
 
@@ -83,7 +82,7 @@ namespace MeControla.Core.Tests.Repositories
         {
             var pagination = PaginationFilterMock.CreatePage1();
 
-            var actual = await userRepository.FindAllPagedAsync(pagination, entity => entity.Id < DataMock.ID_DEV_4, GetCancellationToken());
+            var actual = await userRepository.FindAllPagedAsync(pagination, entity => entity.Id < DataMock.INT_ID_4, GetCancellationToken());
 
             actual.Should().NotBeEmpty();
             actual.Should().HaveCount((int)TOTAL_USERS);
@@ -94,7 +93,7 @@ namespace MeControla.Core.Tests.Repositories
         {
             var pagination = PaginationFilterMock.CreatePage1();
 
-            var actual = await userRepository.FindAllPagedAsync(pagination, entity => entity.Id >= DataMock.ID_DEV_4, GetCancellationToken());
+            var actual = await userRepository.FindAllPagedAsync(pagination, entity => entity.Id >= DataMock.INT_ID_4, GetCancellationToken());
 
             actual.Should().BeEmpty();
         }
@@ -111,7 +110,7 @@ namespace MeControla.Core.Tests.Repositories
         [Fact(DisplayName = "[BaseAsyncRepository.FindAllAsync] Deve retornar lista de todos os registro que exitir na tabela do banco de dados que coincidem com o criterio informado.")]
         public async void DeveRetornarListaRegistrosQuandoCriterioAtendido()
         {
-            var actual = await userRepository.FindAllAsync(entity => entity.Id < DataMock.ID_DEV_4, GetCancellationToken());
+            var actual = await userRepository.FindAllAsync(entity => entity.Id < DataMock.INT_ID_4, GetCancellationToken());
 
             actual.Should().NotBeEmpty();
             actual.Should().HaveCount((int)TOTAL_USERS);
@@ -120,7 +119,7 @@ namespace MeControla.Core.Tests.Repositories
         [Fact(DisplayName = "[BaseAsyncRepository.FindAllAsync] Deve retornar lista vazia quando existir registro que não coincidem com o criterio informado.")]
         public async void DeveRetornarListaVaziaQuandoCriterioNaoAtendido()
         {
-            var actual = await userRepository.FindAllAsync(entity => entity.Id >= DataMock.ID_DEV_4, GetCancellationToken());
+            var actual = await userRepository.FindAllAsync(entity => entity.Id >= DataMock.INT_ID_4, GetCancellationToken());
 
             actual.Should().BeEmpty();
         }
@@ -138,7 +137,7 @@ namespace MeControla.Core.Tests.Repositories
         [Fact(DisplayName = "[BaseAsyncRepository.FindAsync] Deve retornar null não se exitir na tabela do banco de dados algum registro que conincida com o Id.")]
         public async void DeveRetornarNullQuandoIdInformado()
         {
-            var exist = await userRepository.FindAsync(DataMock.ID_DEV_4, GetCancellationToken());
+            var exist = await userRepository.FindAsync(DataMock.INT_ID_4, GetCancellationToken());
 
             exist.Should().BeNull();
         }
@@ -156,7 +155,7 @@ namespace MeControla.Core.Tests.Repositories
         [Fact(DisplayName = "[BaseAsyncRepository.FindAsync] Deve retornar null não se exitir na tabela do banco de dados algum registro que conincida com o Guid.")]
         public async void DeveRetornarNullQuandoGuidInformado()
         {
-            var exist = await userRepository.FindAsync(DataMock.UUID_DEV_4, GetCancellationToken());
+            var exist = await userRepository.FindAsync(DataMock.UUID_USER_4, GetCancellationToken());
 
             exist.Should().BeNull();
         }
@@ -174,7 +173,7 @@ namespace MeControla.Core.Tests.Repositories
         [Fact(DisplayName = "[BaseAsyncRepository.FindAsync] Deve retornar null não se exitir na tabela do banco de dados algum registro que conincida com o criterio.")]
         public async void DeveRetornarNullQuandoCriteriaSemCoincidencia()
         {
-            var exist = await userRepository.FindAsync(entity => entity.Uuid == DataMock.UUID_DEV_4, GetCancellationToken());
+            var exist = await userRepository.FindAsync(entity => entity.Uuid == DataMock.UUID_USER_4, GetCancellationToken());
 
             exist.Should().BeNull();
         }
@@ -182,7 +181,7 @@ namespace MeControla.Core.Tests.Repositories
         [Fact(DisplayName = "[BaseAsyncRepository.ExistsAsync] Deve retornar true se exitir na tabela do banco de dados algum registro que conincida com o Id.")]
         public async void DeveRetornarTrueQuandoIdInformado()
         {
-            var exist = await userRepository.ExistsAsync(DataMock.ID_DEV_3, GetCancellationToken());
+            var exist = await userRepository.ExistsAsync(DataMock.INT_ID_3, GetCancellationToken());
 
             exist.Should().BeTrue();
         }
@@ -190,7 +189,7 @@ namespace MeControla.Core.Tests.Repositories
         [Fact(DisplayName = "[BaseAsyncRepository.ExistsAsync] Deve retornar false não se exitir na tabela do banco de dados algum registro que conincida com o Id.")]
         public async void DeveRetornarFalseQuandoIdInformado()
         {
-            var exist = await userRepository.ExistsAsync(DataMock.ID_DEV_4, GetCancellationToken());
+            var exist = await userRepository.ExistsAsync(DataMock.INT_ID_4, GetCancellationToken());
 
             exist.Should().BeFalse();
         }
@@ -198,7 +197,7 @@ namespace MeControla.Core.Tests.Repositories
         [Fact(DisplayName = "[BaseAsyncRepository.ExistsAsync] Deve retornar true se exitir na tabela do banco de dados algum registro que conincida com o Guid.")]
         public async void DeveRetornarTrueQuandoGuidInformado()
         {
-            var exist = await userRepository.ExistsAsync(DataMock.UUID_DEV_3, GetCancellationToken());
+            var exist = await userRepository.ExistsAsync(DataMock.UUID_USER_3, GetCancellationToken());
 
             exist.Should().BeTrue();
         }
@@ -206,7 +205,7 @@ namespace MeControla.Core.Tests.Repositories
         [Fact(DisplayName = "[BaseAsyncRepository.ExistsAsync] Deve retornar false não se exitir na tabela do banco de dados algum registro que conincida com o Guid.")]
         public async void DeveRetornarFalseQuandoGuidInformado()
         {
-            var exist = await userRepository.ExistsAsync(DataMock.UUID_DEV_4, GetCancellationToken());
+            var exist = await userRepository.ExistsAsync(DataMock.UUID_USER_4, GetCancellationToken());
 
             exist.Should().BeFalse();
         }
@@ -214,7 +213,7 @@ namespace MeControla.Core.Tests.Repositories
         [Fact(DisplayName = "[BaseAsyncRepository.ExistsAsync] Deve retornar true se exitir na tabela do banco de dados algum registro que conincida com o criterio.")]
         public async void DeveRetornarTrueQuandoCriteriaInformado()
         {
-            var exist = await userRepository.ExistsAsync(entity => entity.Uuid == DataMock.UUID_DEV_3, GetCancellationToken());
+            var exist = await userRepository.ExistsAsync(entity => entity.Uuid == DataMock.UUID_USER_3, GetCancellationToken());
 
             exist.Should().BeTrue();
         }
@@ -222,7 +221,7 @@ namespace MeControla.Core.Tests.Repositories
         [Fact(DisplayName = "[BaseAsyncRepository.ExistsAsync] Deve retornar false não se exitir na tabela do banco de dados algum registro que conincida com o criterio.")]
         public async void DeveRetornarFalseQuandoCriteriaInformado()
         {
-            var exist = await userRepository.ExistsAsync(entity => entity.Uuid == DataMock.UUID_DEV_4, GetCancellationToken());
+            var exist = await userRepository.ExistsAsync(entity => entity.Uuid == DataMock.UUID_USER_4, GetCancellationToken());
 
             exist.Should().BeFalse();
         }
