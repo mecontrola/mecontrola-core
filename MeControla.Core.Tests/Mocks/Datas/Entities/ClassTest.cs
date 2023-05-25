@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MeControla.Core.Tests.Datas.Mocks.Entities
+namespace MeControla.Core.Tests.Mocks.Datas.Entities
 {
     public class ClassTest
     {

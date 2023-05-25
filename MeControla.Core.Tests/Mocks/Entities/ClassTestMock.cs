@@ -1,4 +1,4 @@
-﻿using MeControla.Core.Tests.Datas.Mocks.Entities;
+﻿using MeControla.Core.Tests.Mocks.Datas.Entities;
 
 namespace MeControla.Core.Tests.Mocks.Entities
 {
