@@ -39,7 +39,7 @@ namespace MeControla.Core.Tests.Tools
                 .BeEquivalentTo("cst_field_in_class1");
         }
 
-        [Fact(DisplayName = "[TableMetadata.GetColumnName] Deve gerar o nome da columna utilizando o prefixo informado no construtor.")]
+        [Fact(DisplayName = "[TableMetadata.GetColumnName] Deve gerar o nome da columna utilizando o prefixo informado no construtor que contenha somente duas consoantes.")]
         public void DeveGerarNomeColunaDaPropriedadeComPrefixoInformado2()
         {
             var tool = new TableMetadata<Movie>("test_core");
