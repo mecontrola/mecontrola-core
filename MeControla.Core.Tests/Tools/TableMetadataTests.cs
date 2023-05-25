@@ -38,5 +38,18 @@ namespace MeControla.Core.Tests.Tools
                 .Should()
                 .BeEquivalentTo("cst_field_in_class1");
         }
+
+
+
+        [Fact(DisplayName = "[TableMetadata.GetColumnName] Deve gerar o nome da columna utilizando o prefixo informado no construtor.")]
+        public void DeveGerarNomeColunaDaPropriedadeComPrefixoInformado2()
+        {
+            var tool = new TableMetadata<Movie>("test_core");
+            tool.GetColumnName(x => x.FieldInClass1)
+                .Should()
+                .BeEquivalentTo("mve");
+        }
     }
+
+    public class Movie { public int FieldInClass1 { get; set; } }
 }
