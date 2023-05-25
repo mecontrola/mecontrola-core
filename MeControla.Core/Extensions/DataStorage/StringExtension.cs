@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace MeControla.Core.Extensions.DataStorage
 {
@@ -22,7 +21,7 @@ namespace MeControla.Core.Extensions.DataStorage
 
             prefix = words.Length > 1
                    ? string.Concat(words.Select(x => x[0])).ToLower()
-                   : (valueTmp[0] + valueTmp[1..].GetConsonants())[..2];
+                   : $"{valueTmp[0]}{valueTmp[1..].GetConsonants()}"[..2];
 
             return prefix.ToLower();
         }
@@ -40,10 +39,16 @@ namespace MeControla.Core.Extensions.DataStorage
             {
                 >= 3 => valueTmp.GetUpperLetters(),
                 2 => string.Concat(words.Select(x => x[..1] + x[1..].GetConsonants()[..1])),
-                _ => (valueTmp[0] + valueTmp[1..].GetConsonants())[..3],
+                _ => $"{valueTmp[0]}{CheckSingleWord(valueTmp)}"[..3],
             };
 
             return prefix.ToLower();
+
+            static string CheckSingleWord(string word)
+            {
+                var prefix = word[1..].GetConsonants();
+                return prefix.Length == 1 ? $"{prefix}{word[^1]}" : prefix;
+            }
         }
     }
 }

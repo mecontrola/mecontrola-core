@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using MeControla.Core.Tests.Datas.Mocks.Entities;
 using MeControla.Core.Tests.Mocks;
+using MeControla.Core.Tests.Mocks.Datas.Entities;
 using MeControla.Core.Tests.Mocks.Entities;
 using System.Text.Json;
 using Xunit;

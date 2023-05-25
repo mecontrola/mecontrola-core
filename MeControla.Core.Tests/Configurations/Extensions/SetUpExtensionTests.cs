@@ -1,13 +1,8 @@
 ﻿using FluentAssertions;
 using MeControla.Core.Configurations.Extensions;
 using MeControla.Core.IoC;
-using MeControla.Core.Tests.Datas.Mocks.Entities;
+using MeControla.Core.Tests.Mocks.Datas.Entities;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace MeControla.Core.Tests.Configurations.Extensions
@@ -31,7 +26,6 @@ namespace MeControla.Core.Tests.Configurations.Extensions
             serviceCollection.Should().HaveCount(1);
         }
     }
-
 
     public class InjectorTest : IInjector
     {

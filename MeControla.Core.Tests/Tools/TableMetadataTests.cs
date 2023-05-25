@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using MeControla.Core.Tests.Datas.Mocks.Entities;
+using MeControla.Core.Tests.Mocks.Datas.Entities;
 using MeControla.Core.Tools;
 using Xunit;
 
@@ -39,17 +39,13 @@ namespace MeControla.Core.Tests.Tools
                 .BeEquivalentTo("cst_field_in_class1");
         }
 
-
-
         [Fact(DisplayName = "[TableMetadata.GetColumnName] Deve gerar o nome da columna utilizando o prefixo informado no construtor.")]
         public void DeveGerarNomeColunaDaPropriedadeComPrefixoInformado2()
         {
             var tool = new TableMetadata<Movie>("test_core");
             tool.GetColumnName(x => x.FieldInClass1)
                 .Should()
-                .BeEquivalentTo("mve");
+                .BeEquivalentTo("mve_field_in_class1");
         }
     }
-
-    public class Movie { public int FieldInClass1 { get; set; } }
 }
