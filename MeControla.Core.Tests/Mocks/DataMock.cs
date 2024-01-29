@@ -11,6 +11,7 @@ namespace MeControla.Core.Tests.Mocks
         public static string VALUE_DEFAULT_TEXT { get; } = "Simply String Test";
         public static string VALUE_DEFAULT_TEXT2 { get; } = "Simply String Test Anything";
         public static string JSON_CLASS_TEST { get; } = @"{""field_in_class1"":5,""field_in_class2"":9}";
+        public static string JSON_CLASS_WITH_DATE_TEST { get; } = @"{""FieldInClass1"":5,""FieldInClass2"":9,""FieldDateTime"":""20000505000000""}";
         public static string TEXT_DATETIME { get; } = "2000-05-05";
         public static string TEXT_DECIMAL { get; } = "100.0";
         public static string TEXT_URL { get; } = "http://myhost.com";

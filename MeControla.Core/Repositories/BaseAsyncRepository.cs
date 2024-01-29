@@ -11,7 +11,8 @@ using System.Threading.Tasks;
 
 namespace MeControla.Core.Repositories
 {
-    public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity> : ContextRepository<TEntity>, IAsyncRepository<TEntity>
+    public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity>
+        : ContextRepository<TEntity>, IAsyncRepository<TEntity>
          where TEntity : class, IEntity
     {
         protected BaseAsyncRepository(IDbContext context, DbSet<TEntity> dbSet)

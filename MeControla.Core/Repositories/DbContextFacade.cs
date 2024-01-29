@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace MeControla.Core.Repositories
 {
-    public class DbContextFacade : IDbContextFacade
+    public class DbContextFacade(DatabaseFacade database)
+        : IDbContextFacade
     {
-        private readonly DatabaseFacade database;
-
-        public DbContextFacade(DatabaseFacade database)
-            => this.database = database;
+        private readonly DatabaseFacade database = database;
 
         public virtual bool EnsureCreated()
             => database.EnsureCreated();

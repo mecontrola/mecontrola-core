@@ -1,14 +1,12 @@
-﻿using MeControla.Core.Extensions.Newtonsoft;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
+﻿using MeControla.Core.Extensions.JsonSerializers;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using Xunit;
 
-namespace MeControla.Core.Tests.Extensions.Newtonsoft
+namespace MeControla.Core.Tests.Extensions.JsonSerializers
 {
-    public class JObjectExtensionTests
+    public class JsonSerializerAnonymousExtensionTests
     {
         private const string DATE_FORMAT = "yyyyMMddHHmmss";
 
@@ -16,7 +14,7 @@ namespace MeControla.Core.Tests.Extensions.Newtonsoft
         public void DeveConverterObjetoAnonimoParaConcreto()
         {
             var expectd = new ClsTest { Name = "Test" };
-            var actual = new JObject { { "Name", "Test" } }.ToAnonymousType(new ClsTest());
+            var actual = $@"{{""Name"":""Test""}}".ToAnonymousType(new ClsTest());
 
             Assert.Equal(expectd, actual, new ClsTestComparer());
         }
@@ -26,15 +24,15 @@ namespace MeControla.Core.Tests.Extensions.Newtonsoft
         {
             var date = new DateTime(2020, 1, 1);
             var expectd = new ClsTest { Name = "Test", Date = date };
-            var actual = new JObject { { "Name", "Test" }, { "Date", date.ToString(DATE_FORMAT) } }.ToAnonymousType(new ClsTest(), GetTradingDaySerializer());
+            var actual = $@"{{""Name"":""Test"",""Date"":""{date.ToString(DATE_FORMAT)}""}}".ToAnonymousType(new ClsTest(), GetTradingDaySerializer());
 
             Assert.Equal(expectd, actual, new ClsTestComparer());
         }
 
-        private static JsonSerializer GetTradingDaySerializer()
+        private static JsonSerializerOptions GetTradingDaySerializer()
         {
-            var options = new JsonSerializer();
-            options.Converters.Add(new IsoDateTimeConverter() { DateTimeFormat = DATE_FORMAT });
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new DateTimeConverter(DATE_FORMAT));
 
             return options;
         }
