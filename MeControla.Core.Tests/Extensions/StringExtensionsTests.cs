@@ -9,6 +9,56 @@ namespace MeControla.Core.Tests.Extensions
 {
     public class StringExtensionsTests
     {
+        [Fact(DisplayName = "[StringExtensions.IsNullOrEmpty] Deve retornar true quando string for nula.")]
+        public void DeveRetornarTrueQuandoNulo_Empty()
+            => ((string)null).IsNullOrEmpty()
+                             .Should()
+                             .BeTrue();
+
+        [Fact(DisplayName = "[StringExtensions.IsNullOrEmpty] Deve retornar true quando string for vazia.")]
+        public void DeveRetornarTrueQuandoVazio_Empty()
+            => "".IsNullOrEmpty()
+                 .Should()
+                 .BeTrue();
+
+        [Fact(DisplayName = "[StringExtensions.IsNullOrEmpty] Deve retornar false quando string tiver espaço.")]
+        public void DeveRetornarFalseQuandoEspaco_Empty()
+            => " ".IsNullOrEmpty()
+                  .Should()
+                  .BeFalse();
+
+        [Fact(DisplayName = "[StringExtensions.IsNullOrEmpty] Deve retornar false quando string tiver texto.")]
+        public void DeveRetornarFalseQuandoTexto_Empty()
+            => DataMock.VALUE_DEFAULT_TEXT
+                       .IsNullOrEmpty()
+                       .Should()
+                       .BeFalse();
+
+        [Fact(DisplayName = "[StringExtensions.IsNullOrWhiteSpace] Deve retornar true quando string for nula.")]
+        public void DeveRetornarTrueQuandoNulo_WhiteSpace()
+            => ((string)null).IsNullOrWhiteSpace()
+                             .Should()
+                             .BeTrue();
+
+        [Fact(DisplayName = "[StringExtensions.IsNullOrWhiteSpace] Deve retornar true quando string for vazia.")]
+        public void DeveRetornarTrueQuandoVazio_WhiteSpace()
+            => "".IsNullOrWhiteSpace()
+                 .Should()
+                 .BeTrue();
+
+        [Fact(DisplayName = "[StringExtensions.IsNullOrWhiteSpace] Deve retornar true quando string tiver espaço.")]
+        public void DeveRetornarFalseQuandoEspaco_WhiteSpace()
+            => " ".IsNullOrWhiteSpace()
+                  .Should()
+                  .BeTrue();
+
+        [Fact(DisplayName = "[StringExtensions.IsNullOrWhiteSpace] Deve retornar false quando string tiver texto.")]
+        public void DeveRetornarFalseQuandoTexto_WhiteSpace()
+            => DataMock.VALUE_DEFAULT_TEXT
+                       .IsNullOrWhiteSpace()
+                       .Should()
+                       .BeFalse();
+
         [Fact(DisplayName = "[StringExtensions.ToGuid] Deve converter um guid string em um guid objeto.")]
         public void DeveConverterGuidStringParaGuid()
         {

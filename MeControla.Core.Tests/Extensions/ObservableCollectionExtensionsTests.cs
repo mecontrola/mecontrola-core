@@ -4,7 +4,7 @@ using MeControla.Core.Tests.Mocks.Primitives;
 using System.Collections.ObjectModel;
 using Xunit;
 
-namespace MeControla.Kernel.Extensions
+namespace MeControla.Core.Tests.Extensions
 {
     public class ObservableCollectionExtensionsTests
     {

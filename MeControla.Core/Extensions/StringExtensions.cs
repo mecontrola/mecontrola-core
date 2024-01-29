@@ -7,8 +7,20 @@ using System.Text.RegularExpressions;
 
 namespace MeControla.Core.Extensions
 {
-    public static class StringExtensions
+    public static partial class StringExtensions
     {
+#if !DEBUG
+        [System.Diagnostics.DebuggerStepThrough]
+#endif
+        public static bool IsNullOrEmpty(this string str)
+            => string.IsNullOrEmpty(str);
+
+#if !DEBUG
+        [System.Diagnostics.DebuggerStepThrough]
+#endif
+        public static bool IsNullOrWhiteSpace(this string str)
+            => string.IsNullOrWhiteSpace(str);
+
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
@@ -27,52 +39,55 @@ namespace MeControla.Core.Extensions
         public static string ToPascalCase(this string value)
             => value.ToTitleCase().Replace(" ", string.Empty);
 
+        [GeneratedRegex(@"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+")]
+        private static partial Regex RegexCamelCase();
+
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
         public static string ToCamelCase(this string value)
         {
-            var pattern = new Regex(@"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+");
+            var pattern = RegexCamelCase();
             return new string(new CultureInfo("en-US", false).TextInfo
-                                                             .ToTitleCase(string.Join(" ", pattern.Matches(value)).ToLower())
+                                                             .ToTitleCase(string.Join(" ", pattern.Matches(value)).ToLowerInvariant())
                                                              .Replace(@" ", string.Empty)
                                                              .Select((x, i) => i == 0 ? char.ToLower(x) : x)
                                                              .ToArray());
         }
 
+        [GeneratedRegex(@"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+")]
+        private static partial Regex RegexSnakeKebabTitleCase();
+
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
         public static string ToSnakeCase(this string input)
-        {
-            var pattern = new Regex(@"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+");
-            return string.Join("_", pattern.Matches(input)).ToLower();
-        }
+            => string.Join("_", RegexSnakeKebabTitleCase().Matches(input))
+                     .ToLowerInvariant();
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
         public static string ToKebabCase(this string value)
-        {
-            var pattern = new Regex(@"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+");
-            return string.Join("-", pattern.Matches(value)).ToLower();
-        }
+            => string.Join("-", RegexSnakeKebabTitleCase().Matches(value))
+                     .ToLowerInvariant();
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
         public static string ToTitleCase(this string value)
-        {
-            var pattern = new Regex(@"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+");
-            return new CultureInfo("en-US", false).TextInfo
-                                                  .ToTitleCase(string.Join(" ", pattern.Matches(value)).ToLower());
-        }
+            => new CultureInfo("en-US", false).TextInfo
+                                              .ToTitleCase(string.Join(" ", RegexSnakeKebabTitleCase().Matches(value))
+                                                                 .ToLowerInvariant());
+
+        [GeneratedRegex(@"\D+")]
+        private static partial Regex RegexOnlyNumbers();
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
         public static string OnlyNumbers(this string value)
-            => Regex.Replace(value, @"\D+", string.Empty);
+            => RegexOnlyNumbers().Replace(value, string.Empty);
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
@@ -92,19 +107,21 @@ namespace MeControla.Core.Extensions
             return Encoding.UTF8.GetString(bytes);
         }
 
+        [GeneratedRegex(@"\s+")]
+        private static partial Regex RegexTrimAll();
+
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
         public static string TrimAll(this string value)
-            => Regex.Replace(value, @"\s+", " ").Trim();
+            => RegexTrimAll().Replace(value, " ").Trim();
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
         public static string ToMD5(this string input)
         {
-            using var md5Hash = MD5.Create();
-            var data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+            var data = MD5.HashData(Encoding.UTF8.GetBytes(input));
             var sBuilder = new StringBuilder();
 
             for (int i = 0, l = data.Length; i < l; i++)
@@ -128,6 +145,9 @@ namespace MeControla.Core.Extensions
             }
         }
 
+        [GeneratedRegex(@"[^\d|.]")]
+        private static partial Regex RegexToDecimal();
+
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
@@ -137,7 +157,7 @@ namespace MeControla.Core.Extensions
                 return null;
 
             var str = value.Replace(",", ".");
-            str = Regex.Replace(str, @"[^\d|.]", string.Empty);
+            str = RegexToDecimal().Replace(str, string.Empty);
 
             try
             {
@@ -161,11 +181,14 @@ namespace MeControla.Core.Extensions
              ? string.Empty
              : $"{value[0].ToString().ToUpper()}{value[1..]}";
 
+        [GeneratedRegex("[aeiou]", RegexOptions.IgnoreCase)]
+        private static partial Regex RegexGetConsonants();
+
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
         public static string GetConsonants(this string value)
-            => Regex.Replace(value, "[aeiou]", string.Empty, RegexOptions.IgnoreCase);
+            => RegexGetConsonants().Replace(value, string.Empty);
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]

@@ -20,7 +20,7 @@ namespace MeControla.Core.Builders
             FillDefaultValues(obj);
         }
 
-        protected abstract void FillDefaultValues(TObject obj);
+        protected abstract void FillDefaultValues(TObject objInstance);
 
         protected TBuilder Set(Action<TObject> action)
         {

@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace MeControla.Core.Repositories
 {
-    public class BaseManyAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity, TRoot, TTarget> : IManyAsyncRepository<TEntity, TRoot, TTarget>
+    public class BaseManyAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity, TRoot, TTarget>
+        : IManyAsyncRepository<TEntity, TRoot, TTarget>
         where TEntity : class, IManyEntity<TRoot, TTarget>
         where TRoot : IEntity
         where TTarget : IEntity

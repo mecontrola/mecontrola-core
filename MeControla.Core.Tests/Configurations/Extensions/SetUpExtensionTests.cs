@@ -12,15 +12,11 @@ namespace MeControla.Core.Tests.Configurations.Extensions
         protected readonly IServiceCollection serviceCollection;
 
         public SetUpExtensionTests()
-        {
-            serviceCollection = new ServiceCollection();
-        }
+            => serviceCollection = new ServiceCollection();
 
         [Fact(DisplayName = "[SetUpExtension.AddApplicationServices] Deve retornar null quando não existir atributo customizado.")]
         public void DeveRetornarNullQuandoAtributoInexistente2()
         {
-            var injectorTest = typeof(InjectorTest);
-
             serviceCollection.AddApplicationServices();
 
             serviceCollection.Should().HaveCount(1);
@@ -30,8 +26,6 @@ namespace MeControla.Core.Tests.Configurations.Extensions
     public class InjectorTest : IInjector
     {
         public void RegisterServices(IServiceCollection services)
-        {
-            services.AddSingleton<ClassTest>();
-        }
+            => services.AddSingleton<ClassTest>();
     }
 }

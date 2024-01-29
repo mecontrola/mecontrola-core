@@ -191,7 +191,6 @@ namespace MeControla.Core.Tests.Repositories
                            .Be(databaseFacade.AutoSavepointsEnabled);
         }
 
-
         [Fact(DisplayName = "[DbContextFacade.ProviderName] Deve retornar o mesmo valor que a instancia original.")]
         public void DeveGerarProviderName()
             => dbContextFacade.ProviderName

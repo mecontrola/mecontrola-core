@@ -9,6 +9,7 @@ namespace MeControla.Core.Repositories
     {
         protected readonly IDbContext context;
         protected readonly DbSet<TEntity> dbSet;
+
         private DbContextFacade database;
 
         protected ContextRepository([NotNull] IDbContext context, [NotNull] DbSet<TEntity> dbSet)
