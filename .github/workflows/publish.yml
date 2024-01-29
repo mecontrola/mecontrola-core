@@ -37,7 +37,7 @@ jobs:
     strategy:
       matrix:
         app-namespace: [ 'MeControla.Core' ]
-        dotnet-version: [ '7.0.x' ]
+        dotnet-version: [ '8.0.x' ]
         build-configuration: [ 'Release' ]
     env:
       app-version: ${{ needs.release.outputs.app-version }}
