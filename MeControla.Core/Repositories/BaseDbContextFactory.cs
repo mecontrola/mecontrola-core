@@ -7,7 +7,7 @@ namespace MeControla.Core.Repositories
 {
     public abstract class BaseDbContextFactory<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TDbContext>
         : IDesignTimeDbContextFactory<TDbContext>, IDisposable
-        where TDbContext : DbContext, new()
+        where TDbContext : DbContext
     {
         private TDbContext context;
 
