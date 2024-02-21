@@ -2,13 +2,11 @@
 
 namespace MeControla.Core.Exceptions
 {
-    public class UnauthorizedException : Exception
+    public class UnauthorizedException(Exception innerException)
+        : Exception(null, innerException)
     {
         public UnauthorizedException()
-        { }
-
-        public UnauthorizedException(Exception innerException)
-            : base(null, innerException)
+            : this(null)
         { }
     }
 }

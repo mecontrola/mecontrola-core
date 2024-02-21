@@ -2,10 +2,11 @@
 
 namespace MeControla.Core.Exceptions
 {
-    public class NotFoundException : Exception
+    public class NotFoundException(string message)
+        : Exception(message)
     {
-        public NotFoundException(string name)
-            : base($"The {name} not found.")
+        public NotFoundException()
+            : this(null)
         { }
     }
 }
