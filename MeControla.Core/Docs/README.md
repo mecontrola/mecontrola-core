@@ -1,0 +1,1 @@
+Library created to support the development of common day-to-day functionality in .Net 8
