@@ -16,6 +16,10 @@
     <Nullable>disable</Nullable>
     <IsTrimmable>true</IsTrimmable>
     <PublishTrimmed>false</PublishTrimmed>
+    <PackageReadmeFile>Docs\README.md</PackageReadmeFile>
+    <Description>Library created to support the development of common day-to-day functionality in .Net 8</Description>
+    <RepositoryType>git</RepositoryType>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -36,6 +40,13 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Docs\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
