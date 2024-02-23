@@ -32,16 +32,20 @@ namespace MeControla.Core.Configurations.Extensions
             => typeof(T).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract;
 
         private static IEnumerable<Assembly> LoadAppAssemblies()
-            => new DirectoryInfo(GetAppBaseDirectory()).GetFiles("*.dll", SearchOption.TopDirectoryOnly)
-                                                       .Select(itm => GetAssembly(itm))
-                                                       .Where(itm => itm != null);
+        {
+            var currentAppDomain = GetAppDomainCurrentDomain(null);
 
-        private static Assembly GetAssembly(FileInfo itm)
+            return new DirectoryInfo(currentAppDomain.BaseDirectory).GetFiles("*.dll", SearchOption.TopDirectoryOnly)
+                                                                    .Select(itm => GetAssembly(itm, currentAppDomain))
+                                                                    .Where(itm => itm != null);
+        }
+
+        public static Assembly GetAssembly(FileInfo itm, INetCoreAppDomain currentAppDomain)
         {
             var assemblyName = AssemblyName.GetAssemblyName(itm.FullName);
             try
             {
-                return AppDomain.CurrentDomain.Load(assemblyName);
+                return currentAppDomain.Load(assemblyName);
             }
             catch (ArgumentException)
             {
@@ -65,7 +69,29 @@ namespace MeControla.Core.Configurations.Extensions
             }
         }
 
-        private static string GetAppBaseDirectory()
-            => AppDomain.CurrentDomain.BaseDirectory;
+        private static INetCoreAppDomain GetAppDomainCurrentDomain(INetCoreAppDomain baseAppDomain)
+            => baseAppDomain ?? new NetCoreAppDomain();
+    }
+
+    public interface INetCoreAppDomain
+    {
+        public string BaseDirectory { get; }
+
+        Assembly Load(AssemblyName assemblyRef);
+    }
+
+#if DEBUG
+    public
+#else
+    internal
+#endif
+    class NetCoreAppDomain : INetCoreAppDomain
+    {
+        private readonly AppDomain baseAppDomain = AppDomain.CurrentDomain;
+
+        public string BaseDirectory => baseAppDomain.BaseDirectory;
+
+        public Assembly Load(AssemblyName assemblyRef)
+            => baseAppDomain.Load(assemblyRef);
     }
 }

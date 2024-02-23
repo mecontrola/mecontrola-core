@@ -6,7 +6,7 @@ namespace MeControla.Core.Exceptions
         : Exception(message)
     {
         public NotFoundException()
-            : this(null)
+            : this(string.Empty)
         { }
     }
 }

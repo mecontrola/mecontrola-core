@@ -6,7 +6,6 @@ using MeControla.Core.Tests.Mocks.Datas.Entities;
 using MeControla.Core.Tests.Mocks.Dtos;
 using MeControla.Core.Tests.Mocks.Entities;
 using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace MeControla.Core.Tests.Mappers
@@ -16,9 +15,7 @@ namespace MeControla.Core.Tests.Mappers
         private readonly IMapper<User, UserDto> mapper;
 
         public BaseMapperTests()
-        {
-            mapper = new UserEntityToDtoMapper();
-        }
+            => mapper = new UserEntityToDtoMapper();
 
         [Fact(DisplayName = "[BaseMapper.ToMap] Deve retornar null quando informado null.")]
         public void DeveRetornarNuloQuandoForNulo()
@@ -35,7 +32,7 @@ namespace MeControla.Core.Tests.Mappers
             var expected = UserDtoMock.CreateUser1();
             var actual = mapper.ToMap(entity);
 
-            AssertEqual(expected, actual);
+            expected.Should().BeEquivalentTo(actual);
         }
 
         [Fact(DisplayName = "[BaseMapper.ToMap] Deve retornar dto quando informado entidade preenchido.")]
@@ -45,17 +42,17 @@ namespace MeControla.Core.Tests.Mappers
             var expected = UserDtoMock.CreateUser1();
             var actual = mapper.ToMap(entity, UserDtoMock.CreateUser2());
 
-            AssertEqual(expected, actual);
+            expected.Should().BeEquivalentTo(actual);
         }
 
         [Fact(DisplayName = "[BaseMapper.ToMap] Deve retornar lista de dtos quando informado lista de entidades preenchidas.")]
         public void DeveRetornarListaPreenchidaQuandoPreenchida()
         {
             var entity = UserMock.CreateUser1();
-            var expected = UserDtoMock.CreateUser1();
+            var expected = new List<UserDto> { UserDtoMock.CreateUser1() };
             var actual = mapper.ToMapList(new List<User> { entity });
 
-            AssertEqual(expected, actual.FirstOrDefault());
+            expected.Should().BeEquivalentTo(actual);
         }
 
         [Fact(DisplayName = "[BaseMapper.ToMap] Deve retornar um objeto utilizando o mapeamento padrão.")]
@@ -65,13 +62,7 @@ namespace MeControla.Core.Tests.Mappers
             var expected = UserDtoMock.CreateUser1();
             var actual = new UserDtoToDtoMapper().ToMap(entity);
 
-            AssertEqual(expected, actual);
-        }
-
-        private static void AssertEqual(UserDto expected, UserDto actual)
-        {
-            expected.Id.Should().Be(actual.Id);
-            expected.Name.Should().Be(actual.Name);
+            expected.Should().BeEquivalentTo(actual);
         }
     }
 

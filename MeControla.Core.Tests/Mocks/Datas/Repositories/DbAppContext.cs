@@ -9,6 +9,7 @@ namespace MeControla.Core.Tests.Mocks.Datas.Repositories
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserPermission> UserPermissions { get; set; }
+        public DbSet<WorkTask> WorkTasks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
             => modelBuilder.Entity<UserPermission>().HasKey(entity => new { entity.RootId, entity.TargetId });

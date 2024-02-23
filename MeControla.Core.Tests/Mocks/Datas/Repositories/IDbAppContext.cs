@@ -9,5 +9,6 @@ namespace MeControla.Core.Tests.Mocks.Datas.Repositories
         DbSet<Permission> Permissions { get; }
         DbSet<User> Users { get; }
         DbSet<UserPermission> UserPermissions { get; }
+        DbSet<WorkTask> WorkTasks { get; }
     }
 }
