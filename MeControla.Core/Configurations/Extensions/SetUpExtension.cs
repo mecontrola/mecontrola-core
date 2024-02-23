@@ -40,12 +40,7 @@ namespace MeControla.Core.Configurations.Extensions
                                                                     .Where(itm => itm != null);
         }
 
-#if DEBUG
-    public
-#else
-    private
-#endif
-        static Assembly GetAssembly(FileInfo itm, INetCoreAppDomain currentAppDomain)
+        public static Assembly GetAssembly(FileInfo itm, INetCoreAppDomain currentAppDomain)
         {
             var assemblyName = AssemblyName.GetAssemblyName(itm.FullName);
             try
@@ -74,7 +69,7 @@ namespace MeControla.Core.Configurations.Extensions
             }
         }
 
-        private  static INetCoreAppDomain GetAppDomainCurrentDomain(INetCoreAppDomain baseAppDomain)
+        private static INetCoreAppDomain GetAppDomainCurrentDomain(INetCoreAppDomain baseAppDomain)
             => baseAppDomain ?? new NetCoreAppDomain();
     }
 
@@ -85,7 +80,12 @@ namespace MeControla.Core.Configurations.Extensions
         Assembly Load(AssemblyName assemblyRef);
     }
 
-    internal class NetCoreAppDomain : INetCoreAppDomain
+#if DEBUG
+    public
+#else
+    internal
+#endif
+    class NetCoreAppDomain : INetCoreAppDomain
     {
         private readonly AppDomain baseAppDomain = AppDomain.CurrentDomain;
 
