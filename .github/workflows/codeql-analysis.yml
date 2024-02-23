@@ -3,12 +3,11 @@ name: "CodeQL"
 on:
   pull_request:
     branches: [ main, develop ]
-    paths-ignore:
-      - '**/*.md'
-      - '**/*.txt'
     paths:
-    - '**.cs'
-    - '**.csproj'
+      - '**.cs'
+      - '**.csproj'
+      - '!**/*.md'
+      - '!**/*.txt'
   schedule:
     - cron: '0 8 * * 4'
 
