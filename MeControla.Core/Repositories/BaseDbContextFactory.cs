@@ -5,6 +5,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace MeControla.Core.Repositories
 {
+    public interface IBaseDbContextFactory<TDbContext> : IDesignTimeDbContextFactory<TDbContext>, IDisposable
+        where TDbContext : DbContext
+    { }
+
     public abstract class BaseDbContextFactory<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TDbContext>
         : IDesignTimeDbContextFactory<TDbContext>, IDisposable
         where TDbContext : DbContext
@@ -17,7 +21,7 @@ namespace MeControla.Core.Repositories
 
             Configure(optionsBuilder);
 
-            context = (TDbContext)Activator.CreateInstance(typeof(TDbContext), new object[] { optionsBuilder.Options });
+            context = (TDbContext)Activator.CreateInstance(typeof(TDbContext), [optionsBuilder.Options]);
 
             return context;
         }

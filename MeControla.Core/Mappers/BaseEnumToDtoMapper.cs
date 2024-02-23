@@ -13,10 +13,16 @@ namespace MeControla.Core.Mappers
          where TResult : BaseEnumItemDto, new()
     {
         protected override void MapFields(IMappingExpression<TParam, TResult> map)
-            => map.ConvertUsing(source => new()
+            => map.ConvertUsing((source, destionation) =>
             {
-                Id = Convert.ToUInt32(source),
-                Value = source.GetDescription()
+                if (!Enum.IsDefined(typeof(TParam), source))
+                    return null;
+
+                destionation ??= new TResult();
+                destionation.Id = Convert.ToUInt32(source);
+                destionation.Value = source.GetDescription();
+
+                return destionation;
             });
     }
 }

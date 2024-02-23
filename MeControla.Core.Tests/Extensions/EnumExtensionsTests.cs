@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using MeControla.Core.Extensions;
-using MeControla.Core.Tests.Mocks.Enums;
+using MeControla.Core.Tests.Datas.Mocks.Enums;
 using Xunit;
 
 namespace MeControla.Core.Tests.Extensions
