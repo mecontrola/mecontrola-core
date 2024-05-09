@@ -7,15 +7,11 @@ using System.Threading.Tasks;
 
 namespace MeControla.Core.Repositories
 {
-    public abstract class BaseFilterAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity, TFilterEntity>
-        : BaseAsyncRepository<TEntity>, IFilterAsyncRepository<TEntity, TFilterEntity>
+    public abstract class BaseFilterAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity, TFilterEntity>(IDbContext context, DbSet<TEntity> dbSet)
+        : BaseAsyncRepository<TEntity>(context, dbSet), IFilterAsyncRepository<TEntity, TFilterEntity>
         where TEntity : class, IEntity
         where TFilterEntity : class, IFilterEntity
     {
-        protected BaseFilterAsyncRepository(IDbContext context, DbSet<TEntity> dbSet)
-            : base(context, dbSet)
-        { }
-
         public abstract Task<IList<TEntity>> FindFilterAllAsync(TFilterEntity filter, CancellationToken cancellationToken);
     }
 }

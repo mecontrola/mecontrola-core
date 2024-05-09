@@ -12,6 +12,7 @@ namespace MeControla.Core.Repositories
 
         private DbContextFacade database;
 
+        [SuppressMessage("Style", "IDE0290:Use primary constructor", Justification = "Constructor to be protected.")]
         protected ContextRepository([NotNull] IDbContext context, [NotNull] DbSet<TEntity> dbSet)
         {
             this.context = context;

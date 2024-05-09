@@ -15,6 +15,15 @@ namespace MeControla.Core.Tests.Repositories
                 => options.UseSqlite("DataSource=:memory:");
         }
 
+        private class TestDbContextNullFactory : BaseDbContextFactory<DbAppContext>
+        {
+            protected override void Configure(DbContextOptionsBuilder<DbAppContext> options)
+            { }
+
+            protected override DbAppContext CreateInstanceDbContext(DbContextOptionsBuilder<DbAppContext> optionsBuilder)
+                => null;
+        }
+
         [Fact(DisplayName = "[BaseDbContextFactory.CreateDbContext|Dispose] Cria DbAppContext a través da implementação do BaseDbContextFactory e ao final utiliza o dispose para finalizar o contexto.")]
         public void CreateDbContext_ShouldCreateDbContextWithConfiguredOptions()
         {
@@ -31,6 +40,18 @@ namespace MeControla.Core.Tests.Repositories
 
             var act = () => dbContext.Database;
             act.Should().Throw<ObjectDisposedException>();
+        }
+
+        [Fact(DisplayName = "[BaseDbContextFactory.CreateDbContext|Dispose] Cria DbAppContext a través da implementação do BaseDbContextFactory e executar dispose quando context for null.")]
+        public void Dispose_ShouldDisposeDbContext()
+        {
+            var factory = new TestDbContextNullFactory();
+            var context = factory.CreateDbContext([]);
+
+            factory.Dispose();
+
+            var dbContext = context as DbContext;
+            dbContext.Should().BeNull();
         }
     }
 }
