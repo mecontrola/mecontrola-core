@@ -2,6 +2,7 @@
 using MeControla.Core.Tests.Mocks.Datas.Repositories;
 using MeControla.Core.Tests.Mocks.Filters;
 using MeControla.Core.Tests.Mocks.Repositories;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace MeControla.Core.Tests.Repositories
@@ -14,7 +15,7 @@ namespace MeControla.Core.Tests.Repositories
             => workTaskRepository = new WorkTaskRepository(context);
 
         [Fact(DisplayName = "[BaseFilterAsyncRepository.FindFilterAllAsync] Deve implementar o método FindFilterAllAsync para realizar a filtragem das informações.")]
-        public async void FindFilterAllAsync_ShouldReturnListOfEntities()
+        public async Task FindFilterAllAsync_ShouldReturnListOfEntities()
         {
             var actual = await workTaskRepository.FindFilterAllAsync(WorkTaskFilterMock.CreateEmpty(), GetCancellationToken());
 

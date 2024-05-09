@@ -6,6 +6,7 @@ using MeControla.Core.Tests.Mocks.Entities;
 using MeControla.Core.Tests.Mocks.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace MeControla.Core.Tests.Repositories
@@ -70,7 +71,7 @@ namespace MeControla.Core.Tests.Repositories
         }
 
         [Fact(DisplayName = "[DbContextFacade.BeginTransactionAsync] Deve retornar o mesmo valor que a instancia original.")]
-        public async void DeveGerarBeginTransactionAsync()
+        public async Task DeveGerarBeginTransactionAsync()
         {
             await dbContextFacade.BeginTransactionAsync();
 
@@ -80,7 +81,7 @@ namespace MeControla.Core.Tests.Repositories
         }
 
         [Fact(DisplayName = "[DbContextFacade.CommitTransaction] Deve retornar o mesmo valor que a instancia original.")]
-        public async void DeveGerarCommitTransaction()
+        public async Task DeveGerarCommitTransaction()
         {
             var cancellationToken = GetCancellationToken();
             var repository = new UserRepository(context);
@@ -98,7 +99,7 @@ namespace MeControla.Core.Tests.Repositories
         }
 
         [Fact(DisplayName = "[DbContextFacade.CommitTransactionAsync] Deve retornar o mesmo valor que a instancia original.")]
-        public async void DeveGerarCommitTransactionAsync()
+        public async Task DeveGerarCommitTransactionAsync()
         {
             var cancellationToken = GetCancellationToken();
             var repository = new UserRepository(context);
@@ -116,7 +117,7 @@ namespace MeControla.Core.Tests.Repositories
         }
 
         [Fact(DisplayName = "[DbContextFacade.RollbackTransaction] Deve retornar o mesmo valor que a instancia original.")]
-        public async void DeveGerarRollbackTransaction()
+        public async Task DeveGerarRollbackTransaction()
         {
             var cancellationToken = GetCancellationToken();
             var repository = new UserRepository(context);
@@ -134,7 +135,7 @@ namespace MeControla.Core.Tests.Repositories
         }
 
         [Fact(DisplayName = "[DbContextFacade.RollbackTransactionAsync] Deve retornar o mesmo valor que a instancia original.")]
-        public async void DeveGerarRollbackTransactionAsync()
+        public async Task DeveGerarRollbackTransactionAsync()
         {
             var cancellationToken = GetCancellationToken();
             var repository = new UserRepository(context);
