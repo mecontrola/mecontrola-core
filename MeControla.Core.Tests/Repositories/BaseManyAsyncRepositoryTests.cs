@@ -2,6 +2,7 @@
 using MeControla.Core.Tests.Mocks.Datas.Repositories;
 using MeControla.Core.Tests.Mocks.Entities;
 using MeControla.Core.Tests.Mocks.Repositories;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace MeControla.Core.Tests.Repositories
@@ -14,7 +15,7 @@ namespace MeControla.Core.Tests.Repositories
             => userPermissionRepository = new UserPermissionRepository(context);
 
         [Fact(DisplayName = "[BaseManyAsyncRepository.CreateAsync] Deve relacionar a permissão de usuário ao usuario 3 na tabela do banco de dados.")]
-        public async void DeveRelacionarPermissaoAdministradorUsuario3()
+        public async Task DeveRelacionarPermissaoAdministradorUsuario3()
         {
             var userPermission = UserPermissionMock.CreateUser3User();
 
@@ -26,7 +27,7 @@ namespace MeControla.Core.Tests.Repositories
         }
 
         [Fact(DisplayName = "[BaseManyAsyncRepository.RemoveAsync] Deve desrelacionar a permissão de usuário ao usuario 2 na tabela do banco de dados.")]
-        public async void DeveDesrelacionarPermissaoUsuarioUsuario2()
+        public async Task DeveDesrelacionarPermissaoUsuarioUsuario2()
         {
             var userPermission = UserPermissionMock.CreateUser2User();
 
@@ -38,7 +39,7 @@ namespace MeControla.Core.Tests.Repositories
         }
 
         [Fact(DisplayName = "[BaseManyAsyncRepository.ExistsAsync] Deve chegar se o usuário 1 possui permissão de administrador relacionada.")]
-        public async void DeveRetornarTrueQuandoExistirRelacao()
+        public async Task DeveRetornarTrueQuandoExistirRelacao()
         {
             var userPermission = UserPermissionMock.CreateUser1Administrator();
 

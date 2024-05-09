@@ -11,14 +11,10 @@ using System.Threading.Tasks;
 
 namespace MeControla.Core.Repositories
 {
-    public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity>
-        : ContextRepository<TEntity>, IAsyncRepository<TEntity>
+    public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity>(IDbContext context, DbSet<TEntity> dbSet)
+        : ContextRepository<TEntity>(context, dbSet), IAsyncRepository<TEntity>
          where TEntity : class, IEntity
     {
-        protected BaseAsyncRepository(IDbContext context, DbSet<TEntity> dbSet)
-            : base(context, dbSet)
-        { }
-
         public virtual async Task<long> CountAsync(CancellationToken cancellationToken)
             => await dbSet.LongCountAsync(cancellationToken);
 

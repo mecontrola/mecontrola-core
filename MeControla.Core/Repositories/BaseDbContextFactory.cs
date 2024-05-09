@@ -21,10 +21,18 @@ namespace MeControla.Core.Repositories
 
             Configure(optionsBuilder);
 
-            context = (TDbContext)Activator.CreateInstance(typeof(TDbContext), [optionsBuilder.Options]);
+            context = CreateInstanceDbContext(optionsBuilder);
 
             return context;
         }
+
+#if DEBUG
+        protected virtual
+#else
+        private static
+#endif
+        TDbContext CreateInstanceDbContext(DbContextOptionsBuilder<TDbContext> optionsBuilder)
+           => (TDbContext)Activator.CreateInstance(typeof(TDbContext), [optionsBuilder.Options]);
 
         protected abstract void Configure(DbContextOptionsBuilder<TDbContext> options);
 
