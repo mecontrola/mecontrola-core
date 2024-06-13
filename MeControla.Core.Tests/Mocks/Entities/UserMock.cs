@@ -5,7 +5,6 @@ namespace MeControla.Core.Tests.Mocks.Entities
 {
     public static class UserMock
     {
-
         public static User CreateUser1()
         {
             var dev = BaseUser();
@@ -46,11 +45,10 @@ namespace MeControla.Core.Tests.Mocks.Entities
             => new();
 
         public static IList<User> CreateList()
-            => new List<User>
-            {
+            => [
                 CreateUser1(),
                 CreateUser2(),
                 CreateUser3()
-            };
+            ];
     }
 }
