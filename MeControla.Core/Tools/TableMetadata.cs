@@ -4,26 +4,18 @@ using System.Linq.Expressions;
 
 namespace MeControla.Core.Tools
 {
-    public class TableMetadata<TEntity>
+    public class TableMetadata<TEntity>(string schemaName, string prefixColumn)
         where TEntity : class
     {
-        private readonly string schemaName;
-        private readonly string prefixTable;
-        private readonly string prefixColumn;
+        private readonly string schemaName = schemaName;
+        private readonly string prefixTable = schemaName.GetPrefixTable();
+        private readonly string prefixColumn = string.IsNullOrWhiteSpace(prefixColumn)
+                                             ? typeof(TEntity).Name.GetPrefixColumn()
+                                             : prefixColumn;
 
         public TableMetadata(string schemaName)
            : this(schemaName, null)
         { }
-
-        public TableMetadata(string schemaName, string prefixColumn)
-        {
-            this.schemaName = schemaName;
-            this.prefixColumn = string.IsNullOrWhiteSpace(prefixColumn)
-                              ? typeof(TEntity).Name.GetPrefixColumn()
-                              : prefixColumn;
-
-            prefixTable = schemaName.GetPrefixTable();
-        }
 
         public string GetSchemaName()
             => schemaName;

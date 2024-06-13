@@ -16,6 +16,9 @@ namespace MeControla.Core.Tests.Mocks
         public static string TEXT_DATETIME { get; } = "2000-05-05";
         public static string TEXT_DECIMAL { get; } = "100.0";
         public static string TEXT_URL { get; } = "http://myhost.com";
+        public static string TEXT_FORM_EXCEPTION_MESSAGE { get; } = "The User data is not valid. Please adjust the information in the highlighted fields.";
+        public static string TEXT_FORM_EXCEPTION_FIELD_ERROR_1 { get; } = "The field not empty.";
+        public static string TEXT_FORM_EXCEPTION_FIELD_ERROR_2 { get; } = "The field size cannot be smaller than 5.";
 
         public static int VALUE_DEFAULT_5 { get; } = 5;
         public static int VALUE_DEFAULT_9 { get; } = 9;
