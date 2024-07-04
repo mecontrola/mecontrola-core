@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeControla.Core", "MeControla.Core\MeControla.Core.csproj", "{0D1A16D2-4ED4-4DA9-B952-F73441A61F3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeControla.Core", "src\MeControla.Core\MeControla.Core.csproj", "{0D1A16D2-4ED4-4DA9-B952-F73441A61F3D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeControla.Core.Tests", "MeControla.Core.Tests\MeControla.Core.Tests.csproj", "{ABD95747-6BAD-4A12-A4C8-B10AF5178597}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeControla.Core.Tests", "test\MeControla.Core.Tests\MeControla.Core.Tests.csproj", "{ABD95747-6BAD-4A12-A4C8-B10AF5178597}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
