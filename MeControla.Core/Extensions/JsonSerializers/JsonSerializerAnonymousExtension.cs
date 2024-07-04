@@ -8,15 +8,15 @@ namespace MeControla.Core.Extensions.JsonSerializers
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
-        [RequiresUnreferencedCode("IDE0060:Remove unused parameter")]
-        public static T ToAnonymousType<T>(this string source, T template)
+        [RequiresUnreferencedCode("Use 'MethodFriendlyToTrimming' instead")]
+        public static T ToAnonymousType<T>(this string source)
             => JsonSerializer.Deserialize<T>(source);
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
-        [RequiresUnreferencedCode("IDE0060:Remove unused parameter")]
-        public static T ToAnonymousType<T>(this string source, T template, JsonSerializerOptions jsonSerializer)
+        [RequiresUnreferencedCode("Use 'MethodFriendlyToTrimming' instead")]
+        public static T ToAnonymousType<T>(this string source, JsonSerializerOptions jsonSerializer)
             => JsonSerializer.Deserialize<T>(source, jsonSerializer);
     }
 }
