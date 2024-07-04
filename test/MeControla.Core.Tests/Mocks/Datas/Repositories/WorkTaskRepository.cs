@@ -2,6 +2,7 @@
 using MeControla.Core.Tests.Mocks.Datas.Dtos;
 using MeControla.Core.Tests.Mocks.Datas.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -19,7 +20,7 @@ namespace MeControla.Core.Tests.Mocks.Datas.Repositories
 
             return await dbSet.AsNoTracking()
                               .Where(entity => filter != null
-                                            && string.IsNullOrWhiteSpace(filter.Description) || (!string.IsNullOrWhiteSpace(filter.Description) && entity.Description.ToLower().Contains(filter.Description.ToLower())))
+                                            && string.IsNullOrWhiteSpace(filter.Description) || (!string.IsNullOrWhiteSpace(filter.Description) && entity.Description.Contains(filter.Description, StringComparison.CurrentCultureIgnoreCase)))
                               .ToListAsync(cancellationToken);
         }
     }

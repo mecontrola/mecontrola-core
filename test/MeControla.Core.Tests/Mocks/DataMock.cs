@@ -49,5 +49,8 @@ namespace MeControla.Core.Tests.Mocks
         public static string TEXT_USER_NAME_4 { get; } = "Bryan Nicolas Marcos Vinicius Pires";
         public static string TEXT_PERMISSION_NAME_1 { get; } = "Administrator";
         public static string TEXT_PERMISSION_NAME_2 { get; } = "User";
+
+        public static int[] List123 { get; } = [1, 2, 3];
+        public static int[] List456 { get; } = [4, 5, 6];
     }
 }
