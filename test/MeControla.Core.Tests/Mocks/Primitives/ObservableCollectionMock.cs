@@ -6,13 +6,13 @@ namespace MeControla.Core.Tests.Mocks.Primitives
     public class ObservableCollectionMock
     {
         public static ObservableCollection<string> CreateEmpty()
-            => new();
+            => [];
 
         public static ObservableCollection<string> CreateFill()
-            => FillObservableCollection(new[] { 1, 2, 3 }.Select(x => $"{DataMock.VALUE_DEFAULT_TEXT}{x}").ToArray());
+            => FillObservableCollection(DataMock.List123.Select(x => $"{DataMock.VALUE_DEFAULT_TEXT}{x}").ToArray());
 
         public static ObservableCollection<string> CreateFill2()
-            => FillObservableCollection(new[] { 4, 5, 6 }.Select(x => $"{DataMock.VALUE_DEFAULT_TEXT}{x}").ToArray());
+            => FillObservableCollection(DataMock.List456.Select(x => $"{DataMock.VALUE_DEFAULT_TEXT}{x}").ToArray());
 
         private static ObservableCollection<T> FillObservableCollection<T>(T[] values)
         {

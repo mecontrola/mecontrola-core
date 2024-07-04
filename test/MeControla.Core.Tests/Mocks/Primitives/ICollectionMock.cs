@@ -10,9 +10,9 @@ namespace MeControla.Core.Tests.Mocks.Primitives
             => Array.Empty<string>().ToList();
 
         public static ICollection<string> CreateFill()
-            => new[] { 1, 2, 3 }.Select(x => $"{DataMock.VALUE_DEFAULT_TEXT}{x}").ToList();
+            => DataMock.List123.Select(x => $"{DataMock.VALUE_DEFAULT_TEXT}{x}").ToList();
 
         public static ICollection<string> CreateFill2()
-            => new[] { 4, 5, 6 }.Select(x => $"{DataMock.VALUE_DEFAULT_TEXT}{x}").ToList();
+            => DataMock.List456.Select(x => $"{DataMock.VALUE_DEFAULT_TEXT}{x}").ToList();
     }
 }
