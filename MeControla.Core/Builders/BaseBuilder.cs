@@ -3,7 +3,7 @@
 namespace MeControla.Core.Builders
 {
 #if !DEBUG
-        [System.Diagnostics.DebuggerStepThrough]
+    [System.Diagnostics.DebuggerStepThrough]
 #endif
     public abstract class BaseBuilder<TBuilder, TObject> : IBuilder<TObject>
         where TBuilder : BaseBuilder<TBuilder, TObject>, new()

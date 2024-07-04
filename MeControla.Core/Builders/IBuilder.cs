@@ -1,8 +1,6 @@
-﻿using MeControla.Core.Data.Entities;
-
-namespace MeControla.Core.Builders
+﻿namespace MeControla.Core.Builders
 {
-    public interface IBuilder<TObject>
+    public interface IBuilder<out TObject>
         where TObject : class
     {
         TObject ToBuild();
