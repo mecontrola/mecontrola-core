@@ -5,15 +5,17 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace MeControla.Core.Repositories
 {
-    public interface IBaseDbContextFactory<TDbContext> : IDesignTimeDbContextFactory<TDbContext>, IDisposable
+    public interface IBaseDbContextFactory<out TDbContext> : IDesignTimeDbContextFactory<TDbContext>, IDisposable
         where TDbContext : DbContext
     { }
 
     public abstract class BaseDbContextFactory<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TDbContext>
-        : IDesignTimeDbContextFactory<TDbContext>, IDisposable
+        : IBaseDbContextFactory<TDbContext>
         where TDbContext : DbContext
     {
         private TDbContext context;
+
+        private bool disposed = false;
 
         public TDbContext CreateDbContext(string[] args)
         {
@@ -38,9 +40,23 @@ namespace MeControla.Core.Repositories
 
         public void Dispose()
         {
-            context?.Dispose();
+            Dispose(true);
 
             GC.SuppressFinalize(this);
         }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+                context?.Dispose();
+
+            disposed = true;
+        }
+
+        ~BaseDbContextFactory()
+            => Dispose(false);
     }
 }

@@ -65,8 +65,8 @@ namespace MeControla.Core.Repositories
         public virtual async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
             => await dbSet.AsNoTracking().Where(predicate).FirstOrDefaultAsync(cancellationToken);
 
-        public async Task<bool> ExistsAsync(long Id, CancellationToken cancellationToken)
-            => await ExistsAsync(itm => itm.Id.Equals(Id), cancellationToken);
+        public async Task<bool> ExistsAsync(long id, CancellationToken cancellationToken)
+            => await ExistsAsync(itm => itm.Id.Equals(id), cancellationToken);
 
         public async Task<bool> ExistsAsync(Guid uuid, CancellationToken cancellationToken)
             => await ExistsAsync(itm => itm.Uuid.Equals(uuid), cancellationToken);

@@ -9,6 +9,8 @@ namespace MeControla.Core.Extensions
 {
     public static partial class StringExtensions
     {
+        private static readonly TimeSpan REGEX_TIMEOUT = TimeSpan.FromSeconds(2);
+
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
@@ -31,7 +33,7 @@ namespace MeControla.Core.Extensions
         [System.Diagnostics.DebuggerStepThrough]
 #endif
         public static DateTime ToDateTime(this string str)
-            => DateTime.Parse(str);
+            => DateTime.Parse(str, CultureInfo.CurrentCulture);
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
@@ -39,55 +41,61 @@ namespace MeControla.Core.Extensions
         public static string ToPascalCase(this string value)
             => value.ToTitleCase().Replace(" ", string.Empty);
 
-        [GeneratedRegex(@"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+")]
-        private static partial Regex RegexCamelCase();
+        private const string PATTERN_CAMEL_CASE = @"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+";
+        private static Regex RegexCamelCase()
+            => new(PATTERN_CAMEL_CASE, RegexOptions.None, REGEX_TIMEOUT);
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
         public static string ToCamelCase(this string value)
-        {
-            var pattern = RegexCamelCase();
-            return new string(new CultureInfo("en-US", false).TextInfo
-                                                             .ToTitleCase(string.Join(" ", pattern.Matches(value)).ToLowerInvariant())
-                                                             .Replace(@" ", string.Empty)
-                                                             .Select((x, i) => i == 0 ? char.ToLower(x) : x)
-                                                             .ToArray());
-        }
+            => new(new CultureInfo("en-US", false).TextInfo
+                                                  .ToTitleCase(string.Join(" ", RegexCamelCase().Matches(value)).ToLowerInvariant())
+                                                  .Replace(@" ", string.Empty)
+                                                  .Select((x, i) => i == 0 ? char.ToLower(x) : x)
+                                                  .ToArray());
 
-        [GeneratedRegex(@"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+")]
-        private static partial Regex RegexSnakeKebabTitleCase();
+        private const string PATTERN_SNAKE_KEBAB_TITLE_CASE = @"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+";
+
+        private static Regex RegexSnakeKebabTitleCase()
+            => new(PATTERN_SNAKE_KEBAB_TITLE_CASE, RegexOptions.None, REGEX_TIMEOUT);
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
-        public static string ToSnakeCase(this string input)
-            => string.Join("_", RegexSnakeKebabTitleCase().Matches(input))
-                     .ToLowerInvariant();
+        public static string ToSnakeCase(this string value)
+        {
+            var matches = RegexSnakeKebabTitleCase().Matches(value);
+            return string.Join("_", matches)
+                         .ToLowerInvariant();
+        }
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
         public static string ToKebabCase(this string value)
-            => string.Join("-", RegexSnakeKebabTitleCase().Matches(value))
-                     .ToLowerInvariant();
+        {
+            var matches = RegexSnakeKebabTitleCase().Matches(value);
+            return string.Join("-", matches)
+                         .ToLowerInvariant();
+        }
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
         public static string ToTitleCase(this string value)
-            => new CultureInfo("en-US", false).TextInfo
-                                              .ToTitleCase(string.Join(" ", RegexSnakeKebabTitleCase().Matches(value))
-                                                                 .ToLowerInvariant());
-
-        [GeneratedRegex(@"\D+")]
-        private static partial Regex RegexOnlyNumbers();
+        {
+            var matches = RegexSnakeKebabTitleCase().Matches(value);
+            return new CultureInfo("en-US", false).TextInfo
+                                                  .ToTitleCase(string.Join(" ", matches)
+                                                                     .ToLowerInvariant());
+        }
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
         public static string OnlyNumbers(this string value)
-            => RegexOnlyNumbers().Replace(value, string.Empty);
+            => Regex.Replace(value, @"\D+", string.Empty, RegexOptions.None, REGEX_TIMEOUT);
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
@@ -107,14 +115,11 @@ namespace MeControla.Core.Extensions
             return Encoding.UTF8.GetString(bytes);
         }
 
-        [GeneratedRegex(@"\s+")]
-        private static partial Regex RegexTrimAll();
-
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
         public static string TrimAll(this string value)
-            => RegexTrimAll().Replace(value, " ").Trim();
+            => Regex.Replace(value, @"\s+", " ", RegexOptions.None, REGEX_TIMEOUT).Trim();
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
@@ -145,9 +150,6 @@ namespace MeControla.Core.Extensions
             }
         }
 
-        [GeneratedRegex(@"[^\d|.]")]
-        private static partial Regex RegexToDecimal();
-
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
@@ -157,7 +159,7 @@ namespace MeControla.Core.Extensions
                 return null;
 
             var str = value.Replace(",", ".");
-            str = RegexToDecimal().Replace(str, string.Empty);
+            str = Regex.Replace(str, @"[^\d|.]", string.Empty, RegexOptions.None, REGEX_TIMEOUT);
 
             try
             {
@@ -181,14 +183,11 @@ namespace MeControla.Core.Extensions
              ? string.Empty
              : $"{value[0].ToString().ToUpper()}{value[1..]}";
 
-        [GeneratedRegex("[aeiou]", RegexOptions.IgnoreCase)]
-        private static partial Regex RegexGetConsonants();
-
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
         public static string GetConsonants(this string value)
-            => RegexGetConsonants().Replace(value, string.Empty);
+            => Regex.Replace(value, "[aeiou]", string.Empty, RegexOptions.IgnoreCase, REGEX_TIMEOUT);
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
