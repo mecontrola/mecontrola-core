@@ -14,7 +14,7 @@ namespace MeControla.Core.Tests.Extensions.JsonSerializers
         public void DeveConverterObjetoAnonimoParaConcreto()
         {
             var expectd = new ClsTest { Name = "Test" };
-            var actual = $@"{{""Name"":""Test""}}".ToAnonymousType(new ClsTest());
+            var actual = $@"{{""Name"":""Test""}}".ToAnonymousType<ClsTest>();
 
             Assert.Equal(expectd, actual, new ClsTestComparer());
         }
@@ -24,7 +24,7 @@ namespace MeControla.Core.Tests.Extensions.JsonSerializers
         {
             var date = new DateTime(2020, 1, 1);
             var expectd = new ClsTest { Name = "Test", Date = date };
-            var actual = $@"{{""Name"":""Test"",""Date"":""{date.ToString(DATE_FORMAT)}""}}".ToAnonymousType(new ClsTest(), GetTradingDaySerializer());
+            var actual = $@"{{""Name"":""Test"",""Date"":""{date.ToString(DATE_FORMAT)}""}}".ToAnonymousType<ClsTest>(GetTradingDaySerializer());
 
             Assert.Equal(expectd, actual, new ClsTestComparer());
         }

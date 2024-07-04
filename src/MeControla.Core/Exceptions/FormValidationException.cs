@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MeControla.Core.Tests.Exceptions
+namespace MeControla.Core.Exceptions
 {
     public class FormValidationException(Type type, ValidationResult result)
         : Exception(ERROR_MESSAGE.Replace(ERROR_MESSAGE_PARAM, type.Name))

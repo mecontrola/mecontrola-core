@@ -22,20 +22,20 @@ namespace MeControla.Core.Extensions
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
-        public static IList<T> ToListOrNull<T>(this IEnumerable<T> enumerable)
-            => enumerable.IsNullOrEmpty() ? null : enumerable.ToList();
+        public static IList<T> ToListOrEmpty<T>(this IEnumerable<T> enumerable)
+            => enumerable.IsNullOrEmpty() ? [] : enumerable.ToList();
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
-        public static IList<TResult> SelectToListOrNull<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector)
-            => source.IsNullOrEmpty() ? null : source.Select(selector).ToList();
+        public static IList<TResult> SelectToListOrEmpty<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector)
+            => source.IsNullOrEmpty() ? [] : source.Select(selector).ToList();
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
-        public static IList<TResult> SelectToListOrNull<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, int, TResult> selector)
-            => source.IsNullOrEmpty() ? null : source.Select(selector).ToList();
+        public static IList<TResult> SelectToListOrEmpty<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, int, TResult> selector)
+            => source.IsNullOrEmpty() ? [] : source.Select(selector).ToList();
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
@@ -50,12 +50,8 @@ namespace MeControla.Core.Extensions
         [System.Diagnostics.DebuggerStepThrough]
 #endif
         public static IEnumerable<int> FindIndexAll<T>(this IEnumerable<T> data, Predicate<T> match)
-        {
-            var list = (List<T>)data;
-
-            return Enumerable.Range(0, data.Count())
-                             .Where(i => match(list[i]));
-        }
+            => Enumerable.Range(0, data.Count())
+                         .Where(i => match(data.ElementAt(i)));
 
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
@@ -75,8 +71,7 @@ namespace MeControla.Core.Extensions
 #endif
         public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new ObservableCollection<T>(source);
         }

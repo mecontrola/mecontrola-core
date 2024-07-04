@@ -11,10 +11,9 @@ namespace MeControla.Core.Tests.Extensions
         private readonly TimeSpan EXPECTED_AVERAGE = new(11, 40, 0);
         private readonly TimeSpan EXPECTED_SUM = new(35, 0, 0);
 
-        private readonly IList<TimeSpan> ACTUAL_LIST = new List<TimeSpan>
-        {
+        private readonly IList<TimeSpan> ACTUAL_LIST = [
              TimeSpan.FromHours(10), TimeSpan.FromHours(12), TimeSpan.FromHours(13)
-        };
+        ];
 
         [Fact(DisplayName = "[EnumerableExtension.IsNullOrEmpty] Deve retornar true quando enumerable for nulo.")]
         public void DeveRetornarTrueEnumerableNull()
@@ -27,7 +26,7 @@ namespace MeControla.Core.Tests.Extensions
         [Fact(DisplayName = "[EnumerableExtension.IsNullOrEmpty] Deve retornar true quando enumerable estiver vazio.")]
         public void DeveRetornarTrueEnumerableVazio()
         {
-            var list = (IEnumerable<string>)new List<string>();
+            var list = (IEnumerable<string>)[];
 
             list.IsNullOrEmpty().Should().BeTrue();
         }
@@ -35,7 +34,7 @@ namespace MeControla.Core.Tests.Extensions
         [Fact(DisplayName = "[EnumerableExtension.IsNullOrEmpty] Deve retornar false quando enumerable estiver preenchido.")]
         public void DeveRetornarFalseEnumerablePreenchido()
         {
-            var list = (IEnumerable<string>)new List<string> { string.Empty };
+            var list = (IEnumerable<string>)[string.Empty];
 
             list.IsNullOrEmpty().Should().BeFalse();
         }
@@ -51,7 +50,7 @@ namespace MeControla.Core.Tests.Extensions
         [Fact(DisplayName = "[EnumerableExtension.IsNotNullAndAny] Deve retornar false quando enumerable estiver vazio.")]
         public void DeveRetornarFalseEnumerableVazio()
         {
-            var list = (IEnumerable<string>)new List<string>();
+            var list = (IEnumerable<string>)[];
 
             list.IsNotNullAndAny().Should().BeFalse();
         }
@@ -59,87 +58,105 @@ namespace MeControla.Core.Tests.Extensions
         [Fact(DisplayName = "[EnumerableExtension.IsNotNullAndAny] Deve retornar true quando enumerable estiver preenchido.")]
         public void DeveRetornarTrueEnumerablePreenchido()
         {
-            var list = (IEnumerable<string>)new List<string> { string.Empty };
+            var list = (IEnumerable<string>)[string.Empty];
 
             list.IsNotNullAndAny().Should().BeTrue();
         }
 
-        [Fact(DisplayName = "[EnumerableExtension.SelectToListOrNull] Deve retornar null ao utlizar Linq.Select quando lista for nula.")]
-        public void DeveRetornarNullQuandoListNull()
+        [Fact(DisplayName = "[EnumerableExtension.ToListOrEmpty] Deve retornar lista vazia quando enumerable estiver estiver null.")]
+        public void DeveRetornarListaVaziaQuandoListNull()
         {
             var list = (IEnumerable<string>)null;
+            var actual = list.ToListOrEmpty();
 
-            list.ToListOrNull().Should().BeNull();
+            actual.Should().NotBeNull();
+            actual.Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "[EnumerableExtension.SelectToListOrNull] Deve retornar null ao utlizar Linq.Select quando lista estiver vazia.")]
-        public void DeveRetornarNullQuandoListVazia()
+        [Fact(DisplayName = "[EnumerableExtension.ToListOrEmpty] Deve retornar lista vazia quando enumerable estiver estiver vazio.")]
+        public void DeveRetornarListaVaziaQuandoListVazia()
         {
-            var list = (IEnumerable<string>)new List<string>();
+            var list = (IEnumerable<string>)[];
+            var actual = list.ToListOrEmpty();
 
-            list.ToListOrNull().Should().BeNull();
+            actual.Should().NotBeNull();
+            actual.Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "[EnumerableExtension.SelectToListOrNull] Deve retornar lista ao utlizar Linq.Select quando lista estiver preenchida.")]
+        [Fact(DisplayName = "[EnumerableExtension.ToListOrEmpty] Deve retornar lista vazia quando enumerable estiver estiver preenchido.")]
         public void DeveRetornarListQuandoListPreenchida()
         {
-            var list = (IEnumerable<string>)new List<string> { string.Empty };
+            var list = (IEnumerable<string>)[string.Empty];
+            var actual = list.ToListOrEmpty();
 
-            list.ToListOrNull().Should().NotBeNull();
+            actual.Should().NotBeNull();
+            actual.Should().NotBeEmpty();
         }
 
-        [Fact(DisplayName = "[EnumerableExtension.SelectToListOrNull] Deve retornar null ao utlizar Linq.Select quando lista for nula.")]
-        public void DeveRetornarNullQuandoListSelectNull()
+        [Fact(DisplayName = "[EnumerableExtension.SelectToListOrEmpty] Deve retornar lista vazia ao utlizar Linq.Select quando enumerable for null.")]
+        public void DeveRetornarListaVaziaQuandoListSelectNull()
         {
             var list = (IEnumerable<string>)null;
+            var actual = list.SelectToListOrEmpty(itm => itm);
 
-            list.SelectToListOrNull(itm => itm).Should().BeNull();
+            actual.Should().NotBeNull();
+            actual.Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "[EnumerableExtension.SelectToListOrNull] Deve retornar null ao utlizar Linq.Select quando lista estiver vazia.")]
-        public void DeveRetornarNullQuandoListSelectVazia()
+        [Fact(DisplayName = "[EnumerableExtension.SelectToListOrEmpty] Deve retornar lista vazia ao utlizar Linq.Select quando enumerable for vazio.")]
+        public void DeveRetornarListaVaziaQuandoListSelectVazia()
         {
-            var list = (IEnumerable<string>)new List<string>();
+            var list = (IEnumerable<string>)[];
+            var actual = list.SelectToListOrEmpty(itm => itm);
 
-            list.SelectToListOrNull(itm => itm).Should().BeNull();
+            actual.Should().NotBeNull();
+            actual.Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "[EnumerableExtension.SelectToListOrNull] Deve retornar lista ao utlizar Linq.Select quando lista estiver preenchida.")]
+        [Fact(DisplayName = "[EnumerableExtension.SelectToListOrEmpty] Deve retornar lista ao utlizar Linq.Select quando enumerable estiver preenchido.")]
         public void DeveRetornarListQuandoListSelectPreenchido()
         {
-            var list = (IEnumerable<string>)new List<string> { string.Empty };
+            var list = (IEnumerable<string>)[string.Empty];
+            var actual = list.SelectToListOrEmpty(itm => itm);
 
-            list.SelectToListOrNull(itm => itm).Should().NotBeNull();
+            actual.Should().NotBeNull();
+            actual.Should().NotBeEmpty();
         }
 
-        [Fact(DisplayName = "[EnumerableExtension.SelectToListOrNull] Deve retornar null ao utlizar Linq.Select com parâmetro index quando lista for nula.")]
+        [Fact(DisplayName = "[EnumerableExtension.SelectToListOrEmpty] Deve retornar lista vazia ao utlizar Linq.Select com parâmetro index quando lista for nula.")]
         public void DeveRetornarNullQuandoListSelectIndexNull()
         {
             var list = (IEnumerable<string>)null;
+            var actual = list.SelectToListOrEmpty((itm, index) => itm);
 
-            list.SelectToListOrNull((itm, index) => itm).Should().BeNull();
+            actual.Should().NotBeNull();
+            actual.Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "[EnumerableExtension.SelectToListOrNull] Deve retornar null ao utlizar Linq.Select com parâmetro index quando lista estiver vazia.")]
+        [Fact(DisplayName = "[EnumerableExtension.SelectToListOrEmpty] Deve retornar lista vazia ao utlizar Linq.Select com parâmetro index quando lista estiver vazia.")]
         public void DeveRetornarNullQuandoListSelectIndexVazia()
         {
-            var list = (IEnumerable<string>)new List<string>();
+            var list = (IEnumerable<string>)[];
+            var actual = list.SelectToListOrEmpty((itm, index) => itm);
 
-            list.SelectToListOrNull((itm, index) => itm).Should().BeNull();
+            actual.Should().NotBeNull();
+            actual.Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "[EnumerableExtension.SelectToListOrNull] Deve retornar lista ao utlizar Linq.Select com parâmetro index quando lista estiver preenchida.")]
+        [Fact(DisplayName = "[EnumerableExtension.SelectToListOrEmpty] Deve retornar lista ao utlizar Linq.Select com parâmetro index quando lista estiver preenchida.")]
         public void DeveRetornarListQuandoListSelectIndexPreenchido()
         {
-            var list = (IEnumerable<string>)new List<string> { string.Empty };
+            var list = (IEnumerable<string>)[string.Empty];
+            var actual = list.SelectToListOrEmpty((itm, index) => itm);
 
-            list.SelectToListOrNull((itm, index) => itm).Should().NotBeNull();
+            actual.Should().NotBeNull();
+            actual.Should().NotBeEmpty();
         }
 
         [Fact(DisplayName = "[EnumerableExtension.ForEach] Deve somar os valores utilizando Foreach para o IEnumerable.")]
         public void DeveSomarValoresIEnumerableForeach()
         {
-            var list = (IEnumerable<int>)new List<int> { 1, 2, 3 };
+            var list = (IEnumerable<int>)[1, 2, 3];
             var expect = 6;
             var total = 0;
 
@@ -151,7 +168,7 @@ namespace MeControla.Core.Tests.Extensions
         [Fact(DisplayName = "[EnumerableExtension.FindIndexAll] Deve retornar uma lista do indices de acordo com o Predicate.")]
         public void DeveRetornarListaIndicesPredicate()
         {
-            var list = (IEnumerable<int>)new List<int> { 1, 2, 4, 5, 2, 2, 4 };
+            var list = (IEnumerable<int>)[1, 2, 4, 5, 2, 2, 4];
             var expected = new List<int> { 0, 3 };
             var actual = list.FindIndexAll(x => x % 2 != 0);
 

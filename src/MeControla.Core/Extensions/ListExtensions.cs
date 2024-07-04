@@ -20,7 +20,7 @@ namespace MeControla.Core.Extensions
 #if !DEBUG
         [System.Diagnostics.DebuggerStepThrough]
 #endif
-        public static IList<T> ToListOrNull<T>(this IList<T> enumerable)
-            => enumerable.IsNullOrEmpty() ? null : enumerable.ToList();
+        public static IList<T> ToListOrEmpty<T>(this IList<T> enumerable)
+            => enumerable.IsNullOrEmpty() ? [] : enumerable.ToList();
     }
 }
