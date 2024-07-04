@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using FluentValidation.Results;
+using MeControla.Core.Exceptions;
 using MeControla.Core.Tests.Mocks;
 using MeControla.Core.Tests.Mocks.Datas.Entities;
 using System.Collections.Generic;

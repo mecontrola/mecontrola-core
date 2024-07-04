@@ -55,28 +55,34 @@ namespace MeControla.Core.Tests.Extensions
             list.IsNotNullAndAny().Should().BeTrue();
         }
 
-        [Fact(DisplayName = "[ListExtension.ToListOrNull] Deve retornar null quando a lista for nula.")]
-        public void DeveRetornarNuloQuandoNulo()
+        [Fact(DisplayName = "[ListExtension.ToListOrEmpty] Deve retornar lista vazia quando a lista for nula.")]
+        public void DeveRetornarListaVaziaQuandoNulo()
         {
             var list = (List<string>)null;
+            var actual = list.ToListOrEmpty();
 
-            list.ToListOrNull().Should().BeNull();
+            actual.Should().NotBeNull();
+            actual.Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "[ListExtension.ToListOrNull] Deve retornar null quando a lista estiver vazia.")]
-        public void DeveRetornarNuloQuandoVazio()
+        [Fact(DisplayName = "[ListExtension.ToListOrEmpty] Deve retornar lista vazia quando a lista estiver vazia.")]
+        public void DeveRetornarListaVaziaQuandoVazio()
         {
             var list = new List<string> { };
+            var actual = list.ToListOrEmpty();
 
-            list.ToListOrNull().Should().BeNull();
+            actual.Should().NotBeNull();
+            actual.Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "[ListExtension.ToListOrNull] Deve retornar a lista quando a lista estiver preenchido.")]
+        [Fact(DisplayName = "[ListExtension.ToListOrEmpty] Deve retornar a lista quando a lista estiver preenchido.")]
         public void DeveRetornarPreenchidoQuandoPreenchido()
         {
             var list = new List<string> { "Teste" };
+            var actual = list.ToListOrEmpty();
 
-            list.ToListOrNull().Should().NotBeNull();
+            actual.Should().NotBeNull();
+            actual.Should().NotBeEmpty();
         }
     }
 }

@@ -3,6 +3,7 @@ using MeControla.Core.Repositories;
 using MeControla.Core.Tests.Mocks.Datas.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Reflection;
 using Xunit;
 
 namespace MeControla.Core.Tests.Repositories
@@ -27,7 +28,7 @@ namespace MeControla.Core.Tests.Repositories
 #endif
 
         [Fact(DisplayName = "[BaseDbContextFactory.CreateDbContext|Dispose] Cria DbAppContext a través da implementação do BaseDbContextFactory e ao final utiliza o dispose para finalizar o contexto.")]
-        public void CreateDbContext_ShouldCreateDbContextWithConfiguredOptions()
+        public void DeveCriarDbContextComConfiguredOptionsNull()
         {
             var factory = new TestDbContextFactory();
 
@@ -46,7 +47,7 @@ namespace MeControla.Core.Tests.Repositories
 
 #if DEBUG
         [Fact(DisplayName = "[BaseDbContextFactory.CreateDbContext|Dispose] Cria DbAppContext a través da implementação do BaseDbContextFactory e executar dispose quando context for null.")]
-        public void Dispose_ShouldDisposeDbContext()
+        public void DeveChamarDisposeDbContext()
         {
             var factory = new TestDbContextNullFactory();
             var context = factory.CreateDbContext([]);
@@ -57,5 +58,37 @@ namespace MeControla.Core.Tests.Repositories
             dbContext.Should().BeNull();
         }
 #endif
+
+        [Fact(DisplayName = "[BaseDbContextFactory.CreateDbContext|Dispose] Cria DbAppContext a través da implementação do BaseDbContextFactory e ao final utiliza o dispose duas vezes e finalizar o contexto sem exceções.")]
+        public void DeveChamarDisposeDuasVezesSemExcecao2()
+        {
+            var factory = new TestDbContextFactory();
+
+            var dbContext = factory.CreateDbContext([]);
+
+            dbContext.Dispose();
+            factory.Dispose();
+
+            var disposedField = factory.GetType().BaseType.GetField("disposed", BindingFlags.NonPublic | BindingFlags.Instance);
+            var disposedValue = (bool)disposedField.GetValue(factory);
+
+            disposedValue.Should().BeTrue();
+
+            dbContext.Dispose();
+            factory.Dispose();
+        }
+
+        [Fact(DisplayName = "[BaseDbContextFactory.CreateDbContext|Dispose] Cria DbAppContext a través da implementação do BaseDbContextFactory e ao final utiliza o dispose duas vezes e finalizar o contexto sem exceções.")]
+        public void DeveChamarDisposeDuasVezesSemExcecao()
+        {
+            var factory = new TestDbContextFactory();
+
+            var dbContext = factory.CreateDbContext(null);
+
+            dbContext.Dispose();
+            dbContext.Dispose();
+
+            dbContext.Should().NotBeNull();
+        }
     }
 }
