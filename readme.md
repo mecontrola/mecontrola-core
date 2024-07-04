@@ -1,10 +1,17 @@
 Repositório
 ==========
 
-[![Licence](https://img.shields.io/badge/license-Apache%202-blue)](license.txt) [![NuGet](https://img.shields.io/nuget/v/mecontrola.core.svg)](https://www.nuget.org/packages/mecontrola.core) [![NuGet](https://img.shields.io/nuget/dt/mecontrola.core.svg)](https://www.nuget.org/packages/mecontrola.core)
+[![Licence](https://img.shields.io/badge/license-Apache%202-blue)](license.txt) [![NuGet](https://img.shields.io/nuget/v/mecontrola.core.svg)](https://www.nuget.org/packages/mecontrola.core) [![NuGet](https://img.shields.io/nuget/dt/mecontrola.core.svg)](https://www.nuget.org/packages/mecontrola.core) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mecontrola_mecontrola.core&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=mecontrola_mecontrola.core)
 
 || Build | Coverage | CodeQL |
 | ------ | ------ | ------ | ------ |
 | Main | [![.NET](https://github.com/mecontrola/mecontrola.core/actions/workflows/dotnet.yml/badge.svg)](https://github.com/mecontrola/mecontrola.core/actions/workflows/dotnet.yml) | [![Coverage Status](https://coveralls.io/repos/github/mecontrola/mecontrola.core/badge.svg?branch=main)](https://coveralls.io/github/mecontrola/mecontrola.core?branch=main) | [![CodeQL](https://github.com/mecontrola/mecontrola.core/actions/workflows/codeql-analysis.yml/badge.svg?branch=main)](https://github.com/mecontrola/mecontrola.core/actions/workflows/codeql-analysis.yml) |
+
+|| SonarQube Info ||
+| ----- | ----- | ----- |
+| [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=mecontrola_mecontrola.core&metric=bugs)](https://sonarcloud.io/summary/new_code?id=mecontrola_mecontrola.core) | [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=mecontrola_mecontrola.core&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=mecontrola_mecontrola.core) | [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=mecontrola_mecontrola.core&metric=coverage)](https://sonarcloud.io/summary/new_code?id=mecontrola_mecontrola.core) |
+| [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=mecontrola_mecontrola.core&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=mecontrola_mecontrola.core) | [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=mecontrola_mecontrola.core&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=mecontrola_mecontrola.core) | [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=mecontrola_mecontrola.core&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=mecontrola_mecontrola.core) |
+| [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=mecontrola_mecontrola.core&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=mecontrola_mecontrola.core) | [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=mecontrola_mecontrola.core&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=mecontrola_mecontrola.core) | [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=mecontrola_mecontrola.core&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=mecontrola_mecontrola.core) |
+| [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=mecontrola_mecontrola.core&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=mecontrola_mecontrola.core) |||
 
 Este repositório contém todas as ferramentas necessárias para o desenvolvimento dos nossos projetos. Esses projetos são mantidos pela [Me Controla](https://github.com/mecontrola) e licenciados sob a [Licença Apache, Versão 2.0](license.txt).
