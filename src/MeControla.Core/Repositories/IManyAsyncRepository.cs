@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 
 namespace MeControla.Core.Repositories
 {
-    public interface IManyAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity, TRoot, TTarget>
-       where TEntity : IManyEntity<TRoot, TTarget>
-       where TRoot : IEntity
-       where TTarget : IEntity
+    public interface IManyAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity>
+       where TEntity : IForeignKeysManyEntity
     {
         Task<bool> CreateAsync(TEntity obj, CancellationToken cancellationToken);
         Task<bool> RemoveAsync(TEntity obj, CancellationToken cancellationToken);
