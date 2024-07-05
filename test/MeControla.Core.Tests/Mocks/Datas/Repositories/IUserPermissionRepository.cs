@@ -3,6 +3,6 @@ using MeControla.Core.Tests.Mocks.Datas.Entities;
 
 namespace MeControla.Core.Tests.Mocks.Datas.Repositories
 {
-    public interface IUserPermissionRepository : IManyAsyncRepository<UserPermission, User, Permission>
+    public interface IUserPermissionRepository : IManyAsyncRepository<UserPermission>
     { }
 }
