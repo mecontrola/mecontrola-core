@@ -7,7 +7,7 @@ using System;
 namespace MeControla.Core.Extensions
 {
 #if !DEBUG
-    [System.Diagnostics.CodeAnalysis.DoesNotReturn]
+    [System.Diagnostics.DebuggerStepThrough]
 #endif
     public static class IValidatorExtensions
     {
