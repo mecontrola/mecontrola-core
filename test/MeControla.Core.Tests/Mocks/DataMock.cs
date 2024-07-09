@@ -4,6 +4,7 @@ namespace MeControla.Core.Tests.Mocks
 {
     public class DataMock
     {
+        public static string TEXT_ASSEMBLY_NAME { get; } = "MeControla.Core.Tests";
         public static string TEXT_SPACES { get; } = "    Simply      String    Test    Encode  ";
         public static string TEXT_DECODE { get; } = "Simply String Test Encode";
         public static string TEXT_ENCODE { get; } = "U2ltcGx5IFN0cmluZyBUZXN0IEVuY29kZQ==";
