@@ -59,7 +59,7 @@ namespace MeControla.Core.Extensions
                 node = node[section];
             }
 
-            node![sections.Last()] = JsonValue.Create(value);
+            node![sections[^1]] = JsonValue.Create(value);
 
             string output = jsonObj.ToJsonString(GetJsonOptions());
 
