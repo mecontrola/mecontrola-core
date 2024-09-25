@@ -1,8 +1,0 @@
-language: csharp
-mono: none
-dotnet: 5.0
-install:
-  - dotnet restore ./MeControla.Core.sln
-script:
-  - dotnet build ./MeControla.Core.sln -c Release
-  - dotnet test ./MeControla.Core.Tests/MeControla.Core.Tests.csproj -c Release

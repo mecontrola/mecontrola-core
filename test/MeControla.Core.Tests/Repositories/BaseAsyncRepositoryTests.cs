@@ -31,6 +31,42 @@ namespace MeControla.Core.Tests.Repositories
             actual.Should().Be(1);
         }
 
+        [Fact(DisplayName = "[BaseAsyncRepository.SaveAsync] Deve criar um usuario na tabela do banco de dados.")]
+        public async Task DeveSalvarUsuarioNovo()
+        {
+            var expected = UserMock.CreateUser4();
+            expected.Id = 0;
+
+            expected = await userRepository.SaveAsync(expected, GetCancellationToken());
+
+            var actual = await userRepository.FindAsync(entity => entity.Id == expected.Id, GetCancellationToken());
+            actual.Should().NotBeNull();
+            actual.Should().BeEquivalentTo(expected, opt => opt.Excluding(field => field.Id));
+        }
+
+        [Fact(DisplayName = "[BaseAsyncRepository.SaveAsync] Deve atualizar um usuario na tabela do banco de dados.")]
+        public async Task DeveSalvarUsuarioExistente()
+        {
+            var expected = UserMock.CreateUser3();
+            expected.Name = DataMock.TEXT_USER_NAME_4;
+
+            await userRepository.SaveAsync(expected, GetCancellationToken());
+
+            var actual = await userRepository.FindAsync(entity => entity.Id == expected.Id, GetCancellationToken());
+            actual.Should().NotBeNull();
+            actual.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact(DisplayName = "[BaseAsyncRepository.SaveAsync] Deve retornar null quando algum erro ocorrer ao salvar.")]
+        public async Task DeveRetornarNullQuandoOcorrerErro()
+        {
+            var user = UserMock.CreateUserEmpty();
+            user.Name = null;
+
+            var retorno = await userRepository.SaveAsync(user, GetCancellationToken());
+            retorno.Should().BeNull();
+        }
+
         [Fact(DisplayName = "[BaseAsyncRepository.CreateAsync] Deve criar um usuario na tabela do banco de dados.")]
         public async Task DeveCriarUsuario()
         {
@@ -70,7 +106,7 @@ namespace MeControla.Core.Tests.Repositories
         [Fact(DisplayName = "[BaseAsyncRepository.FindAllPagedAsync] Deve retornar lista paginada dos registros que existir na tabela do banco de dados.")]
         public async Task DeveRetornarListaPaginadaComRegistros()
         {
-            var pagination = PaginationFilterMock.CreatePage1();
+            var pagination = PaginationMock.CreatePage1();
 
             var actual = await userRepository.FindAllPagedAsync(pagination, GetCancellationToken());
 
@@ -81,7 +117,7 @@ namespace MeControla.Core.Tests.Repositories
         [Fact(DisplayName = "[BaseAsyncRepository.FindAllPagedAsync] Deve retornar lista paginada de todos os registros que exitir na tabela do banco de dados que coincidem com o criterio informado.")]
         public async Task DeveRetornarListaPaginadaComRegistrosQuandoCriterioAtendido()
         {
-            var pagination = PaginationFilterMock.CreatePage1();
+            var pagination = PaginationMock.CreatePage1();
 
             var actual = await userRepository.FindAllPagedAsync(pagination, entity => entity.Id < DataMock.INT_ID_4, GetCancellationToken());
 
@@ -92,7 +128,7 @@ namespace MeControla.Core.Tests.Repositories
         [Fact(DisplayName = "[BaseAsyncRepository.FindAllPagedAsync] Deve retornar lista paginada vazia quando existir registro que não coincidem com o criterio informado.")]
         public async Task DeveRetornarListaPaginadaSemRegistrosQuandoCriterioNaoAtendido()
         {
-            var pagination = PaginationFilterMock.CreatePage1();
+            var pagination = PaginationMock.CreatePage1();
 
             var actual = await userRepository.FindAllPagedAsync(pagination, entity => entity.Id >= DataMock.INT_ID_4, GetCancellationToken());
 

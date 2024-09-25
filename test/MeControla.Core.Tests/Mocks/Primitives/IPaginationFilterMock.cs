@@ -1,14 +1,13 @@
-﻿using MeControla.Core.Data.Entities;
-using MeControla.Core.Tests.Mocks.Datas.Entities;
+﻿using MeControla.Core.Tests.Mocks.Datas.Entities;
+using System.Linq;
 
-namespace MeControla.Core.Tests.Mocks.Primitives
+namespace MeControla.Core.Tests.Mocks.Primitives;
+
+public class IPaginationFilterMock
 {
-    public class IPaginationFilterMock
-    {
-        public static IPaginationFilter CreateNull()
-            => (IPaginationFilter)null;
+    public static IPagination CreateNull()
+        => null;
 
-        public static IPaginationFilter CreatePage1Size5()
-            => new PaginationFilter { PageNumber = 1, PageSize = 5 };
-    }
+    public static IPagination CreatePage1Size5()
+        => new Pagination { Page = 1, Limit = 5 };
 }

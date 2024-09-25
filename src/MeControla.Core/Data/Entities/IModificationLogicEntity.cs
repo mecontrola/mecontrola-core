@@ -14,18 +14,20 @@
  * limitations under the License.
  ***********************************************************************************/
 
-using MeControla.Core.Data.Dtos;
-using MeControla.Core.Data.Entities;
-
-namespace MeControla.Core.Mappers;
+namespace MeControla.Core.Data.Entities;
 
 /// <summary>
-/// Defines a contract for mapping objects of type <typeparamref name="TParam"/>, which implement <see cref="IDto"/>, 
-/// to objects of type <typeparamref name="TResult"/>, which implement <see cref="IEntity"/>.
+/// Represents an entity that includes deletion user id.
 /// </summary>
-/// <typeparam name="TParam">The source type that implements <see cref="IDto"/> to be mapped from.</typeparam>
-/// <typeparam name="TResult">The destination type that implements <see cref="IEntity"/> to be mapped to.</typeparam>
-public interface IDtoToEntityMapper<TParam, TResult> : IMapper<TParam, TResult>
-    where TParam : class, IDto
-    where TResult : class, IEntity
-{ }
+/// <remarks>
+/// This interface extends <see cref="IModificationLogicDateTimeEntity"/> and <see cref="IModificationEntity"/>.
+/// It defines properties for an optional deletion user ID and the deletion timestamp <c>DeletedAt</c>.
+/// </remarks>
+public interface IModificationLogicEntity : IModificationLogicDateTimeEntity, IModificationEntity
+{
+    /// <summary>
+    /// Gets or sets the user id who deleted the entity.
+    /// This property is nullable.
+    /// </summary>
+    long? DeletedUserId { get; set; }
+}

@@ -14,18 +14,25 @@
  * limitations under the License.
  ***********************************************************************************/
 
-using MeControla.Core.Data.Dtos;
-using MeControla.Core.Data.Entities;
-
-namespace MeControla.Core.Mappers;
+namespace MeControla.Core.Data.Entities;
 
 /// <summary>
-/// Defines a contract for mapping objects of type <typeparamref name="TParam"/>, which implement <see cref="IDto"/>, 
-/// to objects of type <typeparamref name="TResult"/>, which implement <see cref="IEntity"/>.
+/// Represents an entity that includes creation and modification user ids.
 /// </summary>
-/// <typeparam name="TParam">The source type that implements <see cref="IDto"/> to be mapped from.</typeparam>
-/// <typeparam name="TResult">The destination type that implements <see cref="IEntity"/> to be mapped to.</typeparam>
-public interface IDtoToEntityMapper<TParam, TResult> : IMapper<TParam, TResult>
-    where TParam : class, IDto
-    where TResult : class, IEntity
-{ }
+/// <remarks>
+/// This interface extends <see cref="IModificationDateTimeEntity"/> and defines properties for creation user id <c>CreatedUserId</c> 
+/// and optional last update user id <c>UpdatedUserId</c>.
+/// </remarks>
+public interface IModificationEntity : IModificationDateTimeEntity
+{
+    /// <summary>
+    /// Gets or sets the user id who created the entity.
+    /// </summary>
+    long CreatedUserId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the user id who las updated the entity.
+    /// This property is nullable.
+    /// </summary>
+    long? UpdatedUserId { get; set; }
+}

@@ -14,18 +14,27 @@
  * limitations under the License.
  ***********************************************************************************/
 
-using MeControla.Core.Data.Dtos;
-using MeControla.Core.Data.Entities;
+using System;
 
-namespace MeControla.Core.Mappers;
+namespace MeControla.Core.Data.Entities;
 
 /// <summary>
-/// Defines a contract for mapping objects of type <typeparamref name="TParam"/>, which implement <see cref="IDto"/>, 
-/// to objects of type <typeparamref name="TResult"/>, which implement <see cref="IEntity"/>.
+/// Represents an entity that includes deletion timestamps and logical deletion flag.
 /// </summary>
-/// <typeparam name="TParam">The source type that implements <see cref="IDto"/> to be mapped from.</typeparam>
-/// <typeparam name="TResult">The destination type that implements <see cref="IEntity"/> to be mapped to.</typeparam>
-public interface IDtoToEntityMapper<TParam, TResult> : IMapper<TParam, TResult>
-    where TParam : class, IDto
-    where TResult : class, IEntity
-{ }
+/// <remarks>
+/// This interface extends <see cref="IModificationDateTimeEntity"/> and defines properties for deletion time <c>DeletedAt</c> 
+/// and logical deletion flag <c>IsDeleted</c>.
+/// </remarks>
+public interface IModificationLogicDateTimeEntity : IModificationDateTimeEntity
+{
+    /// <summary>
+    /// Gets or sets the date and time when the entity was deleted.
+    /// This property is nullable.
+    /// </summary>
+    DateTime? DeletedAt { get; set; }
+
+    /// <summary>
+    /// Gets or sets the flag to indicate whether the entity was deleted or not.
+    /// </summary>
+    bool IsDeleted { get; set; }
+}

@@ -24,6 +24,12 @@ namespace MeControla.Core.Tests.Repositories
             dbContextFacade = new DbContextFacade(context.Database);
         }
 
+        [Fact(DisplayName = "[DbContextFacade.GetDbConnection] Deve retornar a instancia do banco utilizada pelo EntityFramework.")]
+        public void DeveRetornarConnectionInstancia()
+            => dbContextFacade.GetDbConnection()
+                              .Should()
+                              .Be(databaseFacade.GetDbConnection());
+
         [Fact(DisplayName = "[DbContextFacade.EnsureCreated] Deve retornar o mesmo valor que a instancia original.")]
         public void DeveGerarEnsureCreated()
             => dbContextFacade.EnsureCreated()
