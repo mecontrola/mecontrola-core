@@ -6,21 +6,21 @@ using Xunit;
 
 namespace MeControla.Core.Tests.Exceptions;
 
-public class UnauthorizedExceptionTests : BaseExceptionIndividualTests<UnauthorizedException>
+public class JWTTokenExceptionTests : BaseExceptionIndividualTests<JWTTokenException>
 {
-    public UnauthorizedExceptionTests()
+    public JWTTokenExceptionTests()
         : base(HttpStatusCode.Unauthorized, ResourceThrowMessageDefault.Unauthorized, DataMock.TEXT_EXCEPTION_MESSAGE)
     { }
 
-    [Fact(DisplayName = "[UnauthorizedException.Constructor] Deve gerar exceção utilizando construtor padrão.")]
+    [Fact(DisplayName = "[JWTTokenException.Constructor] Deve gerar exceção utilizando construtor padrão.")]
     public override void DeveGerarExcecaoSemMensagem()
         => base.DeveGerarExcecaoSemMensagem();
 
-    [Fact(DisplayName = "[UnauthorizedException.Constructor] Deve gerar exceção com a mensagem definida.")]
+    [Fact(DisplayName = "[JWTTokenException.Constructor] Deve gerar exceção com a mensagem definida.")]
     public override void DeveGerarExcecaoComMensagem()
         => base.DeveGerarExcecaoSemMensagem();
 
-    [Fact(DisplayName = "[UnauthorizedException.Constructor] Deve gerar exceção com a mensagem e inner exception definidos.")]
+    [Fact(DisplayName = "[JWTTokenException.Constructor] Deve gerar exceção com a mensagem e inner exception definidos.")]
     public override void DeveGerarExcecaoComMensagemEInnerException()
         => base.DeveGerarExcecaoComMensagemEInnerException();
 }

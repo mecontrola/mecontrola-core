@@ -20,29 +20,29 @@ using System.Net;
 namespace MeControla.Core.Exceptions;
 
 /// <summary>
-/// Exception that represents a "Not Found" HTTP error.
-/// Inherits from <see cref="HttpException"/> with a status code of 404.
+/// Exception that represents a "Gone" HTTP error.
+/// Inherits from <see cref="HttpException"/> with a status code of 410.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="NotFoundException"/> class with a specified error message and an inner exception.
+/// Initializes a new instance of the <see cref="GoneException"/> class with a specified error message and an inner exception.
 /// </remarks>
 /// <param name="message">The error message that describes the exception.</param>
 /// <param name="innerException">The inner exception that caused this exception, or <c>null</c> if there is no inner exception.</param>
-public class NotFoundException(string message, Exception innerException)
-    : HttpException(HttpStatusCode.NotFound, message, innerException)
+public class GoneException(string message, Exception innerException)
+    : HttpException(HttpStatusCode.Gone, message, innerException)
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="NotFoundException"/> class with the default error message.
+    /// Initializes a new instance of the <see cref="GoneException"/> class with the default error message.
     /// </summary>
-    public NotFoundException()
-        : this(ResourceThrowMessageDefault.NotFound)
+    public GoneException()
+        : this(ResourceThrowMessageDefault.Gone)
     { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NotFoundException"/> class with a specified error message.
+    /// Initializes a new instance of the <see cref="GoneException"/> class with a specified error message.
     /// </summary>
     /// <param name="message">The error message that describes the exception.</param>
-    public NotFoundException(string message)
+    public GoneException(string message)
         : this(message, null)
     { }
 }

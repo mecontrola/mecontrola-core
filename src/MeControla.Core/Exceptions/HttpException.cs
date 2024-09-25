@@ -20,29 +20,20 @@ using System.Net;
 namespace MeControla.Core.Exceptions;
 
 /// <summary>
-/// Exception that represents a "Not Found" HTTP error.
-/// Inherits from <see cref="HttpException"/> with a status code of 404.
+/// Abstract class representing an HTTP exception.
+/// This class inherits from <see cref="Exception"/> and includes an HTTP status code.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="NotFoundException"/> class with a specified error message and an inner exception.
+/// Initializes a new instance of the <see cref="HttpException"/> class with a status code, a message, and an inner exception.
 /// </remarks>
+/// <param name="statusCode">The HTTP status code associated with the exception.</param>
 /// <param name="message">The error message that describes the exception.</param>
 /// <param name="innerException">The inner exception that caused this exception, or <c>null</c> if there is no inner exception.</param>
-public class NotFoundException(string message, Exception innerException)
-    : HttpException(HttpStatusCode.NotFound, message, innerException)
+public abstract class HttpException(HttpStatusCode statusCode, string message, Exception innerException)
+    : Exception(message, innerException)
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="NotFoundException"/> class with the default error message.
+    /// Gets the HTTP status code associated with this exception.
     /// </summary>
-    public NotFoundException()
-        : this(ResourceThrowMessageDefault.NotFound)
-    { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="NotFoundException"/> class with a specified error message.
-    /// </summary>
-    /// <param name="message">The error message that describes the exception.</param>
-    public NotFoundException(string message)
-        : this(message, null)
-    { }
+    public HttpStatusCode StatusCode { get; } = statusCode;
 }

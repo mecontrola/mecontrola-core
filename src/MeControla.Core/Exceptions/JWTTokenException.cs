@@ -20,29 +20,29 @@ using System.Net;
 namespace MeControla.Core.Exceptions;
 
 /// <summary>
-/// Exception that represents a "Not Found" HTTP error.
-/// Inherits from <see cref="HttpException"/> with a status code of 404.
+/// Exception that represents a "Unauthorized" HTTP error.
+/// Inherits from <see cref="HttpException"/> with a status code of 401.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="NotFoundException"/> class with a specified error message and an inner exception.
+/// Initializes a new instance of the <see cref="JWTTokenException"/> class with a specified error message and an inner exception.
 /// </remarks>
 /// <param name="message">The error message that describes the exception.</param>
 /// <param name="innerException">The inner exception that caused this exception, or <c>null</c> if there is no inner exception.</param>
-public class NotFoundException(string message, Exception innerException)
-    : HttpException(HttpStatusCode.NotFound, message, innerException)
+public class JWTTokenException(string message, Exception innerException)
+    : HttpException(HttpStatusCode.Unauthorized, message, innerException)
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="NotFoundException"/> class with the default error message.
+    /// Initializes a new instance of the <see cref="JWTTokenException"/> class with the default error message.
     /// </summary>
-    public NotFoundException()
-        : this(ResourceThrowMessageDefault.NotFound)
+    public JWTTokenException()
+        : this(ResourceThrowMessageDefault.Unauthorized)
     { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NotFoundException"/> class with a specified error message.
+    /// Initializes a new instance of the <see cref="JWTTokenException"/> class with a specified error message.
     /// </summary>
     /// <param name="message">The error message that describes the exception.</param>
-    public NotFoundException(string message)
+    public JWTTokenException(string message)
         : this(message, null)
     { }
 }
