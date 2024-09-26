@@ -25,9 +25,8 @@ namespace MeControla.Core.Extensions.JsonSerializers;
 /// </summary>
 public static class JsonSerializerAnonymousExtension
 {
-    private const string EXCEPTION_ARGUMENT_SOURCE_MESSAGE = "The source string cannot be null or empty.";
-    private const string EXCEPTION_ARGUMENT_OPTIONS_MESSAGE = "The serialization options cannot be null.";
-    private const string EXCEPTION_DESERIALIZING_MESSAGE = "Error deserializing the JSON string.";
+    internal const string EXCEPTION_ARGUMENT_SOURCE_MESSAGE = "The source string cannot be null or empty.";
+    internal const string EXCEPTION_DESERIALIZING_MESSAGE = "Error deserializing the JSON string.";
 
     /// <summary>
     /// Deserializes a JSON string into an anonymous type.
@@ -42,19 +41,7 @@ public static class JsonSerializerAnonymousExtension
 #endif
     [RequiresUnreferencedCode("Use 'MethodFriendlyToTrimming' instead")]
     public static T ToAnonymousType<T>(this string source)
-    {
-        if (source.IsNullOrWhiteSpace())
-            throw new ArgumentNullException(nameof(source), EXCEPTION_ARGUMENT_SOURCE_MESSAGE);
-
-        try
-        {
-            return JsonSerializer.Deserialize<T>(source);
-        }
-        catch (JsonException ex)
-        {
-            throw new JsonException(EXCEPTION_DESERIALIZING_MESSAGE, ex);
-        }
-    }
+        => ToAnonymousType<T>(source, null);
 
     /// <summary>
     /// Deserializes a JSON string into an anonymous type using custom serialization options.
@@ -75,9 +62,6 @@ public static class JsonSerializerAnonymousExtension
     {
         if (source.IsNullOrWhiteSpace())
             throw new ArgumentNullException(nameof(source), EXCEPTION_ARGUMENT_SOURCE_MESSAGE);
-
-        if (jsonSerializerOptions == null)
-            throw new ArgumentNullException(nameof(jsonSerializerOptions), EXCEPTION_ARGUMENT_OPTIONS_MESSAGE);
 
         try
         {

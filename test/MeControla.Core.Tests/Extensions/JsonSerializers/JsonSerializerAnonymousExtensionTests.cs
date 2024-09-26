@@ -1,67 +1,69 @@
-﻿using MeControla.Core.Extensions.JsonSerializers;
+﻿using FluentAssertions;
+using MeControla.Core.Extensions.JsonSerializers;
 using System;
-using System.Collections.Generic;
 using System.Text.Json;
 using Xunit;
 
-namespace MeControla.Core.Tests.Extensions.JsonSerializers
+namespace MeControla.Core.Tests.Extensions.JsonSerializers;
+
+public class JsonSerializerAnonymousExtensionTests
 {
-    public class JsonSerializerAnonymousExtensionTests
+    private const string DATE_FORMAT = "yyyyMMddHHmmss";
+
+    [Fact(DisplayName = "[JObjectExtension.ToAnonymousType] Deve gerar execção quando a string for null.")]
+    public void DeveGerarExcepcaoQuandoStringNull()
     {
-        private const string DATE_FORMAT = "yyyyMMddHHmmss";
+        var act = () => ((string)null).ToAnonymousType<ClsTest>();
 
-        [Fact(DisplayName = "[JObjectExtension.ToAnonymousType] Deve converter um objeto anônimo para um tipado.")]
-        public void DeveConverterObjetoAnonimoParaConcreto()
-        {
-            var expectd = new ClsTest { Name = "Test" };
-            var actual = $@"{{""Name"":""Test""}}".ToAnonymousType<ClsTest>();
+        act.Should().Throw<ArgumentNullException>().WithMessage($"{JsonSerializerAnonymousExtension.EXCEPTION_ARGUMENT_SOURCE_MESSAGE} (Parameter 'source')");
+    }
 
-            Assert.Equal(expectd, actual, new ClsTestComparer());
-        }
+    [Fact(DisplayName = "[JObjectExtension.ToAnonymousType] Deve gerar execção quando a string for vazia.")]
+    public void DeveGerarExcepcaoQuandoStringVazia()
+    {
+        var act = () => string.Empty.ToAnonymousType<ClsTest>();
 
-        [Fact(DisplayName = "[JObjectExtension.ToAnonymousType] Deve converter um objeto anônimo para um tipado utilizando JsonSerializer.")]
-        public void DeveConverterObjetoComDataOutroFormatoAnonimoParaConcreto()
-        {
-            var date = new DateTime(2020, 1, 1);
-            var expectd = new ClsTest { Name = "Test", Date = date };
-            var actual = $@"{{""Name"":""Test"",""Date"":""{date.ToString(DATE_FORMAT)}""}}".ToAnonymousType<ClsTest>(GetTradingDaySerializer());
+        act.Should().Throw<ArgumentNullException>().WithMessage($"{JsonSerializerAnonymousExtension.EXCEPTION_ARGUMENT_SOURCE_MESSAGE} (Parameter 'source')");
+    }
 
-            Assert.Equal(expectd, actual, new ClsTestComparer());
-        }
+    [Fact(DisplayName = "[JObjectExtension.ToAnonymousType] Deve gerar execção quando a string estiver com formato inválido.")]
+    public void DeveGerarExcepcaoQuandoStringFormatoInvalido()
+    {
+        var act = () => "-".ToAnonymousType<ClsTest>();
 
-        private static JsonSerializerOptions GetTradingDaySerializer()
-        {
-            var options = new JsonSerializerOptions();
-            options.Converters.Add(new DateTimeConverter(DATE_FORMAT));
+        act.Should().Throw<JsonException>().WithMessage(JsonSerializerAnonymousExtension.EXCEPTION_DESERIALIZING_MESSAGE);
+    }
 
-            return options;
-        }
+    [Fact(DisplayName = "[JObjectExtension.ToAnonymousType] Deve converter um objeto anônimo para um tipado.")]
+    public void DeveConverterObjetoAnonimoParaConcreto()
+    {
+        var expected = new ClsTest { Name = "Test" };
+        var actual = $@"{{""Name"":""Test""}}".ToAnonymousType<ClsTest>();
 
-        class ClsTestComparer : IEqualityComparer<ClsTest>
-        {
-            public bool Equals(ClsTest item1, ClsTest item2)
-            {
-                if (ReferenceEquals(item1, item2))
-                    return true;
+        actual.Should().BeEquivalentTo(expected);
+    }
 
-                return item1 is not null
-                    && item2 is not null
-                    && item1.Date == item2.Date
-                    && item1.Name == item2.Name;
-            }
+    [Fact(DisplayName = "[JObjectExtension.ToAnonymousType] Deve converter um objeto anônimo para um tipado utilizando JsonSerializer.")]
+    public void DeveConverterObjetoComDataOutroFormatoAnonimoParaConcreto()
+    {
+        var date = new DateTime(2020, 1, 1);
+        var expected = new ClsTest { Name = "Test", Date = date };
+        var actual = $@"{{""Name"":""Test"",""Date"":""{date.ToString(DATE_FORMAT)}""}}".ToAnonymousType<ClsTest>(GetTradingDaySerializer());
 
-            public int GetHashCode(ClsTest item)
-            {
-                return item is null
-                     ? 0
-                     : item.Name.GetHashCode() ^ item.Date.GetHashCode();
-            }
-        }
+        actual.Should().BeEquivalentTo(expected);
+    }
 
-        class ClsTest
-        {
-            public string Name { get; set; }
-            public DateTime Date { get; set; }
-        }
+    private static JsonSerializerOptions GetTradingDaySerializer()
+    {
+        var options = new JsonSerializerOptions();
+        options.Converters.Add(new DateTimeConverter(DATE_FORMAT));
+
+        return options;
+    }
+
+    class ClsTest
+    {
+        public string Name { get; set; }
+        public DateTime Date { get; set; }
     }
 }
