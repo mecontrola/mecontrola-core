@@ -22,19 +22,15 @@ namespace MeControla.Core.Data.Entities;
 /// Represents an entity that includes deletion timestamps and logical deletion flag.
 /// </summary>
 /// <remarks>
-/// This interface extends <see cref="IModificationDateTimeEntity"/> and defines properties for deletion time <c>DeletedAt</c> 
-/// and logical deletion flag <c>IsDeleted</c>.
+/// This interface extends <see cref="IModificationDateTimeEntity"/> and defines properties
+/// for creation time <c>CreatedAt</c> and updation time <c>UpdatedAt</c>.
+/// Also extends <see cref="ISoftEntity"/> and define logical deletion flag <c>IsDeleted</c>.
 /// </remarks>
-public interface IModificationLogicDateTimeEntity : IModificationDateTimeEntity
+public interface IModificationLogicDateTimeEntity : IModificationDateTimeEntity, ISoftEntity
 {
     /// <summary>
     /// Gets or sets the date and time when the entity was deleted.
     /// This property is nullable.
     /// </summary>
     DateTime? DeletedAt { get; set; }
-
-    /// <summary>
-    /// Gets or sets the flag to indicate whether the entity was deleted or not.
-    /// </summary>
-    bool IsDeleted { get; set; }
 }

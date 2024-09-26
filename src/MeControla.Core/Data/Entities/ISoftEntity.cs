@@ -14,28 +14,23 @@
  * limitations under the License.
  ***********************************************************************************/
 
-using System;
-
 namespace MeControla.Core.Data.Entities;
 
 /// <summary>
-/// Represents an entity that includes creation and modification timestamps.
+/// Represents an entity that supports soft deletion.
 /// </summary>
 /// <remarks>
 /// This interface extends <see cref="IEntity"/>.
 /// This interface defines properties for an identifier <c>Id</c> and a universally
 /// unique identifier <c>Uuid</c> that should be implemented by all entities.
 /// </remarks>
-public interface IModificationDateTimeEntity : IEntity
+public interface ISoftEntity : IEntity
 {
     /// <summary>
-    /// Gets or sets the date and time when the entity was created.
+    /// Gets or sets the flag to indicate whether the entity was deleted or not.
     /// </summary>
-    DateTime CreatedAt { get; set; }
-
-    /// <summary>
-    /// Gets or sets the date and time when the entity was last updated.
-    /// This property is nullable.
-    /// </summary>
-    DateTime? UpdatedAt { get; set; }
+    /// <value>
+    /// <c>true</c> if the entity is marked as deleted; otherwise, <c>false</c>.
+    /// </value>
+    bool IsDeleted { get; set; }
 }
