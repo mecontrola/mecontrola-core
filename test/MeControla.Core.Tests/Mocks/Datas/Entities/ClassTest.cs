@@ -1,11 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
 
-namespace MeControla.Core.Tests.Mocks.Datas.Entities
+namespace MeControla.Core.Tests.Mocks.Datas.Entities;
+
+public class ClassTest
 {
-    public class ClassTest
-    {
-        public int FieldInClass1 { get; set; }
-        public int FieldInClass2 { get; set; }
-        public DateTime FieldDateTime { get; set; }
-    }
+    [Description("TestValue")]
+    public int FieldInClass1 { get; set; }
+    public int FieldInClass2 { get; set; }
+    public DateTime FieldDateTime { get; set; }
 }
