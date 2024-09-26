@@ -29,7 +29,7 @@ public abstract class BaseExceptionHelperTests : BaseExceptionTests
                                                                                string messageCustom,
                                                                                Exception innerException)
         => new(
-            new ThrowHelperArgument(statusCode, messageDefault, null, null),
+            new ThrowHelperArgument(statusCode, null, messageDefault, null),
             new ThrowHelperArgument(statusCode, messageDefault, messageDefault, null),
             new ThrowHelperArgument(statusCode, messageCustom, messageCustom, innerException)
         );
