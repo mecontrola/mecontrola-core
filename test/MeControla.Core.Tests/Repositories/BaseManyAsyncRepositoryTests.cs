@@ -5,47 +5,46 @@ using MeControla.Core.Tests.Mocks.Repositories;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace MeControla.Core.Tests.Repositories
+namespace MeControla.Core.Tests.Repositories;
+
+public class BaseManyAsyncRepositoryTests : BaseRepository
 {
-    public class BaseManyAsyncRepositoryTests : BaseRepository
+    private readonly UserPermissionRepository userPermissionRepository;
+
+    public BaseManyAsyncRepositoryTests()
+        => userPermissionRepository = new UserPermissionRepository(context);
+
+    [Fact(DisplayName = "[BaseManyAsyncRepository.CreateAsync] Deve relacionar a permissão de usuário ao usuario 3 na tabela do banco de dados.")]
+    public async Task DeveRelacionarPermissaoAdministradorUsuario3()
     {
-        private readonly IUserPermissionRepository userPermissionRepository;
+        var userPermission = UserPermissionMock.CreateUser3User();
 
-        public BaseManyAsyncRepositoryTests()
-            => userPermissionRepository = new UserPermissionRepository(context);
+        await userPermissionRepository.CreateAsync(userPermission, GetCancellationToken());
 
-        [Fact(DisplayName = "[BaseManyAsyncRepository.CreateAsync] Deve relacionar a permissão de usuário ao usuario 3 na tabela do banco de dados.")]
-        public async Task DeveRelacionarPermissaoAdministradorUsuario3()
-        {
-            var userPermission = UserPermissionMock.CreateUser3User();
+        var exist = await userPermissionRepository.ExistsAsync(userPermission, GetCancellationToken());
 
-            await userPermissionRepository.CreateAsync(userPermission, GetCancellationToken());
+        exist.Should().BeTrue();
+    }
 
-            var exist = await userPermissionRepository.ExistsAsync(userPermission, GetCancellationToken());
+    [Fact(DisplayName = "[BaseManyAsyncRepository.RemoveAsync] Deve desrelacionar a permissão de usuário ao usuario 2 na tabela do banco de dados.")]
+    public async Task DeveDesrelacionarPermissaoUsuarioUsuario2()
+    {
+        var userPermission = UserPermissionMock.CreateUser2User();
 
-            exist.Should().BeTrue();
-        }
+        await userPermissionRepository.RemoveAsync(userPermission, GetCancellationToken());
 
-        [Fact(DisplayName = "[BaseManyAsyncRepository.RemoveAsync] Deve desrelacionar a permissão de usuário ao usuario 2 na tabela do banco de dados.")]
-        public async Task DeveDesrelacionarPermissaoUsuarioUsuario2()
-        {
-            var userPermission = UserPermissionMock.CreateUser2User();
+        var exist = await userPermissionRepository.ExistsAsync(userPermission, GetCancellationToken());
 
-            await userPermissionRepository.RemoveAsync(userPermission, GetCancellationToken());
+        exist.Should().BeFalse();
+    }
 
-            var exist = await userPermissionRepository.ExistsAsync(userPermission, GetCancellationToken());
+    [Fact(DisplayName = "[BaseManyAsyncRepository.ExistsAsync] Deve chegar se o usuário 1 possui permissão de administrador relacionada.")]
+    public async Task DeveRetornarTrueQuandoExistirRelacao()
+    {
+        var userPermission = UserPermissionMock.CreateUser1Administrator();
 
-            exist.Should().BeFalse();
-        }
+        var exist = await userPermissionRepository.ExistsAsync(userPermission, GetCancellationToken());
 
-        [Fact(DisplayName = "[BaseManyAsyncRepository.ExistsAsync] Deve chegar se o usuário 1 possui permissão de administrador relacionada.")]
-        public async Task DeveRetornarTrueQuandoExistirRelacao()
-        {
-            var userPermission = UserPermissionMock.CreateUser1Administrator();
-
-            var exist = await userPermissionRepository.ExistsAsync(userPermission, GetCancellationToken());
-
-            exist.Should().BeTrue();
-        }
+        exist.Should().BeTrue();
     }
 }

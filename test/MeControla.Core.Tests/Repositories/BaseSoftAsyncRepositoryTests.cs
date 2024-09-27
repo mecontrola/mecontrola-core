@@ -12,7 +12,7 @@ public class BaseSoftAsyncRepositoryTests : BaseRepository
 {
     private const long TOTAL_USERS = 3;
 
-    private readonly ISoftUserRepository userRepository;
+    private readonly SoftUserRepository userRepository;
 
     public BaseSoftAsyncRepositoryTests()
         => userRepository = new SoftUserRepository(context);
