@@ -30,10 +30,6 @@ namespace MeControla.Core.Extensions;
 #endif
 public static class IValidatorExtensions
 {
-#if !DEBUG
-    [System.Diagnostics.DebuggerStepThrough]
-    [System.Diagnostics.CodeAnalysis.DoesNotReturn]
-#endif
     /// <summary>
     /// Throws a validation exception if the provided input is not valid according to the specified validator.
     /// </summary>
@@ -43,6 +39,10 @@ public static class IValidatorExtensions
     /// <param name="input">The input DTO to validate.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="validator"/> or <paramref name="input"/> is <c>null</c>.</exception>
     /// <exception cref="ValidationException">Thrown when the input DTO is not valid.</exception>
+#if !DEBUG
+    [System.Diagnostics.DebuggerStepThrough]
+    [System.Diagnostics.CodeAnalysis.DoesNotReturn]
+#endif
     public static void ThrowIfInvalid<TEntity, TInputDto>(this IValidator<TInputDto> validator, TInputDto input)
         where TEntity : class, IEntity
         where TInputDto : class, IInputDto

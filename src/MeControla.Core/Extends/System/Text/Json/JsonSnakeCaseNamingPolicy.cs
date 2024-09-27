@@ -27,14 +27,14 @@ namespace System.Text.Json;
 /// </remarks>
 public class JsonSnakeCaseNamingPolicy : JsonNamingPolicy
 {
-#if !DEBUG
-[System.Diagnostics.DebuggerStepThrough]
-#endif
     /// <summary>
     /// Converts the specified property name to snake_case format.
     /// </summary>
     /// <param name="name">The name of the property to be converted.</param>
     /// <returns>The property name in snake_case format.</returns>
+#if !DEBUG
+    [System.Diagnostics.DebuggerStepThrough]
+#endif
     public override string ConvertName(string name)
         => name.ToSnakeCase();
 }
