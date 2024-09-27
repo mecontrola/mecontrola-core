@@ -30,7 +30,7 @@ public sealed class BaseDbContextFactoryTests
     [Fact(DisplayName = "[BaseDbContextFactory.CreateDbContext|Dispose] Cria DbAppContext a través da implementação do BaseDbContextFactory e ao final utiliza o dispose para finalizar o contexto.")]
     public void DeveCriarDbContextComConfiguredOptionsNull()
     {
-        var factory = new TestDbContextFactory();
+        using var factory = new TestDbContextFactory();
 
         var dbContext = factory.CreateDbContext(null);
 
@@ -49,12 +49,12 @@ public sealed class BaseDbContextFactoryTests
     [Fact(DisplayName = "[BaseDbContextFactory.CreateDbContext|Dispose] Cria DbAppContext a través da implementação do BaseDbContextFactory e executar dispose quando context for null.")]
     public void DeveChamarDisposeDbContext()
     {
-        var factory = new TestDbContextNullFactory();
+        using var factory = new TestDbContextNullFactory();
         var context = factory.CreateDbContext([]);
 
         factory.Dispose();
 
-        var dbContext = context as DbContext;
+        using var dbContext = context as DbContext;
         dbContext.Should().BeNull();
     }
 #endif
@@ -62,9 +62,9 @@ public sealed class BaseDbContextFactoryTests
     [Fact(DisplayName = "[BaseDbContextFactory.CreateDbContext|Dispose] Cria DbAppContext a través da implementação do BaseDbContextFactory e ao final utiliza o dispose duas vezes e finalizar o contexto sem exceções.")]
     public void DeveChamarDisposeDuasVezesSemExcecao2()
     {
-        var factory = new TestDbContextFactory();
+        using var factory = new TestDbContextFactory();
 
-        var dbContext = factory.CreateDbContext([]);
+        using var dbContext = factory.CreateDbContext([]);
 
         dbContext.Dispose();
         factory.Dispose();
@@ -73,9 +73,6 @@ public sealed class BaseDbContextFactoryTests
         var disposedValue = (bool)disposedField.GetValue(factory);
 
         disposedValue.Should().BeTrue();
-
-        dbContext.Dispose();
-        factory.Dispose();
     }
 
     [Fact(DisplayName = "[BaseDbContextFactory.CreateDbContext|Dispose] Cria DbAppContext a través da implementação do BaseDbContextFactory e ao final utiliza o dispose duas vezes e finalizar o contexto sem exceções.")]
@@ -83,7 +80,7 @@ public sealed class BaseDbContextFactoryTests
     {
         var factory = new TestDbContextFactory();
 
-        var dbContext = factory.CreateDbContext(null);
+        using var dbContext = factory.CreateDbContext(null);
 
         dbContext.Dispose();
         dbContext.Dispose();
