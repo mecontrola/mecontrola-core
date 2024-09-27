@@ -40,14 +40,8 @@ public abstract class InternalBaseMapper<TParam, TResult>
     protected InternalBaseMapper()
         => mapper = new MapperConfiguration(cfg => CreateMap(cfg)).CreateMapper();
 
-    private IMappingExpression<TParam, TResult> CreateMap(IMapperConfigurationExpression cfg)
-    {
-        var map = cfg.CreateMap<TParam, TResult>();
-
-        MapFields(map);
-
-        return map;
-    }
+    private void CreateMap(IMapperConfigurationExpression cfg)
+        => MapFields(cfg.CreateMap<TParam, TResult>());
 
     /// <summary>
     /// Method used to configure the mapping between the two types defined in the construction of the class.

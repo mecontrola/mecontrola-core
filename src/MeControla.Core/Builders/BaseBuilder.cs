@@ -49,10 +49,6 @@ public abstract class BaseBuilder<TBuilder, TObject> : IBuilder<TObject>
             throw new InvalidOperationException(ERRO_CREATE_INSTANCE_NEW);
 
         obj = new TObject();
-
-        FillDefaultValues(obj);
-
-        isInstanceCreated = true;
     }
 
     /// <summary>
@@ -88,6 +84,11 @@ public abstract class BaseBuilder<TBuilder, TObject> : IBuilder<TObject>
     {
         isInstanceCreated = false;
 
-        return instance = new();
+        instance = new();
+        instance.FillDefaultValues(instance.obj);
+
+        isInstanceCreated = true;
+
+        return instance;
     }
 }
