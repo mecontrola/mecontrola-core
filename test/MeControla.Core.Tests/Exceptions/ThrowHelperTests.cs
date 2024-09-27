@@ -51,12 +51,12 @@ public class ThrowHelperTests : BaseExceptionHelperTests
     public static TheoryData<ThrowHelperArgument> GetInternalServerErrorException()
         => CreateParamExceptionTests(HttpStatusCode.InternalServerError, ResourceThrowMessageDefault.InternalServerError, DataMock.TEXT_EXCEPTION_MESSAGE, ExceptionMock.Create());
 
-    [Theory(DisplayName = "[ThrowHelper.ThrowJWTTokenException] Deve gerar exceção do tipo JWTTokenException.")]
-    [MemberData(nameof(GetJWTTokenException), MemberType = typeof(ThrowHelperTests))]
-    public void DeveValidarJWTTokenException(ThrowHelperArgument args)
-        => ExecuteAndValidateTests<JwtTokenException>("ThrowJWTTokenException", args);
+    [Theory(DisplayName = "[ThrowHelper.ThrowJwtTokenException] Deve gerar exceção do tipo JwtTokenException.")]
+    [MemberData(nameof(GetJwtTokenException), MemberType = typeof(ThrowHelperTests))]
+    public void DeveValidarJwtTokenException(ThrowHelperArgument args)
+        => ExecuteAndValidateTests<JwtTokenException>("ThrowJwtTokenException", args);
 
-    public static TheoryData<ThrowHelperArgument> GetJWTTokenException()
+    public static TheoryData<ThrowHelperArgument> GetJwtTokenException()
         => CreateParamExceptionTests(HttpStatusCode.Unauthorized, ResourceThrowMessageDefault.Unauthorized, DataMock.TEXT_EXCEPTION_MESSAGE, ExceptionMock.Create());
 
     [Theory(DisplayName = "[ThrowHelper.ThrowNotFoundException] Deve gerar exceção do tipo NotFoundException.")]

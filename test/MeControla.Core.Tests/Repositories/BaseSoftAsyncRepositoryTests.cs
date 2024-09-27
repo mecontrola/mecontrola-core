@@ -75,8 +75,6 @@ public class BaseSoftAsyncRepositoryTests : BaseRepository
     [Fact(DisplayName = "[BaseSoftAsyncRepository.FindAllPagedAsync] Deve listar todos os registros, remover e listar todos registros menos o removido.")]
     public async Task DeveRetornarListaTodaRemoverRetornarListaToda()
     {
-        var pagination = PaginationMock.CreatePage1();
-
         var list = await userRepository.FindAllAsync(GetCancellationToken());
         list.Should().NotBeEmpty();
         list.Should().HaveCount((int)TOTAL_USERS);
