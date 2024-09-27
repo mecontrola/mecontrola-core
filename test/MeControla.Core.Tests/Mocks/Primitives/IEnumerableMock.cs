@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace MeControla.Core.Tests.Mocks.Primitives
+namespace MeControla.Core.Tests.Mocks.Primitives;
+
+public class IEnumerableMock
 {
-    public class IEnumerableMock
-    {
-        public static IEnumerable<string> CreateFill()
-            => DataMock.List456.Select(x => $"{DataMock.VALUE_DEFAULT_TEXT}{x}");
-    }
+    public static IEnumerable<string> CreateNull()
+        => null;
+
+    public static IEnumerable<string> CreateFill()
+        => DataMock.List456.Select(x => $"{DataMock.VALUE_DEFAULT_TEXT}{x}");
 }

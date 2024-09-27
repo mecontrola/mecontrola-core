@@ -1,4 +1,20 @@
-﻿using MeControla.Core.Extensions;
+﻿/***********************************************************************************
+ * Copyright 2024 Me Controla
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ***********************************************************************************/
+
+using MeControla.Core.Extensions;
 using System;
 using System.IO;
 using System.Reflection;
@@ -6,8 +22,14 @@ using System.Reflection;
 namespace MeControla.Core.Tools
 {
     /// <summary>
-    /// Recovery assembly informations
+    /// Retrieves metadata information from an assembly.
     /// </summary>
+    /// <remarks>
+    /// This class is designed to retrieve information about an assembly, using the provided
+    /// <see cref="ICustomAttributeProvider"/> to access custom attributes.
+    /// If the given assembly is null, it will be the library's own assembly.
+    /// </remarks>
+    /// <param name="assembly"></param>
     public class AssemblyInfo(ICustomAttributeProvider assembly)
     {
         private readonly ICustomAttributeProvider assembly = assembly ?? Assembly.GetExecutingAssembly();

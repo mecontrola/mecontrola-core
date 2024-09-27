@@ -1,6 +1,7 @@
 using FluentAssertions;
 using MeControla.Core.Extensions;
 using MeControla.Core.Tests.Mocks;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using Xunit;
@@ -140,11 +141,39 @@ namespace MeControla.Core.Tests.Extensions
             actual.Should().BeEquivalentTo(DataMock.TEXT_ENCODE);
         }
 
+        [Fact(DisplayName = "[StringExtensions.Base64Encode] Deve gerar execeção quando o valor para codificação em base64 for null.")]
+        public void DeveGerarExcecaoEncodeQuandoNull()
+        {
+            var act = () => ((string)null).Base64Encode();
+            act.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact(DisplayName = "[StringExtensions.Base64Encode] Deve gerar execeção quando o valor para codificação em base64 for vazio.")]
+        public void DeveGerarExcecaoEncodeQuandoVazio()
+        {
+            var act = () => string.Empty.Base64Encode();
+            act.Should().Throw<ArgumentNullException>();
+        }
+
         [Fact(DisplayName = "[StringExtensions.Base64Decode] Deve realizar a decodificação em base64 de um texto.")]
         public void DeveRealizarDecodeTexto()
         {
             var actual = DataMock.TEXT_ENCODE.Base64Decode();
             actual.Should().BeEquivalentTo(DataMock.TEXT_DECODE);
+        }
+
+        [Fact(DisplayName = "[StringExtensions.Base64Decode] Deve gerar execeção quando o valor para decodificação em base64 for null.")]
+        public void DeveGerarExcecaoDecodeQuandoNull()
+        {
+            var act = () => ((string)null).Base64Decode();
+            act.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact(DisplayName = "[StringExtensions.Base64Decode] Deve gerar execeção quando o valor para decodificação em base64 for vazio.")]
+        public void DeveGerarExcecaoDecodeQuandoVazio()
+        {
+            var act = () => string.Empty.Base64Decode();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [Fact(DisplayName = "[StringExtensions.TrimAll] Deve remover o excesso de espaços em um texto.")]

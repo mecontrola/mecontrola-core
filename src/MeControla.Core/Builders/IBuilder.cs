@@ -1,8 +1,31 @@
-﻿namespace MeControla.Core.Builders
+﻿/***********************************************************************************
+ * Copyright 2024 Me Controla
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ***********************************************************************************/
+
+namespace MeControla.Core.Builders;
+
+/// <summary>
+/// Defines a generic interface for building objects of type <typeparamref name="TObject"/>.
+/// </summary>
+/// <typeparam name="TObject">The type of object to be built, which must be a class.</typeparam>
+public interface IBuilder<out TObject>
+    where TObject : class
 {
-    public interface IBuilder<out TObject>
-        where TObject : class
-    {
-        TObject ToBuild();
-    }
+    /// <summary>
+    /// Finalizes the construction process and returns the built object instance.
+    /// </summary>
+    /// <returns>Instance of the object of type <typeparamref name="TObject"/>.</returns>
+    TObject ToBuild();
 }

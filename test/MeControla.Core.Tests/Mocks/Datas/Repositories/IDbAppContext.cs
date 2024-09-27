@@ -2,13 +2,13 @@
 using MeControla.Core.Tests.Mocks.Datas.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace MeControla.Core.Tests.Mocks.Datas.Repositories
+namespace MeControla.Core.Tests.Mocks.Datas.Repositories;
+
+public interface IDbAppContext : IDbContext
 {
-    public interface IDbAppContext : IDbContext
-    {
-        DbSet<Permission> Permissions { get; }
-        DbSet<User> Users { get; }
-        DbSet<UserPermission> UserPermissions { get; }
-        DbSet<WorkTask> WorkTasks { get; }
-    }
+    DbSet<Permission> Permissions { get; }
+    DbSet<SoftUser> SoftUsers { get; }
+    DbSet<User> Users { get; }
+    DbSet<UserPermission> UserPermissions { get; }
+    DbSet<WorkTask> WorkTasks { get; }
 }

@@ -1,27 +1,26 @@
-﻿using FluentAssertions;
-using MeControla.Core.Exceptions;
+﻿using MeControla.Core.Exceptions;
+using MeControla.Core.Tests.Exceptions.Bases;
 using MeControla.Core.Tests.Mocks;
-using System;
+using System.Net;
 using Xunit;
 
-namespace MeControla.Core.Tests.Exceptions
+namespace MeControla.Core.Tests.Exceptions;
+
+public class UnauthorizedExceptionTests : BaseExceptionIndividualTests<UnauthorizedException>
 {
-    public sealed class UnauthorizedExceptionTests
-    {
-        [Fact(DisplayName = "[UnauthorizedException.Constructor] Deve gerar exceção com InnerException definido.")]
-        public void Constructor_WithInnerException_ShouldSetInnerException()
-        {
-            var innerException = new Exception(DataMock.TEXT_EXCEPTION_MESSAGE);
+    public UnauthorizedExceptionTests()
+        : base(HttpStatusCode.Unauthorized, ResourceThrowMessageDefault.Unauthorized, DataMock.TEXT_EXCEPTION_MESSAGE)
+    { }
 
-            var exception = new UnauthorizedException(innerException);
-            exception.InnerException.Should().BeEquivalentTo(innerException);
-        }
+    [Fact(DisplayName = "[UnauthorizedException.Constructor] Deve gerar exceção utilizando construtor padrão.")]
+    public override void DeveGerarExcecaoSemMensagem()
+        => base.DeveGerarExcecaoSemMensagem();
 
-        [Fact(DisplayName = "[UnauthorizedException.Constructor] Deve gerar exceção sem InnerException.")]
-        public void DeveGerarExecaoSemInnerException()
-        {
-            var exception = new UnauthorizedException();
-            exception.InnerException.Should().BeNull();
-        }
-    }
+    [Fact(DisplayName = "[UnauthorizedException.Constructor] Deve gerar exceção com a mensagem definida.")]
+    public override void DeveGerarExcecaoComMensagem()
+        => base.DeveGerarExcecaoSemMensagem();
+
+    [Fact(DisplayName = "[UnauthorizedException.Constructor] Deve gerar exceção com a mensagem e inner exception definidos.")]
+    public override void DeveGerarExcecaoComMensagemEInnerException()
+        => base.DeveGerarExcecaoComMensagemEInnerException();
 }

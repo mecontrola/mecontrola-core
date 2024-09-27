@@ -24,6 +24,7 @@ namespace MeControla.Core.Tests.Mocks
         public static int VALUE_DEFAULT_5 { get; } = 5;
         public static int VALUE_DEFAULT_9 { get; } = 9;
         public static int WEEK_YEAR { get; } = 18;
+        public static long INT_PAGINATION_TOTAL { get; } = 10;
 
         public static DateTime DATETIME_QUARTER_2_2000 { get; } = new(2000, 5, 5);
 

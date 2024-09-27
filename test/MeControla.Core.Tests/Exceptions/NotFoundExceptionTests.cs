@@ -1,24 +1,26 @@
-﻿using FluentAssertions;
-using MeControla.Core.Exceptions;
+﻿using MeControla.Core.Exceptions;
+using MeControla.Core.Tests.Exceptions.Bases;
 using MeControla.Core.Tests.Mocks;
+using System.Net;
 using Xunit;
 
-namespace MeControla.Core.Tests.Exceptions
-{
-    public sealed class NotFoundExceptionTests
-    {
-        [Fact(DisplayName = "[NotFoundException.Constructor] Deve gerar exceção com a mensagem definida.")]
-        public void DeveGerarExcecaoComMensagem()
-        {
-            var exception = new NotFoundException(DataMock.TEXT_EXCEPTION_MESSAGE);
-            exception.Message.Should().Be(DataMock.TEXT_EXCEPTION_MESSAGE);
-        }
+namespace MeControla.Core.Tests.Exceptions;
 
-        [Fact(DisplayName = "[NotFoundException.Constructor] Deve gerar exceção sem mensagem.")]
-        public void DeveGerarExcecaoSemMensagem()
-        {
-            var exception = new NotFoundException();
-            exception.Message.Should().BeEmpty();
-        }
-    }
+public class NotFoundExceptionTests : BaseExceptionIndividualTests<NotFoundException>
+{
+    public NotFoundExceptionTests()
+        : base(HttpStatusCode.NotFound, ResourceThrowMessageDefault.NotFound, DataMock.TEXT_EXCEPTION_MESSAGE)
+    { }
+
+    [Fact(DisplayName = "[NotFoundException.Constructor] Deve gerar exceção utilizando construtor padrão.")]
+    public override void DeveGerarExcecaoSemMensagem()
+        => base.DeveGerarExcecaoSemMensagem();
+
+    [Fact(DisplayName = "[NotFoundException.Constructor] Deve gerar exceção com a mensagem definida.")]
+    public override void DeveGerarExcecaoComMensagem()
+        => base.DeveGerarExcecaoSemMensagem();
+
+    [Fact(DisplayName = "[NotFoundException.Constructor] Deve gerar exceção com a mensagem e inner exception definidos.")]
+    public override void DeveGerarExcecaoComMensagemEInnerException()
+        => base.DeveGerarExcecaoComMensagemEInnerException();
 }
