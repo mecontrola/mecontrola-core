@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace MeControla.Core.Tests.Mocks.Entities;
 
-public static class UserMock
+public static class SoftUserMock
 {
-    public static User CreateUser1()
+    public static SoftUser CreateUser1()
     {
         var dev = CreateUserEmpty();
         dev.Id = DataMock.INT_ID_1;
@@ -14,7 +14,7 @@ public static class UserMock
         return dev;
     }
 
-    public static User CreateUser2()
+    public static SoftUser CreateUser2()
     {
         var dev = CreateUserEmpty();
         dev.Id = DataMock.INT_ID_2;
@@ -23,7 +23,7 @@ public static class UserMock
         return dev;
     }
 
-    public static User CreateUser3()
+    public static SoftUser CreateUser3()
     {
         var dev = CreateUserEmpty();
         dev.Id = DataMock.INT_ID_3;
@@ -32,7 +32,7 @@ public static class UserMock
         return dev;
     }
 
-    public static User CreateUser4()
+    public static SoftUser CreateUser4()
     {
         var dev = CreateUserEmpty();
         dev.Id = DataMock.INT_ID_4;
@@ -41,10 +41,10 @@ public static class UserMock
         return dev;
     }
 
-    public static User CreateUserEmpty()
+    public static SoftUser CreateUserEmpty()
         => new();
 
-    public static IList<User> CreateList()
+    public static IList<SoftUser> CreateList()
         => [
             CreateUser1(),
             CreateUser2(),
