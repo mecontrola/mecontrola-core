@@ -154,29 +154,29 @@ public static class ThrowHelper
         => throw new InternalServerErrorException(message, innerException);
 
     /// <summary>
-    /// Throws a <see cref="JWTTokenException"/> with a default message.
+    /// Throws a <see cref="JwtTokenException"/> with a default message.
     /// This method does not return to the caller.
     /// </summary>
     [DoesNotReturn]
-    public static void ThrowJWTTokenException()
-        => throw new JWTTokenException();
+    public static void ThrowJwtTokenException()
+        => throw new JwtTokenException();
 
     /// <summary>
-    /// Throws a <see cref="JWTTokenException"/> with a specified error message.
+    /// Throws a <see cref="JwtTokenException"/> with a specified error message.
     /// </summary>
     /// <param name="message">The error message that describes the exception.</param>
     [DoesNotReturn]
-    public static void ThrowJWTTokenException(string message)
-        => throw new JWTTokenException(message);
+    public static void ThrowJwtTokenException(string message)
+        => throw new JwtTokenException(message);
 
     /// <summary>
-    /// Throws a <see cref="JWTTokenException"/> with a specified error message and an inner exception.
+    /// Throws a <see cref="JwtTokenException"/> with a specified error message and an inner exception.
     /// </summary>
     /// <param name="message">The error message that describes the exception.</param>
     /// <param name="innerException">The inner exception that caused this exception, or <c>null</c> if there is no inner exception.</param>
     [DoesNotReturn]
-    public static void ThrowJWTTokenException(string message, Exception innerException)
-        => throw new JWTTokenException(message, innerException);
+    public static void ThrowJwtTokenException(string message, Exception innerException)
+        => throw new JwtTokenException(message, innerException);
 
     /// <summary>
     /// Throws a <see cref="NotFoundException"/> with a default message.

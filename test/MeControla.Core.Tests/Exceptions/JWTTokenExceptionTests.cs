@@ -6,7 +6,7 @@ using Xunit;
 
 namespace MeControla.Core.Tests.Exceptions;
 
-public class JWTTokenExceptionTests : BaseExceptionIndividualTests<JWTTokenException>
+public class JWTTokenExceptionTests : BaseExceptionIndividualTests<JwtTokenException>
 {
     public JWTTokenExceptionTests()
         : base(HttpStatusCode.Unauthorized, ResourceThrowMessageDefault.Unauthorized, DataMock.TEXT_EXCEPTION_MESSAGE)

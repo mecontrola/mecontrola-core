@@ -22,6 +22,9 @@ namespace MeControla.Core.Exceptions;
 /// </summary>
 internal sealed class ResourceThrowMessageDefault
 {
+    private ResourceThrowMessageDefault()
+    { }
+
     /// <summary>
     /// The default message for a "Bad Gateway" error.
     /// </summary>

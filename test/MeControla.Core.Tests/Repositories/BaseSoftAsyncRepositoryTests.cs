@@ -1,16 +1,8 @@
 ﻿using FluentAssertions;
-using MeControla.Core.Data.Entities;
 using MeControla.Core.Tests.Mocks;
-using MeControla.Core.Tests.Mocks.Datas.Entities;
 using MeControla.Core.Tests.Mocks.Datas.Repositories;
 using MeControla.Core.Tests.Mocks.Entities;
 using MeControla.Core.Tests.Mocks.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using NSubstitute;
-using System;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 

@@ -54,7 +54,7 @@ public class ThrowHelperTests : BaseExceptionHelperTests
     [Theory(DisplayName = "[ThrowHelper.ThrowJWTTokenException] Deve gerar exceção do tipo JWTTokenException.")]
     [MemberData(nameof(GetJWTTokenException), MemberType = typeof(ThrowHelperTests))]
     public void DeveValidarJWTTokenException(ThrowHelperArgument args)
-        => ExecuteAndValidateTests<JWTTokenException>("ThrowJWTTokenException", args);
+        => ExecuteAndValidateTests<JwtTokenException>("ThrowJWTTokenException", args);
 
     public static TheoryData<ThrowHelperArgument> GetJWTTokenException()
         => CreateParamExceptionTests(HttpStatusCode.Unauthorized, ResourceThrowMessageDefault.Unauthorized, DataMock.TEXT_EXCEPTION_MESSAGE, ExceptionMock.Create());
