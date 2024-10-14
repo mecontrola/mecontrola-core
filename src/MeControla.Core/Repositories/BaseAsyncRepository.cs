@@ -31,12 +31,19 @@ namespace MeControla.Core.Repositories;
 /// Provides a base implementation for an asynchronous repository handling basic operations with entities.
 /// </summary>
 /// <typeparam name="TEntity">The type of entity being managed by the repository.</typeparam>
-/// <param name="context">The <see cref="IDbContext"/> used to interact with the database.</param>
-/// <param name="dbSet">The <see cref="DbSet{TEntity}"/> that provides access to entities in the database.</param>
-public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity>(IDbContext context, DbSet<TEntity> dbSet)
-    : ContextRepository<TEntity>(context, dbSet), IAsyncRepository<TEntity>
-     where TEntity : class, IEntity
+public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity>
+    : ContextRepository<TEntity>, IAsyncRepository<TEntity>
+    where TEntity : class, IEntity
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BaseAsyncRepository{TEntity}"/> class.
+    /// </summary>
+    /// <param name="context">The <see cref="IDbContext"/> used to interact with the database.</param>
+    /// <param name="dbSet">The <see cref="DbSet{TEntity}"/> that provides access to entities in the database.</param>
+    protected BaseAsyncRepository(IDbContext context, DbSet<TEntity> dbSet)
+        : base(context, dbSet)
+    { }
+
     /// <summary>
     /// Asynchronously returns the number of elements in a sequence.
     /// </summary>
@@ -46,7 +53,7 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     /// The task result contains the number of elements in the input sequence.
     /// </returns>
     public virtual async Task<long> CountAsync(CancellationToken cancellationToken)
-        => await dbSet.LongCountAsync(cancellationToken);
+        => await DbSet.LongCountAsync(cancellationToken);
 
     /// <summary>
     /// Asynchronously returns the number of elements in a sequence.
@@ -58,7 +65,7 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     /// The task result contains the number of elements in the input sequence.
     /// </returns>
     public virtual async Task<long> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
-        => await dbSet.LongCountAsync(predicate, cancellationToken);
+        => await DbSet.LongCountAsync(predicate, cancellationToken);
 
     /// <summary>
     /// Asynchronously saves the specified entity. If the entity exists, it is updated; otherwise, it is created.
@@ -151,7 +158,8 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     /// <param name="pagination">The pagination details to apply to the query, including page and limit.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
     /// <returns>A task representing the asynchronous operation, containing a paginated list of entities.</returns>
-    public virtual async Task<IList<TEntity>> FindAllPagedAsync(IPagination pagination, CancellationToken cancellationToken)
+    [RequiresUnreferencedCode("This method uses reflection, which may not be compatible with trimming.")]
+    public virtual async Task<IPagination<TEntity>> FindAllPagedAsync(IPagination pagination, CancellationToken cancellationToken)
         => await FindAllPagedAsync(pagination, null, cancellationToken);
 
     /// <summary>
@@ -161,8 +169,20 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     /// <param name="predicate">An expression that filters the entities.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
     /// <returns>A task representing the asynchronous operation, containing a paginated list of entities matching the predicate.</returns>
-    public virtual async Task<IList<TEntity>> FindAllPagedAsync(IPagination pagination, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
-        => await dbSet.SetPagination(pagination).SetPredicate(predicate).ToListAsync(cancellationToken);
+    [RequiresUnreferencedCode("This method uses reflection, which may not be compatible with trimming.")]
+    public virtual async Task<IPagination<TEntity>> FindAllPagedAsync(IPagination pagination, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+    {
+        var query = DbSet.SetPredicate(predicate)
+                         .SetFilterBy(pagination.FilterBy);
+
+        var total = await query.CountAsync(cancellationToken);
+
+        var list = await query.SetPagination(pagination)
+                              .SetSortBy(pagination.SortBy)
+                              .ToListAsync(cancellationToken);
+
+        return list.PaginationBy(pagination, total);
+    }
 
     /// <summary>
     /// Asynchronously finds all entities.
@@ -179,7 +199,7 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains a list of entities that satisfy the given predicate.</returns>
     public virtual async Task<IList<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
-        => await dbSet.SetPredicate(predicate).ToListAsync(cancellationToken);
+        => await DbSet.SetPredicate(predicate).ToListAsync(cancellationToken);
 
     /// <summary>
     /// Asynchronously finds a single entity that matches the specified identifier.
@@ -227,7 +247,7 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     /// the predicate, or <see langword="null"/> if no entity is found.
     /// </returns>
     public virtual async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
-        => await dbSet.AsNoTracking()
+        => await DbSet.AsNoTracking()
                       .Where(predicate)
                       .FirstOrDefaultAsync(cancellationToken);
 
@@ -265,7 +285,7 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     /// <c>true</c> if the entity exists; otherwise, <c>false</c>.
     /// </returns>
     public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
-        => await dbSet.AnyAsync(predicate, cancellationToken);
+        => await DbSet.AnyAsync(predicate, cancellationToken);
 
     /// <summary>
     /// Detaches the specified entity from the context, setting its state to the provided <see cref="EntityState"/>.
@@ -274,19 +294,19 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     /// <param name="entityState">The state to be assigned to the entity after detaching.</param>
     protected virtual void Detach(TEntity entity, EntityState entityState)
     {
-        var local = dbSet.Local.FirstOrDefault(itm => itm.Id.Equals(entity.Id));
+        var local = DbSet.Local.FirstOrDefault(itm => itm.Id.Equals(entity.Id));
         var id = local?.Id ?? 0;
 
         if (id != 0)
-            context.Entry(local).State = EntityState.Detached;
+            Context.Entry(local).State = EntityState.Detached;
 
-        context.Entry(entity).State = entityState;
+        Context.Entry(entity).State = entityState;
     }
 
     private async Task<bool> ApplyAlterContextAsync(Action<DbSet<TEntity>> action, CancellationToken cancellationToken)
     {
-        action(dbSet);
+        action(DbSet);
 
-        return await context.SaveChangesAsync(cancellationToken) > 0;
+        return await Context.SaveChangesAsync(cancellationToken) > 0;
     }
 }

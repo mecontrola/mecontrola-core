@@ -33,6 +33,9 @@ public static class EnumerableExtensions
     /// <typeparam name="T">The type of elements in the enumerable.</typeparam>
     /// <param name="enumerable">The enumerable to check.</param>
     /// <returns>True if the enumerable is null or empty; otherwise, false.</returns>
+#if !DEBUG
+    [System.Diagnostics.DebuggerStepThrough]
+#endif
     public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
         => enumerable == null || !enumerable.Any();
 
@@ -42,6 +45,9 @@ public static class EnumerableExtensions
     /// <typeparam name="T">The type of elements in the enumerable.</typeparam>
     /// <param name="enumerable">The enumerable to check.</param>
     /// <returns>True if the enumerable is not null and contains at least one element; otherwise, false.</returns>
+#if !DEBUG
+    [System.Diagnostics.DebuggerStepThrough]
+#endif
     public static bool IsNotNullAndAny<T>(this IEnumerable<T> enumerable)
         => enumerable != null && enumerable.Any();
 
@@ -51,6 +57,9 @@ public static class EnumerableExtensions
     /// <typeparam name="T">The type of elements in the enumerable.</typeparam>
     /// <param name="enumerable">The enumerable to convert.</param>
     /// <returns>A list containing the elements of the enumerable, or an empty list if the enumerable is null or empty.</returns>
+#if !DEBUG
+    [System.Diagnostics.DebuggerStepThrough]
+#endif
     public static IList<T> ToListOrEmpty<T>(this IEnumerable<T> enumerable)
         => enumerable.IsNullOrEmpty() ? [] : enumerable.ToList();
 
@@ -63,6 +72,9 @@ public static class EnumerableExtensions
     /// <param name="source">The sequence to project.</param>
     /// <param name="selector">A transform function to apply to each element.</param>
     /// <returns>A list of transformed elements, or an empty list if the source is null or empty.</returns>
+#if !DEBUG
+    [System.Diagnostics.DebuggerStepThrough]
+#endif
     public static IList<TResult> SelectToListOrEmpty<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector)
         => source.IsNullOrEmpty() ? [] : source.Select(selector).ToList();
 
@@ -76,6 +88,9 @@ public static class EnumerableExtensions
     /// <param name="selector">A transform function to apply to each element, the second parameter of the function
     /// represents the index of the source element.</param>
     /// <returns>A list of transformed elements, or an empty list if the source is null or empty.</returns>
+#if !DEBUG
+    [System.Diagnostics.DebuggerStepThrough]
+#endif
     public static IList<TResult> SelectToListOrEmpty<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, int, TResult> selector)
         => source.IsNullOrEmpty() ? [] : source.Select(selector).ToList();
 
@@ -85,6 +100,9 @@ public static class EnumerableExtensions
     /// <typeparam name="T">The type of elements in the source sequence.</typeparam>
     /// <param name="source">The sequence on which the action will be executed.</param>
     /// <param name="action">The action to execute on each element.</param>
+#if !DEBUG
+    [System.Diagnostics.DebuggerStepThrough]
+#endif
     public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
     {
         ArgumentNullException.ThrowIfNull(source);
@@ -100,6 +118,9 @@ public static class EnumerableExtensions
     /// <param name="source">The sequence to search.</param>
     /// <param name="match">The predicate to test each element against.</param>
     /// <returns>An enumerable of indices where the elements match the predicate.</returns>
+#if !DEBUG
+    [System.Diagnostics.DebuggerStepThrough]
+#endif
     public static IEnumerable<int> FindIndexAll<T>(this IEnumerable<T> source, Predicate<T> match)
     {
         ArgumentNullException.ThrowIfNull(source);
@@ -115,6 +136,9 @@ public static class EnumerableExtensions
     /// <param name="source">The sequence to sum.</param>
     /// <param name="selector">A function to extract a TimeSpan from each element.</param>
     /// <returns>The sum of the selected TimeSpan values.</returns>
+#if !DEBUG
+    [System.Diagnostics.DebuggerStepThrough]
+#endif
     public static TimeSpan Sum<TSource>(this IEnumerable<TSource> source, Func<TSource, TimeSpan> selector)
     {
         ArgumentNullException.ThrowIfNull(source);
@@ -130,6 +154,9 @@ public static class EnumerableExtensions
     /// <param name="source">The sequence to average.</param>
     /// <param name="selector">A function to extract a TimeSpan from each element.</param>
     /// <returns>The average of the selected TimeSpan values.</returns>
+#if !DEBUG
+    [System.Diagnostics.DebuggerStepThrough]
+#endif
     public static TimeSpan Average<TSource>(this IEnumerable<TSource> source, Func<TSource, TimeSpan> selector)
     {
         ArgumentNullException.ThrowIfNull(source);
@@ -143,6 +170,9 @@ public static class EnumerableExtensions
     /// <typeparam name="T">The type of elements in the source sequence.</typeparam>
     /// <param name="source">The sequence to convert.</param>
     /// <returns>An ObservableCollection containing the elements of the source.</returns>
+#if !DEBUG
+    [System.Diagnostics.DebuggerStepThrough]
+#endif
     public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
     {
         ArgumentNullException.ThrowIfNull(source);

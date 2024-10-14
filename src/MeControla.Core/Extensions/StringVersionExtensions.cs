@@ -29,6 +29,8 @@ public static class StringVersionExtensions
     private const string REGEX_VERSION_KEY = "version";
     private const string REGEX_VERSION = $@"(?<{REGEX_VERSION_KEY}>[0-9]+.[0-9]+.[0-9]+(.[0-9]+)?)";
 
+    private static readonly Regex VersionRegex = new(REGEX_VERSION, RegexOptions.Compiled, REGEX_TIMEOUT);
+
     /// <summary>
     /// Extracts the version number from the given string using a regex pattern.
     /// </summary>
@@ -42,9 +44,12 @@ public static class StringVersionExtensions
 #endif
     public static Version GetVersion(this string value)
     {
-        var regex = Regex.Match(value, REGEX_VERSION, RegexOptions.None, REGEX_TIMEOUT);
-        return !regex.Success
-             ? null
-             : new(regex.Groups[REGEX_VERSION_KEY].Value);
+        if (value.IsNullOrWhiteSpace())
+            return null;
+
+        var match = VersionRegex.Match(value);
+        return match.Success
+             ? new(match.GetValueOrDefault(REGEX_VERSION_KEY))
+             : null;
     }
 }

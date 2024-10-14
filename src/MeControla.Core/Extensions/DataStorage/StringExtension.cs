@@ -53,10 +53,10 @@ public static class StringExtension
         var prefix = string.Empty;
 
         prefix = words.Length > 1
-               ? string.Concat(words.Select(x => x[0])).ToLower()
+               ? string.Concat(words.Select(x => x[0]))
                : $"{valueTmp[0]}{valueTmp[1..].GetConsonants()}"[..2];
 
-        return prefix.ToLower();
+        return prefix.ToLowerInvariant();
     }
 
     /// <summary>
@@ -81,7 +81,7 @@ public static class StringExtension
             _ => $"{valueTmp[0]}{CheckSingleWord(valueTmp)}"[..3],
         };
 
-        return prefix.ToLower();
+        return prefix.ToLowerInvariant();
 
         static string CheckSingleWord(string word)
         {

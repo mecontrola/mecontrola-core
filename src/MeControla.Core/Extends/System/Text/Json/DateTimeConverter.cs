@@ -17,7 +17,9 @@
 using System.Globalization;
 using System.Text.Json.Serialization;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace System.Text.Json;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 /// <summary>
 /// A custom JSON converter for handling <see cref="DateTime"/> serialization and deserialization
@@ -51,5 +53,5 @@ public class DateTimeConverter(string dateFormat) : JsonConverter<DateTime>
     /// <param name="value">The <see cref="DateTime"/> value to write.</param>
     /// <param name="options">Options for writing JSON.</param>
     public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
-        => writer.WriteStringValue(value.ToString(dateFormat));
+        => writer.WriteStringValue(value.ToString(dateFormat, CultureInfo.InvariantCulture));
 }

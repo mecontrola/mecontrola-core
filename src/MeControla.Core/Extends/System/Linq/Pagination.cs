@@ -17,7 +17,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace System.Linq;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 /// <summary>
 /// Provides extension methods for IEnumerable to support pagination.
@@ -50,6 +52,16 @@ public interface IPagination
     /// Gets the number of items to be retrieved per page.
     /// </summary>
     long Limit { get; }
+
+    /// <summary>
+    /// Gets or sets the fields to be filtered and their values.
+    /// </summary>
+    string FilterBy { get; set; }
+
+    /// <summary>
+    /// Gets or sets the fields to be sorted and their order.
+    /// </summary>
+    string SortBy { get; set; }
 }
 
 /// <summary>
@@ -72,6 +84,8 @@ internal sealed partial class PaginationEnumerable<TSource> : IPagination<TSourc
     public long Page { get; }
     public long Limit { get; }
     public long Total { get; }
+    public string FilterBy { get; set; }
+    public string SortBy { get; set; }
 
     public PaginationEnumerable(IEnumerable<TSource> source, IPagination pagination, long total)
     {
@@ -83,6 +97,8 @@ internal sealed partial class PaginationEnumerable<TSource> : IPagination<TSourc
         Page = pagination.Page;
         Limit = pagination.Limit;
         Total = total;
+        FilterBy = pagination.FilterBy;
+        SortBy = pagination.SortBy;
     }
 
     public IEnumerator<TSource> GetEnumerator()

@@ -41,7 +41,7 @@ public abstract class BaseDbContextFactory<[DynamicallyAccessedMembers(Dynamical
 {
     private TDbContext context;
 
-    private bool disposed = false;
+    private bool disposed;
 
     /// <summary>
     /// Creates a new instance of a derived context.

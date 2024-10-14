@@ -8,7 +8,6 @@ namespace MeControla.Core.Tests.Mocks
         public static string TEXT_SPACES { get; } = "    Simply      String    Test    Encode  ";
         public static string TEXT_DECODE { get; } = "Simply String Test Encode";
         public static string TEXT_ENCODE { get; } = "U2ltcGx5IFN0cmluZyBUZXN0IEVuY29kZQ==";
-        public static string TEXT_ENCODE_MD5 { get; } = "e26c3a1b5f4f4b2a9096548e77ea89e7";
         public static string TEXT_EXCEPTION_MESSAGE { get; } = "Exception Message Test";
         public static string VALUE_DEFAULT_TEXT { get; } = "Simply String Test";
         public static string VALUE_DEFAULT_TEXT2 { get; } = "Simply String Test Anything";
