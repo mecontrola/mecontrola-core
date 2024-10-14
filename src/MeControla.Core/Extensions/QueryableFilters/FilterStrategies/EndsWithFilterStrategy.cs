@@ -11,7 +11,7 @@ internal class EndsWithFilterStrategy : BaseFilterStrategy
     /// <summary>
     /// The name of the ends with operation.
     /// </summary>
-    public static string Name = "ect";
+    internal const string Name = "ect";
 
     /// <summary>
     /// Constructs the expression for an ends with comparison between the member and the constant value.

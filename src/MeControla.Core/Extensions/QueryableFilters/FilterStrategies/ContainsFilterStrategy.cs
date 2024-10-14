@@ -11,7 +11,7 @@ internal class ContainsFilterStrategy : BaseFilterStrategy
     /// <summary>
     /// The name of the contains operation.
     /// </summary>
-    public static string Name = "ct";
+    internal const string Name = "ct";
 
     /// <summary>
     /// Constructs the expression for an contains comparison between the member and the constant value.

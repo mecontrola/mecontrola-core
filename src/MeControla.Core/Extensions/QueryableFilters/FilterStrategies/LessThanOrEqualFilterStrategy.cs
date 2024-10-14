@@ -11,7 +11,7 @@ internal class LessThanOrEqualFilterStrategy : BaseFilterStrategy
     /// <summary>
     /// The name of the less than or equal operation.
     /// </summary>
-    public static string Name = "lte";
+    internal const string Name = "lte";
 
     /// <summary>
     /// Constructs the expression for an less than or equal comparison between the member and the constant value.

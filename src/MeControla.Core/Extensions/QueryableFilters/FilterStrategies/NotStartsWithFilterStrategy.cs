@@ -11,7 +11,7 @@ internal class NotStartsWithFilterStrategy : BaseFilterStrategy
     /// <summary>
     /// The name of the not starts with operation.
     /// </summary>
-    public static string Name = "nsct";
+    internal const string Name = "nsct";
 
     /// <summary>
     /// Constructs the expression for an not starts with comparison between the member and the constant value.

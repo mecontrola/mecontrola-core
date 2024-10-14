@@ -11,7 +11,7 @@ internal class NotEndsWithFilterStrategy : BaseFilterStrategy
     /// <summary>
     /// The name of the not ends with operation.
     /// </summary>
-    public static string Name = "nect";
+    internal const string Name = "nect";
 
     /// <summary>
     /// Constructs the expression for an not ends with comparison between the member and the constant value.

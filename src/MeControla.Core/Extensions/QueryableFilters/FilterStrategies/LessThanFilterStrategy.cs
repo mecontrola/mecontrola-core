@@ -11,7 +11,8 @@ internal class LessThanFilterStrategy : BaseFilterStrategy
     /// <summary>
     /// The name of the less than operation.
     /// </summary>
-    public static string Name = "lt";
+    internal const string Name = "lt";
+
     /// <summary>
     /// Constructs the expression for an less than comparison between the member and the constant value.
     /// </summary>

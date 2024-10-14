@@ -11,7 +11,7 @@ internal class NotEqualFilterStrategy : BaseFilterStrategy
     /// <summary>
     /// The name of the not equality operation.
     /// </summary>
-    public static string Name = "ne";
+    internal const string Name = "ne";
 
     /// <summary>
     /// Constructs the expression for an not equality comparison between the member and the constant value.

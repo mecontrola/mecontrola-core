@@ -11,7 +11,7 @@ internal class GreaterThanOrEqualFilterStrategy : BaseFilterStrategy
     /// <summary>
     /// The name of the greater than or equal operation.
     /// </summary>
-    public static string Name = "gte";
+    internal const string Name = "gte";
 
     /// <summary>
     /// Constructs the expression for an greater than or equal comparison between the member and the constant value.

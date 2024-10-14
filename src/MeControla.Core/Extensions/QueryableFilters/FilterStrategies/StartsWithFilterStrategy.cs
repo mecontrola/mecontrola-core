@@ -11,7 +11,7 @@ internal class StartsWithFilterStrategy : BaseFilterStrategy
     /// <summary>
     /// The name of the starts with operation.
     /// </summary>
-    public static string Name = "sct";
+    internal const string Name = "sct";
 
     /// <summary>
     /// Constructs the expression for an starts with comparison between the member and the constant value.

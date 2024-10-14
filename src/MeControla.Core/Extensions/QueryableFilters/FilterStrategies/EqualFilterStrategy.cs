@@ -11,7 +11,7 @@ internal class EqualFilterStrategy : BaseFilterStrategy
     /// <summary>
     /// The name of the equality operation.
     /// </summary>
-    public static string Name = "eq";
+    internal const string Name = "eq";
 
     /// <summary>
     /// Constructs the expression for an equality comparison between the member and the constant value.

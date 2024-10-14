@@ -11,7 +11,7 @@ internal class NotContainsFilterStrategy : BaseFilterStrategy
     /// <summary>
     /// The name of the not contains operation.
     /// </summary>
-    public static string Name = "nct";
+    internal const string Name = "nct";
 
     /// <summary>
     /// Constructs the expression for an not contains comparison between the member and the constant value.
