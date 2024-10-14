@@ -100,11 +100,11 @@ namespace MeControla.Core.Extensions
         [System.Diagnostics.DebuggerStepThrough]
 #endif
         public static string ToCamelCase(this string value)
-            => new(new CultureInfo("en-US", false).TextInfo
-                                                  .ToTitleCase(string.Join(" ", RegexCamelCase().Matches(value)).ToLowerInvariant())
-                                                  .Replace(@" ", string.Empty)
-                                                  .Select((x, i) => i == 0 ? char.ToLower(x) : x)
-                                                  .ToArray());
+            => new(CultureInfo.InvariantCulture.TextInfo
+                                               .ToTitleCase(string.Join(" ", RegexCamelCase().Matches(value)).ToLowerInvariant())
+                                               .Replace(@" ", string.Empty)
+                                               .Select((x, i) => i == 0 ? char.ToLowerInvariant(x) : x)
+                                               .ToArray());
 
         private const string PATTERN_SNAKE_KEBAB_TITLE_CASE = @"[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+";
 
@@ -237,7 +237,7 @@ namespace MeControla.Core.Extensions
             var sBuilder = new StringBuilder();
 
             for (int i = 0, l = data.Length; i < l; i++)
-                sBuilder.Append(data[i].ToString("x2"));
+                sBuilder.Append(data[i].ToString("x2", CultureInfo.InvariantCulture));
 
             return sBuilder.ToString();
         }
@@ -257,7 +257,7 @@ namespace MeControla.Core.Extensions
         {
             try
             {
-                return Convert.ToDateTime(value);
+                return Convert.ToDateTime(value, CultureInfo.InvariantCulture);
             }
             catch (FormatException)
             {
@@ -309,7 +309,7 @@ namespace MeControla.Core.Extensions
         public static string ToFirstUpper(this string value)
             => string.IsNullOrWhiteSpace(value)
              ? string.Empty
-             : $"{value[0].ToString().ToUpper()}{value[1..]}";
+             : $"{value[0].ToString().ToUpperInvariant()}{value[1..]}";
 
         /// <summary>
         /// Extracts all consonants from the given string.

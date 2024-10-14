@@ -14,6 +14,8 @@
  * limitations under the License.
  ***********************************************************************************/
 
+using System.Globalization;
+
 namespace MeControla.Core.Extensions;
 
 /// <summary>
@@ -38,5 +40,5 @@ public static class IntegerExtensions
     /// The method formats the integer using the "D" format specifier, which pads the number with leading zeros.
     /// </remarks>
     public static string Pad(this int source, int length)
-        => source.ToString($"D{length}");
+        => source.ToString($"D{length}", CultureInfo.InvariantCulture);
 }

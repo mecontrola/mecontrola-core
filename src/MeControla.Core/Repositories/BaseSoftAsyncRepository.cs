@@ -15,12 +15,19 @@ namespace MeControla.Core.Repositories;
 /// Provides a base implementation for an asynchronous repository handling basic operations with entities.
 /// </summary>
 /// <typeparam name="TEntity">The type of entity being managed by the repository.</typeparam>
-/// <param name="context">The <see cref="IDbContext"/> used to interact with the database.</param>
-/// <param name="dbSet">The <see cref="DbSet{TEntity}"/> that provides access to entities in the database.</param>
-public abstract class BaseSoftAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity>(IDbContext context, DbSet<TEntity> dbSet)
-    : BaseAsyncRepository<TEntity>(context, dbSet), IAsyncRepository<TEntity>
-     where TEntity : class, ISoftEntity
+public abstract class BaseSoftAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity>
+    : BaseAsyncRepository<TEntity>, IAsyncRepository<TEntity>
+    where TEntity : class, ISoftEntity
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BaseSoftAsyncRepository{TEntity}"/> class.
+    /// </summary>
+    /// <param name="context">The <see cref="IDbContext"/> used to interact with the database.</param>
+    /// <param name="dbSet">The <see cref="DbSet{TEntity}"/> that provides access to entities in the database.</param>
+    protected BaseSoftAsyncRepository(IDbContext context, DbSet<TEntity> dbSet)
+        : base(context, dbSet)
+    { }
+
     /// <summary>
     /// Asynchronously returns the number of elements in a sequence.
     /// </summary>
@@ -56,17 +63,17 @@ public abstract class BaseSoftAsyncRepository<[DynamicallyAccessedMembers(Dynami
     /// </returns>
     public new virtual async Task<bool> RemoveAsync(TEntity obj, CancellationToken cancellationToken)
     {
-        using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
+        using var transaction = await Context.Database.BeginTransactionAsync(cancellationToken);
 
         try
         {
-            var trackedEntity = context.ChangeTracker.Entries<TEntity>().FirstOrDefault(e => e.Entity.Id == obj.Id);
+            var trackedEntity = Context.ChangeTracker.Entries<TEntity>().FirstOrDefault(e => e.Entity.Id == obj.Id);
             if (trackedEntity != null)
-                context.Entry(trackedEntity.Entity).State = EntityState.Detached;
+                Context.Entry(trackedEntity.Entity).State = EntityState.Detached;
 
-            context.Entry(obj).State = EntityState.Deleted;
+            Context.Entry(obj).State = EntityState.Deleted;
 
-            var rowsAffected = await context.SaveChangesAsync(cancellationToken);
+            var rowsAffected = await Context.SaveChangesAsync(cancellationToken);
             if (rowsAffected == 0)
                 throw new DbUpdateConcurrencyException();
 
@@ -74,9 +81,9 @@ public abstract class BaseSoftAsyncRepository<[DynamicallyAccessedMembers(Dynami
 
             obj.IsDeleted = true;
 
-            context.Entry(obj).State = EntityState.Modified;
+            Context.Entry(obj).State = EntityState.Modified;
 
-            await context.SaveChangesAsync(cancellationToken);
+            await Context.SaveChangesAsync(cancellationToken);
 
             return true;
         }
@@ -84,7 +91,7 @@ public abstract class BaseSoftAsyncRepository<[DynamicallyAccessedMembers(Dynami
         {
             await transaction.RollbackAsync(cancellationToken);
 
-            context.Entry(obj).State = EntityState.Detached;
+            Context.Entry(obj).State = EntityState.Detached;
 
             return false;
         }
@@ -96,7 +103,8 @@ public abstract class BaseSoftAsyncRepository<[DynamicallyAccessedMembers(Dynami
     /// <param name="pagination">The pagination details to apply to the query, including page and limit.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
     /// <returns>A task representing the asynchronous operation, containing a paginated list of entities.</returns>
-    public new virtual async Task<IList<TEntity>> FindAllPagedAsync(IPagination pagination, CancellationToken cancellationToken)
+    [RequiresUnreferencedCode("This method uses reflection, which may not be compatible with trimming.")]
+    public new virtual async Task<IPagination<TEntity>> FindAllPagedAsync(IPagination pagination, CancellationToken cancellationToken)
         => await base.FindAllPagedAsync(pagination, itm => !itm.IsDeleted, cancellationToken);
 
     /// <summary>
@@ -106,7 +114,8 @@ public abstract class BaseSoftAsyncRepository<[DynamicallyAccessedMembers(Dynami
     /// <param name="predicate">An expression that filters the entities.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
     /// <returns>A task representing the asynchronous operation, containing a paginated list of entities matching the predicate.</returns>
-    public new virtual async Task<IList<TEntity>> FindAllPagedAsync(IPagination pagination, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+    [RequiresUnreferencedCode("This method uses reflection, which may not be compatible with trimming.")]
+    public new virtual async Task<IPagination<TEntity>> FindAllPagedAsync(IPagination pagination, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
         => await base.FindAllPagedAsync(pagination, predicate.Combine(itm => !itm.IsDeleted), cancellationToken);
 
     /// <summary>

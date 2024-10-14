@@ -39,9 +39,11 @@ public abstract class BaseBuilder<TBuilder, TObject> : IBuilder<TObject>
 
     private readonly TObject obj;
 
+    static BaseBuilder()
+    { }
+
     /// <summary>
-    /// Creates an instance of the object to be constructed and filled with the default
-    /// information defined in the <see cref="FillDefaultValues"/> ​​method.
+    /// Creates an instance of the object to be constructed.
     /// </summary>
     protected BaseBuilder()
     {
@@ -52,11 +54,11 @@ public abstract class BaseBuilder<TBuilder, TObject> : IBuilder<TObject>
     }
 
     /// <summary>
-    /// Fills the default values of the <paramref name="objInstance"/>.
+    /// Fills the default values of the <paramref name="source"/>.
     /// This method must be implemented by subclasses to define the filling logic.
     /// </summary>
-    /// <param name="objInstance">Instance of the object that should be filled with default values.</param>
-    protected abstract void FillDefaultValues(TObject objInstance);
+    /// <param name="source">Instance of the object that should be filled with default values.</param>
+    protected abstract void FillDefaultValues(TObject source);
 
     /// <summary>
     /// Sets a information in the properties objects of type <typeparamref name="TObject"/>.
@@ -66,7 +68,7 @@ public abstract class BaseBuilder<TBuilder, TObject> : IBuilder<TObject>
     protected TBuilder Set(Action<TObject> action)
     {
         action?.Invoke(obj);
-        return instance;
+        return (TBuilder)this;
     }
 
     /// <summary>

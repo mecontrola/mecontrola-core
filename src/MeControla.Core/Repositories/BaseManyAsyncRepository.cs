@@ -37,12 +37,24 @@ public class BaseManyAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAcce
     /// <summary>
     /// The database context used by the repository.
     /// </summary>
-    protected readonly IDbContext context = context;
+    private readonly IDbContext context = context;
 
     /// <summary>
     /// The <see cref="DbSet{TEntity}"/> representing the entity collection in the database.
     /// </summary>
-    protected readonly DbSet<TEntity> dbSet = dbSet;
+    private readonly DbSet<TEntity> dbSet = dbSet;
+
+    /// <summary>
+    /// Gets the current database context instance associated with the repository.
+    /// </summary>
+    /// <value>The <see cref="IDbContext"/> used for database operations.</value>
+    protected IDbContext Context { get => context; }
+
+    /// <summary>
+    /// Gets the <see cref="DbSet{TEntity}"/> associated with the entity type <typeparamref name="TEntity"/>.
+    /// </summary>
+    /// <value>The <see cref="DbSet{TEntity}"/> used for querying and persisting entities of type <typeparamref name="TEntity"/>.</value>
+    protected DbSet<TEntity> DbSet { get => dbSet; }
 
     /// <summary>
     /// Asynchronously creates a new entity in the repository.
@@ -88,7 +100,7 @@ public class BaseManyAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAcce
     /// <see langword="true"/> if the entity exists; otherwise, <see langword="false"/>.
     /// </returns>
     public async Task<bool> ExistsAsync(TEntity obj, CancellationToken cancellationToken)
-        => await dbSet.AnyAsync(itm => itm.RootId.Equals(obj.RootId) && itm.TargetId.Equals(obj.TargetId), cancellationToken);
+        => await DbSet.AnyAsync(itm => itm.RootId.Equals(obj.RootId) && itm.TargetId.Equals(obj.TargetId), cancellationToken);
 
     /// <summary>
     /// Detaches the specified entity from the context, setting its state to the provided <see cref="EntityState"/>.
@@ -97,21 +109,21 @@ public class BaseManyAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAcce
     /// <param name="entityState">The state to be assigned to the entity after detaching.</param>
     protected virtual void Detach(TEntity entity, EntityState entityState)
     {
-        var local = dbSet.Local.FirstOrDefault(itm => itm.RootId.Equals(entity.RootId)
+        var local = DbSet.Local.FirstOrDefault(itm => itm.RootId.Equals(entity.RootId)
                                                    && itm.TargetId.Equals(entity.TargetId));
         var rootId = local?.RootId ?? 0;
         var targetId = local?.TargetId ?? 0;
 
         if (rootId != 0 && targetId != 0)
-            context.Entry(local).State = EntityState.Detached;
+            Context.Entry(local).State = EntityState.Detached;
 
-        context.Entry(entity).State = entityState;
+        Context.Entry(entity).State = entityState;
     }
 
     private async Task<bool> ApplyAlterContextAsync(Action<DbSet<TEntity>> action, CancellationToken cancellationToken)
     {
-        action(dbSet);
+        action(DbSet);
 
-        return await context.SaveChangesAsync(cancellationToken) > 0;
+        return await Context.SaveChangesAsync(cancellationToken) > 0;
     }
 }

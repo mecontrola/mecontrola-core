@@ -17,6 +17,7 @@
 using MeControla.Core.Data.Entities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -64,7 +65,8 @@ public interface IAsyncRepository<TEntity>
     /// <param name="pagination">The pagination details to apply to the query, including page and limit.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
     /// <returns>A task representing the asynchronous operation, containing a paginated list of entities.</returns>
-    Task<IList<TEntity>> FindAllPagedAsync(IPagination pagination, CancellationToken cancellationToken);
+    [RequiresUnreferencedCode("This method uses reflection, which may not be compatible with trimming.")]
+    Task<IPagination<TEntity>> FindAllPagedAsync(IPagination pagination, CancellationToken cancellationToken);
 
     /// <summary>
     /// Asynchronously retrieves a paginated list of entities that match the given predicate.
@@ -73,7 +75,8 @@ public interface IAsyncRepository<TEntity>
     /// <param name="predicate">An expression that filters the entities.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
     /// <returns>A task representing the asynchronous operation, containing a paginated list of entities matching the predicate.</returns>
-    Task<IList<TEntity>> FindAllPagedAsync(IPagination pagination, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
+    [RequiresUnreferencedCode("This method uses reflection, which may not be compatible with trimming.")]
+    Task<IPagination<TEntity>> FindAllPagedAsync(IPagination pagination, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
 
     /// <summary>
     /// Asynchronously finds all entities.

@@ -8,5 +8,6 @@ public class SoftUser : ISoftEntity
     public long Id { get; set; }
     public Guid Uuid { get; set; }
     public string Name { get; set; }
+    public int Age { get; set; }
     public bool IsDeleted { get; set; }
 }

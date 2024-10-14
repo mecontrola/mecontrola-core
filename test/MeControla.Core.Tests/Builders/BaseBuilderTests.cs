@@ -11,11 +11,9 @@ public class BaseBuilderTests
     [Fact(DisplayName = "[BaseBuilder.ToBuild] Deve criar exceção ao criar uma instancia com new.")]
     public void DeveGerarExcecaoQuandoCriaInstanciaComNew()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() => {
-            new UserBuilder();
-            });
-
-        exception.Message.Should().Be(UserBuilder.ERRO_CREATE_INSTANCE_NEW);
+        var exception = () => new UserBuilder();
+    
+        exception.Should().ThrowExactly<InvalidOperationException>().WithMessage(UserBuilder.ERRO_CREATE_INSTANCE_NEW);
     }
 
     [Fact(DisplayName = "[BaseBuilder.ToBuild] Deve criar um objeto do tipo criado e preenchido com as informações definidas.")]

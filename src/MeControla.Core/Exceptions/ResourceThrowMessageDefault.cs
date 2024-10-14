@@ -20,11 +20,8 @@ namespace MeControla.Core.Exceptions;
 /// This class contains default message constants for various HTTP error responses.
 /// It is sealed to prevent inheritance and ensure that the messages remain consistent.
 /// </summary>
-internal sealed class ResourceThrowMessageDefault
+internal static class ResourceThrowMessageDefault
 {
-    private ResourceThrowMessageDefault()
-    { }
-
     /// <summary>
     /// The default message for a "Bad Gateway" error.
     /// </summary>

@@ -1,5 +1,7 @@
-﻿using MeControla.Core.Tests.Mocks.Datas.Entities;
+﻿using MeControla.Core.Tests.Mocks;
+using MeControla.Core.Tests.Mocks.Datas.Entities;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MeControla.Core.Tests.Mocks.Entities;
 
@@ -50,4 +52,13 @@ public static class SoftUserMock
             CreateUser2(),
             CreateUser3()
         ];
-}
+
+    public static IQueryable<SoftUser> CreateQueryable()
+        => new List<SoftUser>
+        {
+            new() { Id = DataMock.INT_ID_1, Name = "John", Age = 25, IsDeleted = false },
+            new() { Id = DataMock.INT_ID_2, Name = "Jane", Age = 30, IsDeleted = false },
+            new() { Id = DataMock.INT_ID_3, Name = "Johnathan", Age = 35, IsDeleted = false },
+            new() { Id = DataMock.INT_ID_4, Name = "Alice", Age = 40, IsDeleted = true }
+        }.AsQueryable();
+}        

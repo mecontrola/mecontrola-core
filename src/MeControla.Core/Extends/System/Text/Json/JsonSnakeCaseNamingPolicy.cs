@@ -16,7 +16,9 @@
 
 using MeControla.Core.Extensions;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace System.Text.Json;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 /// <summary>
 /// A <see cref="JsonNamingPolicy"/> implementation that converts property names to snake_case.

@@ -18,6 +18,7 @@ using AutoMapper;
 using MeControla.Core.Data.Enums;
 using MeControla.Core.Extensions;
 using System;
+using System.Globalization;
 
 namespace MeControla.Core.Mappers;
 
@@ -45,7 +46,7 @@ public abstract class BaseEnumToDtoMapper<TParam, TResult> : InternalBaseMapper<
                 return null;
 
             destionation ??= new TResult();
-            destionation.Id = Convert.ToUInt32(source);
+            destionation.Id = Convert.ToUInt32(source, CultureInfo.InvariantCulture);
             destionation.Value = source.GetDescription();
 
             return destionation;

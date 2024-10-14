@@ -32,12 +32,12 @@ public abstract class ContextRepository<[DynamicallyAccessedMembers(DynamicallyA
     /// <summary>
     /// The database context used by the repository.
     /// </summary>
-    protected readonly IDbContext context;
+    private readonly IDbContext context;
 
     /// <summary>
     /// The <see cref="DbSet{TEntity}"/> representing the entity collection in the database.
     /// </summary>
-    protected readonly DbSet<TEntity> dbSet;
+    private readonly DbSet<TEntity> dbSet;
 
     private IDbContextFacade database;
 
@@ -54,9 +54,21 @@ public abstract class ContextRepository<[DynamicallyAccessedMembers(DynamicallyA
     }
 
     /// <summary>
+    /// Gets the current database context instance associated with the repository.
+    /// </summary>
+    /// <value>The <see cref="IDbContext"/> used for database operations.</value>
+    protected IDbContext Context { get => context; }
+
+    /// <summary>
+    /// Gets the <see cref="DbSet{TEntity}"/> associated with the entity type <typeparamref name="TEntity"/>.
+    /// </summary>
+    /// <value>The <see cref="DbSet{TEntity}"/> used for querying and persisting entities of type <typeparamref name="TEntity"/>.</value>
+    protected DbSet<TEntity> DbSet { get => dbSet; }
+
+    /// <summary>
     /// Gets the <see cref="IDbContextFacade"/> for managing database transactions and connections.
     /// </summary>
     /// <returns>An instance of the <see cref="IDbContextFacade"/> implementation.</returns>
     public IDbContextFacade Database()
-        => database ??= new DbContextFacade(context.Database);
+        => database ??= new DbContextFacade(Context.Database);
 }
