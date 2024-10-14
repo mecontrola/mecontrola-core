@@ -183,13 +183,6 @@ namespace MeControla.Core.Tests.Extensions
             actual.Should().BeEquivalentTo(DataMock.TEXT_DECODE);
         }
 
-        [Fact(DisplayName = "[StringExtensions.ToMD5] Deve realizar a decodificação em MD5 de um texto.")]
-        public void DeveRealizarEncodeMD5Texto()
-        {
-            var actual = DataMock.TEXT_ENCODE.ToMD5();
-            actual.Should().BeEquivalentTo(DataMock.TEXT_ENCODE_MD5);
-        }
-
         [Fact(DisplayName = "[StringExtensions.ToDateTime] Deve realizar conversão de uma valor DateTime em string para um DateTime.")]
         public void DeveRealizarConversaoStringValidaParaDateTime()
         {

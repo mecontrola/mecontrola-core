@@ -31,12 +31,6 @@ public abstract class BaseBuilder<TBuilder, TObject> : IBuilder<TObject>
     where TBuilder : BaseBuilder<TBuilder, TObject>, new()
     where TObject : class, new()
 {
-    internal const string ERRO_CREATE_INSTANCE_NEW = "You cannot create another instance of the singleton class.";
-
-    private static bool isInstanceCreated = true;
-
-    private static TBuilder instance;
-
     private readonly TObject obj;
 
     static BaseBuilder()
@@ -47,10 +41,9 @@ public abstract class BaseBuilder<TBuilder, TObject> : IBuilder<TObject>
     /// </summary>
     protected BaseBuilder()
     {
-        if (isInstanceCreated)
-            throw new InvalidOperationException(ERRO_CREATE_INSTANCE_NEW);
-
         obj = new TObject();
+
+        FillDefaultValues(obj);
     }
 
     /// <summary>
@@ -77,20 +70,4 @@ public abstract class BaseBuilder<TBuilder, TObject> : IBuilder<TObject>
     /// <returns>Instance of the object of type <typeparamref name="TObject"/>.</returns>
     public TObject ToBuild()
         => obj;
-
-    /// <summary>
-    /// Gets a new instance of the builder, initializes the object, and returns the builder instance.
-    /// </summary>
-    /// <returns>Instance of the builder of type <typeparamref name="TBuilder"/>.</returns>
-    public static TBuilder GetInstance()
-    {
-        isInstanceCreated = false;
-
-        instance = new();
-        instance.FillDefaultValues(instance.obj);
-
-        isInstanceCreated = true;
-
-        return instance;
-    }
 }

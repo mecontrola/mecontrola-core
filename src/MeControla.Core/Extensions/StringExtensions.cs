@@ -17,7 +17,6 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -219,28 +218,6 @@ namespace MeControla.Core.Extensions
 #endif
         public static string TrimAll(this string value)
             => Regex.Replace(value, @"\s+", " ", RegexOptions.None, REGEX_TIMEOUT).Trim();
-
-        /// <summary>
-        /// Computes the MD5 hash of the given input string.
-        /// </summary>
-        /// <param name="input">The input string to compute the hash for.</param>
-        /// <returns>
-        /// A string representing the hexadecimal value of the MD5 hash.
-        /// If the input string is <c>null</c> or empty, returns <c>null</c>.
-        /// </returns>
-#if !DEBUG
-        [System.Diagnostics.DebuggerStepThrough]
-#endif
-        public static string ToMD5(this string input)
-        {
-            var data = MD5.HashData(Encoding.UTF8.GetBytes(input));
-            var sBuilder = new StringBuilder();
-
-            for (int i = 0, l = data.Length; i < l; i++)
-                sBuilder.Append(data[i].ToString("x2", CultureInfo.InvariantCulture));
-
-            return sBuilder.ToString();
-        }
 
         /// <summary>
         /// Converts a string representation of a date and time to a nullable <see cref="DateTime"/>.
