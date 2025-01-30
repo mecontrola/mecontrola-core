@@ -260,13 +260,6 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Gets a <see cref="DbSet{TEntity}"/> for the specified entity type.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of entity to access.</typeparam>
-    /// <returns>A set for the specified entity type.</returns>
-    DbSet<TEntity> Set<[NetCoreCodeAnalysis.DynamicallyAccessedMembers(NetCoreCodeAnalysis.DynamicallyAccessedMemberTypes.All)] TEntity>() where TEntity : class;
-
-    /// <summary>
     /// Returns a string representation of the current context.
     /// </summary>
     /// <returns>A string that represents the current object.</returns>
