@@ -293,7 +293,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     ///     The <see cref="EntityEntry{TEntity}" /> for the entity. The entry provides
     ///     access to change tracking information and operations for the entity.
     /// </returns>
-    EntityEntry<TEntity> Add<TEntity>([NotNull] TEntity entity) where TEntity : class;
+    EntityEntry<TEntity> Add<TEntity>(TEntity entity) where TEntity : class;
 
     /// <summary>
     ///     Begins tracking the given entity, and any other reachable entities that are
@@ -328,7 +328,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     ///     information and operations for the entity.
     /// </returns>
     /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
-    ValueTask<EntityEntry> AddAsync([NotNull] object entity, CancellationToken cancellationToken = default);
+    ValueTask<EntityEntry> AddAsync(object entity, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Begins tracking the given entity, and any other reachable entities that are
@@ -361,7 +361,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     ///     information and operations for the entity.
     /// </returns>
     /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
-    ValueTask<EntityEntry<TEntity>> AddAsync<TEntity>([NotNull] TEntity entity, CancellationToken cancellationToken = default) where TEntity : class;
+    ValueTask<EntityEntry<TEntity>> AddAsync<TEntity>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : class;
 
     /// <summary>
     ///     Begins tracking the given entities, and any other reachable entities that are
@@ -374,7 +374,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     ///     for more information and examples.
     /// </remarks>
     /// <param name="entities">The entities to add.</param>
-    void AddRange([NotNull] params object[] entities);
+    void AddRange(params object[] entities);
 
     /// <summary>
     ///     Begins tracking the given entities, and any other reachable entities that are
@@ -387,7 +387,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     ///     for more information and examples.
     /// </remarks>
     /// <param name="entities">The entities to add.</param>
-    void AddRange([NotNull] IEnumerable<object> entities);
+    void AddRange(IEnumerable<object> entities);
 
     /// <summary>
     ///     Begins tracking the given entity, and any other reachable entities that are
@@ -419,7 +419,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     ///     A task that represents the asynchronous operation.
     /// </returns>
     /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
-    Task AddRangeAsync([NotNull] IEnumerable<object> entities, CancellationToken cancellationToken = default);
+    Task AddRangeAsync(IEnumerable<object> entities, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Begins tracking the given entity, and any other reachable entities that are
@@ -447,7 +447,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     /// </remarks>
     /// <param name="entities">The entities to add.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task AddRangeAsync([NotNull] params object[] entities);
+    Task AddRangeAsync(params object[] entities);
 
     /// <summary>
     ///     Begins tracking the given entity and entries reachable from the given entity using
@@ -486,7 +486,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     ///     The <see cref="EntityEntry" /> for the entity. The entry provides
     ///     access to change tracking information and operations for the entity.
     /// </returns>
-    EntityEntry Attach([NotNull] object entity);
+    EntityEntry Attach(object entity);
 
     /// <summary>
     ///     Begins tracking the given entity and entries reachable from the given entity using
@@ -563,7 +563,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     ///     </para>
     /// </remarks>
     /// <param name="entities">The entities to attach.</param>
-    void AttachRange([NotNull] IEnumerable<object> entities);
+    void AttachRange(IEnumerable<object> entities);
 
     /// <summary>
     ///     Begins tracking the given entities and entries reachable from the given entities using
@@ -600,7 +600,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     ///     </para>
     /// </remarks>
     /// <param name="entities">The entities to attach.</param>
-    void AttachRange([NotNull] params object[] entities);
+    void AttachRange(params object[] entities);
 
     /// <summary>
     ///     Begins tracking the given entity and entries reachable from the given entity using
@@ -639,7 +639,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     ///     The <see cref="EntityEntry" /> for the entity. The entry provides
     ///     access to change tracking information and operations for the entity.
     /// </returns>
-    EntityEntry Update([NotNull] object entity);
+    EntityEntry Update(object entity);
 
     /// <summary>
     ///     Begins tracking the given entity and entries reachable from the given entity using
@@ -679,7 +679,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     ///     The <see cref="EntityEntry{TEntity}" /> for the entity. The entry provides
     ///     access to change tracking information and operations for the entity.
     /// </returns>
-    EntityEntry<TEntity> Update<TEntity>([NotNull] TEntity entity) where TEntity : class;
+    EntityEntry<TEntity> Update<TEntity>(TEntity entity) where TEntity : class;
 
     /// <summary>
     ///     Begins tracking the given entities and entries reachable from the given entities using
@@ -716,7 +716,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     ///     </para>
     /// </remarks>
     /// <param name="entities">The entities to update.</param>
-    void UpdateRange([NotNull] IEnumerable<object> entities);
+    void UpdateRange(IEnumerable<object> entities);
 
     /// <summary>
     ///     Begins tracking the given entities and entries reachable from the given entities using
@@ -753,7 +753,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     ///     </para>
     /// </remarks>
     /// <param name="entities">The entities to update.</param>
-    void UpdateRange([NotNull] params object[] entities);
+    void UpdateRange(params object[] entities);
 
     /// <summary>
     ///     Begins tracking the given entity in the <see cref="EntityState.Deleted" /> state such that it will
@@ -782,7 +782,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     ///     The <see cref="EntityEntry" /> for the entity. The entry provides
     ///     access to change tracking information and operations for the entity.
     /// </returns>
-    EntityEntry Remove([NotNull] object entity);
+    EntityEntry Remove(object entity);
 
     /// <summary>
     ///     Begins tracking the given entity in the <see cref="EntityState.Deleted" /> state such that it will
@@ -812,7 +812,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     ///     The <see cref="EntityEntry{TEntity}" /> for the entity. The entry provides
     ///     access to change tracking information and operations for the entity.
     /// </returns>
-    EntityEntry<TEntity> Remove<TEntity>([NotNull] TEntity entity) where TEntity : class;
+    EntityEntry<TEntity> Remove<TEntity>(TEntity entity) where TEntity : class;
 
     /// <summary>
     ///     Begins tracking the given entity in the <see cref="EntityState.Deleted" /> state such that it will
@@ -836,7 +836,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     ///     </para>
     /// </remarks>
     /// <param name="entities">The entities to remove.</param>
-    void RemoveRange([NotNull] IEnumerable<object> entities);
+    void RemoveRange(IEnumerable<object> entities);
 
     /// <summary>
     ///     Begins tracking the given entity in the <see cref="EntityState.Deleted" /> state such that it will
@@ -860,7 +860,7 @@ public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<ISe
     ///     </para>
     /// </remarks>
     /// <param name="entities">The entities to remove.</param>
-    void RemoveRange([NotNull] params object[] entities);
+    void RemoveRange(params object[] entities);
 
     /// <summary>
     ///     Finds an entity with the given primary key values. If an entity with the given primary key values
