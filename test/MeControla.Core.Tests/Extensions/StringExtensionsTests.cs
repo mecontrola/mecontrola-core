@@ -296,7 +296,7 @@ public class StringExtensionsTests
     public void DeveRetornarStringOriginalQuandoSemArgumentos()
     {
         var template = "Olá, Mundo!";
-        object[] args = { };
+        object[] args = [];
 
         var actual = template.Format(args);
 
