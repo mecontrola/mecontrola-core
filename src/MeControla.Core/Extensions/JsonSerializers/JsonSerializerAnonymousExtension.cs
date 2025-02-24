@@ -40,8 +40,8 @@ public static class JsonSerializerAnonymousExtension
     [System.Diagnostics.DebuggerStepThrough]
 #endif
     [RequiresUnreferencedCode("Use 'MethodFriendlyToTrimming' instead")]
-    public static T ToAnonymousType<T>(this string source)
-        => ToAnonymousType<T>(source, null);
+    public static T? ToAnonymousType<T>(this string source)
+        => InternalToAnonymousType<T>(source, null);
 
     /// <summary>
     /// Deserializes a JSON string into an anonymous type using custom serialization options.
@@ -58,7 +58,11 @@ public static class JsonSerializerAnonymousExtension
     [System.Diagnostics.DebuggerStepThrough]
 #endif
     [RequiresUnreferencedCode("Use 'MethodFriendlyToTrimming' instead")]
-    public static T ToAnonymousType<T>(this string source, JsonSerializerOptions jsonSerializerOptions)
+    public static T? ToAnonymousType<T>(this string source, JsonSerializerOptions jsonSerializerOptions)
+        => InternalToAnonymousType<T>(source, jsonSerializerOptions);
+
+    [RequiresUnreferencedCode("Use 'MethodFriendlyToTrimming' instead")]
+    private static T? InternalToAnonymousType<T>(this string source, JsonSerializerOptions? jsonSerializerOptions)
     {
         if (source.IsNullOrWhiteSpace())
             throw new ArgumentNullException(nameof(source), EXCEPTION_ARGUMENT_SOURCE_MESSAGE);

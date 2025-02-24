@@ -92,11 +92,13 @@ public class DbContextFacadeTests : BaseRepository
         var cancellationToken = GetCancellationToken();
         var repository = new UserRepository(context);
 
-        dbContextFacade.BeginTransaction();
+        var transaction = dbContextFacade.BeginTransaction();
 
         await repository.RemoveAsync(UserMock.CreateUser3(), cancellationToken);
 
-        dbContextFacade.CommitTransaction();
+        context.SaveChanges();
+
+        transaction.Commit();
 
         var actual = await repository.FindAsync(DataMock.INT_ID_3, cancellationToken);
 
@@ -110,11 +112,13 @@ public class DbContextFacadeTests : BaseRepository
         var cancellationToken = GetCancellationToken();
         var repository = new UserRepository(context);
 
-        await dbContextFacade.BeginTransactionAsync(cancellationToken);
+        var transaction = await dbContextFacade.BeginTransactionAsync(cancellationToken);
 
         await repository.RemoveAsync(UserMock.CreateUser3(), cancellationToken);
 
-        await dbContextFacade.CommitTransactionAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
+
+        await transaction.CommitAsync(cancellationToken);
 
         var actual = await repository.FindAsync(DataMock.INT_ID_3, cancellationToken);
 

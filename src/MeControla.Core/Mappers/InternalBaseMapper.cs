@@ -38,16 +38,16 @@ public abstract class InternalBaseMapper<TParam, TResult>
     /// to be used later in the methods <see cref="ToMap(TParam)"/>, <see cref="ToMap(TParam, TResult)"/> e <see cref="ToMapList"/>.
     /// </summary>
     protected InternalBaseMapper()
-        => mapper = new MapperConfiguration(cfg => CreateMap(cfg)).CreateMapper();
+        => mapper = new MapperConfiguration(CreateMap).CreateMapper();
 
     private void CreateMap(IMapperConfigurationExpression cfg)
-        => MapFields(cfg.CreateMap<TParam, TResult>());
+        => MapFields(cfg.CreateMap<TParam, TResult?>());
 
     /// <summary>
     /// Method used to configure the mapping between the two types defined in the construction of the class.
     /// </summary>
     /// <param name="map">The <see cref="IMappingExpression{TParam, TResult}"/> used to define the mapping configuration.</param>
-    protected virtual void MapFields(IMappingExpression<TParam, TResult> map)
+    protected virtual void MapFields(IMappingExpression<TParam, TResult?> map)
     { }
 
     /// <summary>
@@ -55,7 +55,7 @@ public abstract class InternalBaseMapper<TParam, TResult>
     /// </summary>
     /// <param name="obj">The source object to be mapped.</param>
     /// <returns>A new instance of <typeparamref name="TResult"/> mapped from the source object.</returns>
-    public TResult ToMap(TParam obj)
+    public TResult? ToMap(TParam obj)
         => mapper.Map<TResult>(obj);
 
     /// <summary>
@@ -75,5 +75,7 @@ public abstract class InternalBaseMapper<TParam, TResult>
     /// <returns>A list of mapped <typeparamref name="TResult"/> instances.</returns>
     public IList<TResult> ToMapList<T>(T list)
         where T : IList<TParam>, ICollection<TParam>
-        => list.Select(itm => ToMap(itm)).ToList();
+        => list.Select(ToMap)
+               .OfType<TResult>()
+               .ToList();
 }

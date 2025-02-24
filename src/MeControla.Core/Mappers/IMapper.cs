@@ -32,7 +32,7 @@ public interface IMapper<TParam, TResult>
     /// </summary>
     /// <param name="obj">The source object to be mapped.</param>
     /// <returns>A new instance of <typeparamref name="TResult"/> mapped from the source object.</returns>
-    TResult ToMap(TParam obj);
+    TResult? ToMap(TParam obj);
 
     /// <summary>
     /// Maps an instance of <typeparamref name="TParam"/> to an existing instance of <typeparamref name="TResult"/>.

@@ -17,6 +17,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,26 +27,36 @@ namespace MeControla.Core.Repositories;
 /// <summary>
 /// Facade for interacting with the <see cref="DatabaseFacade"/> to provide a simplified interface for database operations.
 /// </summary>
-/// <remarks>
-/// Initializes a new instance of the <see cref="DbContextFacade"/> class.
-/// </remarks>
-/// <param name="database">The <see cref="DatabaseFacade"/> instance to be used for database operations.</param>
-public class DbContextFacade(DatabaseFacade database)
+public class DbContextFacade
     : IDbContextFacade
 {
+    private readonly DatabaseFacade _database;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DbContextFacade"/> class.
+    /// </summary>
+    /// <param name="database">The <see cref="DatabaseFacade"/> instance to be used for database operations.</param>
+    /// <exception cref="ArgumentNullException">Lançado se <paramref name="database"/> for nulo.</exception>
+    public DbContextFacade(DatabaseFacade database)
+    {
+        ArgumentNullException.ThrowIfNull(database);
+
+        _database = database;
+    }
+
     /// <summary>
     /// Gets the underlying database connection.
     /// </summary>
     /// <returns>The <see cref="IDbConnection"/> for the database.</returns>
     public IDbConnection GetDbConnection()
-        => database.GetDbConnection();
+        => _database.GetDbConnection();
 
     /// <summary>
     /// Ensures that the database is created.
     /// </summary>
     /// <returns><c>true</c> if the database is created; otherwise, <c>false</c>.</returns>
     public virtual bool EnsureCreated()
-        => database.EnsureCreated();
+        => _database.EnsureCreated();
 
     /// <summary>
     /// Asynchronously ensures that the database is created.
@@ -53,14 +64,14 @@ public class DbContextFacade(DatabaseFacade database)
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
     /// <returns><c>true</c> if the database is created; otherwise, <c>false</c>.</returns>
     public virtual async Task<bool> EnsureCreatedAsync(CancellationToken cancellationToken = default)
-        => await database.EnsureCreatedAsync(cancellationToken);
+        => await _database.EnsureCreatedAsync(cancellationToken);
 
     /// <summary>
     /// Ensures that the database is deleted.
     /// </summary>
     /// <returns><c>true</c> if the database is deleted; otherwise, <c>false</c>.</returns>
     public virtual bool EnsureDeleted()
-        => database.EnsureDeleted();
+        => _database.EnsureDeleted();
 
     /// <summary>
     /// Asynchronously ensures that the database is deleted.
@@ -68,14 +79,14 @@ public class DbContextFacade(DatabaseFacade database)
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
     /// <returns><c>true</c> if the database is deleted; otherwise, <c>false</c>.</returns>
     public virtual async Task<bool> EnsureDeletedAsync(CancellationToken cancellationToken = default)
-        => await database.EnsureDeletedAsync(cancellationToken);
+        => await _database.EnsureDeletedAsync(cancellationToken);
 
     /// <summary>
     /// Checks if a connection to the database can be established.
     /// </summary>
     /// <returns><c>true</c> if a connection can be established; otherwise, <c>false</c>.</returns>
     public virtual bool CanConnect()
-        => database.CanConnect();
+        => _database.CanConnect();
 
     /// <summary>
     /// Asynchronously checks if a connection to the database can be established.
@@ -83,14 +94,14 @@ public class DbContextFacade(DatabaseFacade database)
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
     /// <returns><c>true</c> if a connection can be established; otherwise, <c>false</c>.</returns>
     public virtual async Task<bool> CanConnectAsync(CancellationToken cancellationToken = default)
-        => await database.CanConnectAsync(cancellationToken);
+        => await _database.CanConnectAsync(cancellationToken);
 
     /// <summary>
     /// Begins a new database transaction.
     /// </summary>
     /// <returns>An <see cref="IDbContextTransaction"/> representing the transaction.</returns>
     public virtual IDbContextTransaction BeginTransaction()
-        => database.BeginTransaction();
+        => _database.BeginTransaction();
 
     /// <summary>
     /// Asynchronously begins a new database transaction.
@@ -98,13 +109,13 @@ public class DbContextFacade(DatabaseFacade database)
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
     /// <returns>A task representing the asynchronous operation, with a value of type <see cref="IDbContextTransaction"/>.</returns>
     public virtual Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
-        => database.BeginTransactionAsync(cancellationToken);
+        => _database.BeginTransactionAsync(cancellationToken);
 
     /// <summary>
     /// Commits the current transaction.
     /// </summary>
     public virtual void CommitTransaction()
-        => database.CommitTransaction();
+        => _database.CommitTransaction();
 
     /// <summary>
     /// Asynchronously commits the current transaction.
@@ -112,13 +123,13 @@ public class DbContextFacade(DatabaseFacade database)
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
     /// <returns>A task representing the asynchronous commit operation.</returns>
     public virtual async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
-        => await database.CommitTransactionAsync(cancellationToken);
+        => await _database.CommitTransactionAsync(cancellationToken);
 
     /// <summary>
     /// Rolls back the current transaction.
     /// </summary>
     public virtual void RollbackTransaction()
-        => database.RollbackTransaction();
+        => _database.RollbackTransaction();
 
     /// <summary>
     /// Asynchronously rolls back the current transaction.
@@ -126,28 +137,28 @@ public class DbContextFacade(DatabaseFacade database)
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
     /// <returns>A task representing the asynchronous rollback operation.</returns>
     public virtual async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
-        => await database.RollbackTransactionAsync(cancellationToken);
+        => await _database.RollbackTransactionAsync(cancellationToken);
 
     /// <summary>
     /// Creates an execution strategy for database operations.
     /// </summary>
     /// <returns>An <see cref="IExecutionStrategy"/> instance.</returns>
     public virtual IExecutionStrategy CreateExecutionStrategy()
-        => database.CreateExecutionStrategy();
+        => _database.CreateExecutionStrategy();
 
     /// <summary>
     /// Gets the current transaction, if any.
     /// </summary>
-    public virtual IDbContextTransaction CurrentTransaction
-        => database.CurrentTransaction;
+    public virtual IDbContextTransaction? CurrentTransaction
+        => _database.CurrentTransaction;
 
     /// <summary>
     /// Gets or sets the behavior for automatic transaction handling.
     /// </summary>
     public virtual AutoTransactionBehavior AutoTransactionBehavior
     {
-        get { return database.AutoTransactionBehavior; }
-        set { database.AutoTransactionBehavior = value; }
+        get { return _database.AutoTransactionBehavior; }
+        set { _database.AutoTransactionBehavior = value; }
     }
 
     /// <summary>
@@ -155,35 +166,35 @@ public class DbContextFacade(DatabaseFacade database)
     /// </summary>
     public virtual bool AutoSavepointsEnabled
     {
-        get { return database.AutoSavepointsEnabled; }
-        set { database.AutoSavepointsEnabled = value; }
+        get { return _database.AutoSavepointsEnabled; }
+        set { _database.AutoSavepointsEnabled = value; }
     }
 
     /// <summary>
     /// Gets the name of the database provider.
     /// </summary>
-    public virtual string ProviderName
-        => database.ProviderName;
+    public virtual string? ProviderName
+        => _database.ProviderName;
 
     /// <summary>
     /// Returns a string that represents the current object.
     /// </summary>
     /// <returns>A string that represents the current object.</returns>
-    public override string ToString()
-        => database.ToString();
+    public override string? ToString()
+        => _database.ToString();
 
     /// <summary>
     /// Determines whether the specified object is equal to the current object.
     /// </summary>
     /// <param name="obj">The object to compare with the current object.</param>
     /// <returns><see langword="true" /> if the specified object is equal to the current object; otherwise, <see langword="false" />.</returns>
-    public override bool Equals(object obj)
-        => database.Equals(obj);
+    public override bool Equals(object? obj)
+        => _database.Equals(obj);
 
     /// <summary>
     /// Serves as the default hash function.
     /// </summary>
     /// <returns>A hash code for the current object.</returns>
     public override int GetHashCode()
-        => database.GetHashCode();
+        => _database.GetHashCode();
 }

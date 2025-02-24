@@ -28,7 +28,7 @@ namespace MeControla.Core.Exceptions;
 /// </remarks>
 /// <param name="message">The error message that describes the exception.</param>
 /// <param name="innerException">The inner exception that caused this exception, or <c>null</c> if there is no inner exception.</param>
-public class BadRequestException(string message, Exception innerException)
+public class BadRequestException(string message, Exception? innerException)
     : HttpException(HttpStatusCode.BadRequest, message, innerException)
 {
     /// <summary>

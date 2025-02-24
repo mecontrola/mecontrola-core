@@ -30,7 +30,7 @@ namespace MeControla.Core.Tools
     /// <typeparam name="TEntity">Entity to be mapped</typeparam>
     /// <param name="schemaName">Schema name</param>
     /// <param name="prefixColumn">Fixed prefix</param>
-    public class TableMetadata<TEntity>(string schemaName, string prefixColumn)
+    public class TableMetadata<TEntity>(string schemaName, string? prefixColumn)
         where TEntity : class
     {
         private readonly string schemaName = schemaName;

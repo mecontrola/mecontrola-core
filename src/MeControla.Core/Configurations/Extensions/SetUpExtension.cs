@@ -50,13 +50,13 @@ public static class SetUpExtension
 
     [RequiresUnreferencedCode("Calls System.Reflection.Assembly.ExportedTypes")]
     private static IEnumerable<T> LoadAssemblies<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>()
-            => LoadAppAssemblies().Select(itm => GetClassFromType<T>(itm))
+            => LoadAppAssemblies().Select(GetClassFromType<T>)
                                   .SelectMany(x => x);
 
     [RequiresUnreferencedCode("Calls System.Reflection.Assembly.ExportedTypes")]
     private static IEnumerable<T> GetClassFromType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(Assembly assembly)
         => assembly.ExportedTypes
-                   .Where(x => IsTypeOfClass<T>(x))
+                   .Where(IsTypeOfClass<T>)
                    .Select(Activator.CreateInstance)
                    .Cast<T>();
 
@@ -69,10 +69,10 @@ public static class SetUpExtension
 
         return new DirectoryInfo(currentAppDomain.BaseDirectory).GetFiles("*.dll", SearchOption.TopDirectoryOnly)
                                                                 .Select(itm => GetAssembly(itm, currentAppDomain))
-                                                                .Where(itm => itm != null);
+                                                                .OfType<Assembly>();
     }
 
-    internal static Assembly GetAssembly(FileInfo itm, INetCoreAppDomain currentAppDomain)
+    internal static Assembly? GetAssembly(FileInfo itm, INetCoreAppDomain currentAppDomain)
     {
         var assemblyName = AssemblyName.GetAssemblyName(itm.FullName);
         try
@@ -101,7 +101,7 @@ public static class SetUpExtension
         }
     }
 
-    private static INetCoreAppDomain GetAppDomainCurrentDomain(INetCoreAppDomain baseAppDomain)
+    private static INetCoreAppDomain GetAppDomainCurrentDomain(INetCoreAppDomain? baseAppDomain)
         => baseAppDomain ?? new NetCoreAppDomain();
 }
 

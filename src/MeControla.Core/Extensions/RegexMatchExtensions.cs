@@ -15,8 +15,8 @@ public static class RegexMatchExtensions
     /// <param name="match">The <see cref="Match"/> object containing the match results.</param>
     /// <param name="groupName">The name of the group to retrieve the value from.</param>
     /// <returns>The matched value if the group exists and is successfully matched; otherwise, <c>null</c>.</returns>
-    public static string GetValueOrDefault(this Match match, string groupName)
-        => GetValueOrDefault(match, groupName, null);
+    public static string? GetValueOrDefault(this Match match, string groupName)
+        => InternalGetValueOrDefault(match, groupName, null);
 
     /// <summary>
     /// Retrieves the matched value from the specified group within the provided match object.
@@ -26,13 +26,16 @@ public static class RegexMatchExtensions
     /// <param name="groupName">The name of the group to retrieve the value from.</param>
     /// <param name="defaultValue">The default value to return if the group is not successfully matched.</param>
     /// <returns>The matched value if the group exists and is successfully matched; otherwise, the specified default value.</returns>
-    public static string GetValueOrDefault(this Match source, string groupName, string defaultValue)
+    public static string? GetValueOrDefault(this Match source, string groupName, string defaultValue)
+        => InternalGetValueOrDefault(source, groupName, defaultValue);
+
+    private static string? InternalGetValueOrDefault(this Match source, string groupName, string? defaultValue)
     {
         ArgumentNullException.ThrowIfNull(source);
 
         ArgumentException.ThrowIfNullOrWhiteSpace(groupName);
 
-        return source.Groups.TryGetValue(groupName, out Group group) && group.Success
+        return source.Groups.TryGetValue(groupName, out Group? group) && group.Success
              ? group.Value
              : defaultValue;
     }

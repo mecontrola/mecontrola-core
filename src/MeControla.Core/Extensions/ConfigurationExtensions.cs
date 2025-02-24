@@ -40,7 +40,7 @@ public static class ConfigurationExtensions
     [System.Diagnostics.DebuggerStepThrough]
 #endif
     [RequiresUnreferencedCode("Use 'MethodFriendlyToTrimming' instead")]
-    public static T Load<T>(this IConfiguration configuration)
+    public static T? Load<T>(this IConfiguration configuration)
         where T : new()
     {
         var section = configuration.GetSection(typeof(T).Name);
@@ -89,7 +89,7 @@ public static class ConfigurationExtensions
         var jsonObj = JsonNode.Parse(json);
 
         var sections = key.Split(':');
-        JsonNode node = jsonObj;
+        JsonNode? node = jsonObj;
 
         for (int i = 0; i < sections.Length - 1; i++)
         {
@@ -102,7 +102,7 @@ public static class ConfigurationExtensions
 
         node![sections[^1]] = JsonValue.Create(value);
 
-        string output = jsonObj.ToJsonString(GetJsonOptions());
+        var output = jsonObj?.ToJsonString(GetJsonOptions()) ?? string.Empty;
 
         File.WriteAllText(filePath, output);
 

@@ -106,7 +106,7 @@ public interface IAsyncRepository<TEntity>
     /// A task that represents the asynchronous operation. The task result contains the entity that matches
     /// the predicate, or <see langword="null"/> if no entity is found.
     /// </returns>
-    Task<TEntity> FindAsync(long id, CancellationToken cancellationToken);
+    Task<TEntity?> FindAsync(long id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Asynchronously finds a single entity that matches the specified uuid.
@@ -121,7 +121,7 @@ public interface IAsyncRepository<TEntity>
     /// A task that represents the asynchronous operation. The task result contains the entity that matches
     /// the predicate, or <see langword="null"/> if no entity is found.
     /// </returns>
-    Task<TEntity> FindAsync(Guid uuid, CancellationToken cancellationToken);
+    Task<TEntity?> FindAsync(Guid uuid, CancellationToken cancellationToken);
 
     /// <summary>
     /// Asynchronously finds a single entity that matches the specified predicate.
@@ -136,7 +136,7 @@ public interface IAsyncRepository<TEntity>
     /// A task that represents the asynchronous operation. The task result contains the entity that matches
     /// the predicate, or <see langword="null"/> if no entity is found.
     /// </returns>
-    Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
+    Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
 
     /// <summary>
     /// Asynchronously saves the specified entity. If the entity exists, it is updated; otherwise, it is created.
@@ -148,7 +148,7 @@ public interface IAsyncRepository<TEntity>
     /// <returns>
     /// A task representing the asynchronous operation. The task result contains the saved entity.
     /// </returns>
-    Task<TEntity> SaveAsync(TEntity obj, CancellationToken cancellationToken);
+    Task<TEntity?> SaveAsync(TEntity obj, CancellationToken cancellationToken);
 
     /// <summary>
     /// Asynchronously creates a new entity in the repository.

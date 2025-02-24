@@ -16,6 +16,7 @@
 
 using MeControla.Core.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MeControla.Core.Repositories;
@@ -39,18 +40,18 @@ public abstract class ContextRepository<[DynamicallyAccessedMembers(DynamicallyA
     /// </summary>
     private readonly DbSet<TEntity> dbSet;
 
-    private IDbContextFacade database;
+    private readonly IDbContextFacade database;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ContextRepository{TEntity}"/> class.
     /// </summary>
     /// <param name="context">The database context to be used.</param>
-    /// <param name="dbSet">The <see cref="DbSet{TEntity}"/> corresponding to the entity.</param>
     [SuppressMessage("Style", "IDE0290:Use primary constructor", Justification = "Constructor to be protected.")]
-    protected ContextRepository([NotNull] IDbContext context, [NotNull] DbSet<TEntity> dbSet)
+    protected ContextRepository(IDbContext context)
     {
-        this.context = context;
-        this.dbSet = dbSet;
+        this.context = context ?? throw new ArgumentNullException(nameof(context));
+        this.dbSet = context!.Set<TEntity>();
+        this.database = new DbContextFacade(Context.Database);
     }
 
     /// <summary>
@@ -69,6 +70,5 @@ public abstract class ContextRepository<[DynamicallyAccessedMembers(DynamicallyA
     /// Gets the <see cref="IDbContextFacade"/> for managing database transactions and connections.
     /// </summary>
     /// <returns>An instance of the <see cref="IDbContextFacade"/> implementation.</returns>
-    public IDbContextFacade Database()
-        => database ??= new DbContextFacade(Context.Database);
+    public IDbContextFacade Database() => database;
 }

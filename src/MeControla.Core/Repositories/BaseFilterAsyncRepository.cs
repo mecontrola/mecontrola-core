@@ -15,7 +15,6 @@
  ***********************************************************************************/
 
 using MeControla.Core.Data.Entities;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
@@ -28,8 +27,8 @@ namespace MeControla.Core.Repositories;
 /// </summary>
 /// <typeparam name="TEntity">The type of the entity that the repository will handle.</typeparam>
 /// <typeparam name="TFilterEntity">The type of the filter entity used for filtering.</typeparam>
-public abstract class BaseFilterAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity, TFilterEntity>(IDbContext context, DbSet<TEntity> dbSet)
-    : BaseAsyncRepository<TEntity>(context, dbSet), IFilterAsyncRepository<TEntity, TFilterEntity>
+public abstract class BaseFilterAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity, TFilterEntity>(IDbContext context)
+    : BaseAsyncRepository<TEntity>(context), IFilterAsyncRepository<TEntity, TFilterEntity>
     where TEntity : class, IEntity
     where TFilterEntity : class, IFilterEntity
 {
