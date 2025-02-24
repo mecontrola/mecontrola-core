@@ -22,7 +22,7 @@ internal static class SortExecutor
     [RequiresUnreferencedCode("This method uses reflection, which may not be compatible with trimming.")]
     public static IQueryable<TEntity> ApplySorting<TEntity>(IQueryable<TEntity> query, IEnumerable<SortExpression> sortExpressions)
     {
-        IOrderedQueryable<TEntity> orderedQuery = null;
+        IOrderedQueryable<TEntity>? orderedQuery = null;
 
         foreach (var sortExpression in sortExpressions)
         {

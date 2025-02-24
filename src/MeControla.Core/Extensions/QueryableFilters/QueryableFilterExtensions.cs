@@ -50,7 +50,7 @@ internal static class QueryableFilterExtensions
 
         foreach (var filter in filters)
         {
-            if (!filterStrategies.TryGetValue(filter.Operation, out IFilterStrategy strategy))
+            if (!filterStrategies.TryGetValue(filter.Operation, out IFilterStrategy? strategy))
                 throw new InvalidOperationException($"Unsupported filter operation: {filter.Operation}.");
 
             query = strategy.ApplyFilter(query, filter.Property, filter.Operation, filter.Value);

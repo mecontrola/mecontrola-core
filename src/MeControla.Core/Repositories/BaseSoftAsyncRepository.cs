@@ -23,9 +23,8 @@ public abstract class BaseSoftAsyncRepository<[DynamicallyAccessedMembers(Dynami
     /// Initializes a new instance of the <see cref="BaseSoftAsyncRepository{TEntity}"/> class.
     /// </summary>
     /// <param name="context">The <see cref="IDbContext"/> used to interact with the database.</param>
-    /// <param name="dbSet">The <see cref="DbSet{TEntity}"/> that provides access to entities in the database.</param>
-    protected BaseSoftAsyncRepository(IDbContext context, DbSet<TEntity> dbSet)
-        : base(context, dbSet)
+    protected BaseSoftAsyncRepository(IDbContext context)
+        : base(context)
     { }
 
     /// <summary>
@@ -148,7 +147,7 @@ public abstract class BaseSoftAsyncRepository<[DynamicallyAccessedMembers(Dynami
     /// A task that represents the asynchronous operation. The task result contains the entity that matches
     /// the predicate, or <see langword="null"/> if no entity is found.
     /// </returns>
-    public new virtual async Task<TEntity> FindAsync(long id, CancellationToken cancellationToken)
+    public new virtual async Task<TEntity?> FindAsync(long id, CancellationToken cancellationToken)
         => await FindAsync(itm => itm.Id.Equals(id), cancellationToken);
 
     /// <summary>
@@ -164,7 +163,7 @@ public abstract class BaseSoftAsyncRepository<[DynamicallyAccessedMembers(Dynami
     /// A task that represents the asynchronous operation. The task result contains the entity that matches
     /// the predicate, or <see langword="null"/> if no entity is found.
     /// </returns>
-    public new virtual async Task<TEntity> FindAsync(Guid uuid, CancellationToken cancellationToken)
+    public new virtual async Task<TEntity?> FindAsync(Guid uuid, CancellationToken cancellationToken)
         => await FindAsync(itm => itm.Uuid.Equals(uuid), cancellationToken);
 
     /// <summary>
@@ -180,7 +179,7 @@ public abstract class BaseSoftAsyncRepository<[DynamicallyAccessedMembers(Dynami
     /// A task that represents the asynchronous operation. The task result contains the entity that matches
     /// the predicate, or <see langword="null"/> if no entity is found.
     /// </returns>
-    public new virtual async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+    public new virtual async Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
         => await base.FindAsync(predicate.Combine(itm => !itm.IsDeleted), cancellationToken);
 
     /// <summary>

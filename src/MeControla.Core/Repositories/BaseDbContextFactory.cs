@@ -39,7 +39,7 @@ public abstract class BaseDbContextFactory<[DynamicallyAccessedMembers(Dynamical
     : IBaseDbContextFactory<TDbContext>
     where TDbContext : DbContext
 {
-    private TDbContext context;
+    private TDbContext? context;
 
     private bool disposed;
 
@@ -70,7 +70,8 @@ public abstract class BaseDbContextFactory<[DynamicallyAccessedMembers(Dynamical
     private static
 #endif
     TDbContext CreateInstanceDbContext(DbContextOptionsBuilder<TDbContext> optionsBuilder)
-       => (TDbContext)Activator.CreateInstance(typeof(TDbContext), [optionsBuilder.Options]);
+       => Activator.CreateInstance(typeof(TDbContext), [optionsBuilder.Options]) as TDbContext
+       ?? throw new InvalidOperationException($"Failed to create an instance of {typeof(TDbContext).Name}.");
 
     /// <summary>
     /// Configures the <see cref="DbContextOptionsBuilder{TDbContext}"/> for the specified <typeparamref name="TDbContext"/>.

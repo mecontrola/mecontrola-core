@@ -32,7 +32,7 @@ namespace MeControla.Core.Exceptions;
 /// <param name="result">The validation result from FluentValidation.</param>
 /// <param name="message">The error message that describes the exception.</param>
 /// <param name="innerException">The inner exception that caused this exception, or <c>null</c> if there is no inner exception.</param>
-public class ValidationException(Type type, ValidationResult result, string message, Exception innerException)
+public class ValidationException(Type type, ValidationResult result, string message, Exception? innerException)
     : HttpException(HttpStatusCode.BadRequest, GetMessage(type, message), innerException)
 {
     private const string ERROR_MESSAGE_PARAM = "{entityName}";
@@ -85,7 +85,7 @@ public class ValidationException(Type type, ValidationResult result, string mess
 /// <param name="result">The validation result from FluentValidation.</param>
 /// <param name="message">The error message that describes the exception.</param>
 /// <param name="innerException">The inner exception that caused this exception, or <c>null</c> if there is no inner exception.</param>
-public class ValidationException<T>(ValidationResult result, string message, Exception innerException)
+public class ValidationException<T>(ValidationResult result, string message, Exception? innerException)
     : ValidationException(typeof(T), result, message, innerException)
     where T : class
 {
@@ -107,6 +107,6 @@ public class ValidationException<T>(ValidationResult result, string message, Exc
     /// </summary>
     /// <param name="result"></param>
     public ValidationException(ValidationResult result)
-        : this(result, null)
+        : this(result, string.Empty)
     { }
 }

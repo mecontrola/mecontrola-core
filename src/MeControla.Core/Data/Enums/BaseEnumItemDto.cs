@@ -28,6 +28,6 @@ namespace MeControla.Core.Data.Enums
         /// <summary>
         /// Gets or sets the description of the Enum item.
         /// </summary>
-        public string Value { get; set; }
+        public string Value { get; set; } = null!;
     }
 }

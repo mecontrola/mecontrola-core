@@ -39,9 +39,8 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     /// Initializes a new instance of the <see cref="BaseAsyncRepository{TEntity}"/> class.
     /// </summary>
     /// <param name="context">The <see cref="IDbContext"/> used to interact with the database.</param>
-    /// <param name="dbSet">The <see cref="DbSet{TEntity}"/> that provides access to entities in the database.</param>
-    protected BaseAsyncRepository(IDbContext context, DbSet<TEntity> dbSet)
-        : base(context, dbSet)
+    protected BaseAsyncRepository(IDbContext context)
+        : base(context)
     { }
 
     /// <summary>
@@ -77,7 +76,7 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     /// <returns>
     /// A task representing the asynchronous operation. The task result contains the saved entity.
     /// </returns>
-    public async Task<TEntity> SaveAsync(TEntity obj, CancellationToken cancellationToken)
+    public async Task<TEntity?> SaveAsync(TEntity obj, CancellationToken cancellationToken)
     {
         try
         {
@@ -160,7 +159,7 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     /// <returns>A task representing the asynchronous operation, containing a paginated list of entities.</returns>
     [RequiresUnreferencedCode("This method uses reflection, which may not be compatible with trimming.")]
     public virtual async Task<IPagination<TEntity>> FindAllPagedAsync(IPagination pagination, CancellationToken cancellationToken)
-        => await FindAllPagedAsync(pagination, null, cancellationToken);
+        => await InternalFindAllPagedAsync(pagination, null, cancellationToken);
 
     /// <summary>
     /// Asynchronously retrieves a paginated list of entities that match the given predicate.
@@ -171,8 +170,14 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     /// <returns>A task representing the asynchronous operation, containing a paginated list of entities matching the predicate.</returns>
     [RequiresUnreferencedCode("This method uses reflection, which may not be compatible with trimming.")]
     public virtual async Task<IPagination<TEntity>> FindAllPagedAsync(IPagination pagination, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+        => await InternalFindAllPagedAsync(pagination, predicate, cancellationToken);
+
+    [RequiresUnreferencedCode("This method uses reflection, which may not be compatible with trimming.")]
+    private async Task<IPagination<TEntity>> InternalFindAllPagedAsync(IPagination pagination, Expression<Func<TEntity, bool>>? predicate, CancellationToken cancellationToken)
     {
-        var query = DbSet.SetPredicate(predicate)
+        var query = predicate is null
+                  ? DbSet.SetFilterBy(pagination.FilterBy)
+                  : DbSet.SetPredicate(predicate)
                          .SetFilterBy(pagination.FilterBy);
 
         var total = await query.CountAsync(cancellationToken);
@@ -190,7 +195,7 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains a list of entities.</returns>
     public virtual async Task<IList<TEntity>> FindAllAsync(CancellationToken cancellationToken)
-        => await FindAllAsync(null, cancellationToken);
+        => await InternalFindAllAsync(null, cancellationToken);
 
     /// <summary>
     /// Asynchronously finds all entities that match the provided predicate.
@@ -199,7 +204,12 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains a list of entities that satisfy the given predicate.</returns>
     public virtual async Task<IList<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
-        => await DbSet.SetPredicate(predicate).ToListAsync(cancellationToken);
+        => await InternalFindAllAsync(predicate, cancellationToken);
+
+    private async Task<IList<TEntity>> InternalFindAllAsync(Expression<Func<TEntity, bool>>? predicate, CancellationToken cancellationToken)
+        => predicate is not null
+         ? await DbSet.SetPredicate(predicate).ToListAsync(cancellationToken)
+         : await DbSet.ToListAsync(cancellationToken);
 
     /// <summary>
     /// Asynchronously finds a single entity that matches the specified identifier.
@@ -214,7 +224,7 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     /// A task that represents the asynchronous operation. The task result contains the entity that matches
     /// the predicate, or <see langword="null"/> if no entity is found.
     /// </returns>
-    public virtual async Task<TEntity> FindAsync(long id, CancellationToken cancellationToken)
+    public virtual async Task<TEntity?> FindAsync(long id, CancellationToken cancellationToken)
         => await FindAsync(itm => itm.Id.Equals(id), cancellationToken);
 
     /// <summary>
@@ -230,7 +240,7 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     /// A task that represents the asynchronous operation. The task result contains the entity that matches
     /// the predicate, or <see langword="null"/> if no entity is found.
     /// </returns>
-    public virtual async Task<TEntity> FindAsync(Guid uuid, CancellationToken cancellationToken)
+    public virtual async Task<TEntity?> FindAsync(Guid uuid, CancellationToken cancellationToken)
         => await FindAsync(itm => itm.Uuid.Equals(uuid), cancellationToken);
 
     /// <summary>
@@ -246,7 +256,7 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     /// A task that represents the asynchronous operation. The task result contains the entity that matches
     /// the predicate, or <see langword="null"/> if no entity is found.
     /// </returns>
-    public virtual async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+    public virtual async Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
         => await DbSet.AsNoTracking()
                       .Where(predicate)
                       .FirstOrDefaultAsync(cancellationToken);
@@ -297,7 +307,7 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
         var local = DbSet.Local.FirstOrDefault(itm => itm.Id.Equals(entity.Id));
         var id = local?.Id ?? 0;
 
-        if (id != 0)
+        if (local is not null && id != 0)
             Context.Entry(local).State = EntityState.Detached;
 
         Context.Entry(entity).State = entityState;
@@ -307,6 +317,7 @@ public abstract class BaseAsyncRepository<[DynamicallyAccessedMembers(Dynamicall
     {
         action(DbSet);
 
-        return await Context.SaveChangesAsync(cancellationToken) > 0;
+        return Context.Database.CurrentTransaction != null
+            || await Context.SaveChangesAsync(cancellationToken) > 0;
     }
 }

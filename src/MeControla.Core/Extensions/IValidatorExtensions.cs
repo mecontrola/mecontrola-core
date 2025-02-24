@@ -41,7 +41,6 @@ public static class IValidatorExtensions
     /// <exception cref="ValidationException">Thrown when the input DTO is not valid.</exception>
 #if !DEBUG
     [System.Diagnostics.DebuggerStepThrough]
-    [System.Diagnostics.CodeAnalysis.DoesNotReturn]
 #endif
     public static void ThrowIfInvalid<TEntity, TInputDto>(this IValidator<TInputDto> validator, TInputDto input)
         where TEntity : class, IEntity
@@ -51,9 +50,7 @@ public static class IValidatorExtensions
         ArgumentNullException.ThrowIfNull(input);
 
         var result = validator.Validate(input);
-        if (result.IsValid)
-            return;
-
-        ThrowHelper.ThrowValidationException<TEntity>(result);
+        if (!result.IsValid)
+            ThrowHelper.ThrowValidationException<TEntity>(result);
     }
 }

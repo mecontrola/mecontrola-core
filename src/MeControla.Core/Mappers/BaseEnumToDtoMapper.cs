@@ -39,15 +39,15 @@ public abstract class BaseEnumToDtoMapper<TParam, TResult> : InternalBaseMapper<
     /// Configures the mapping between the enum <typeparamref name="TParam"/> and the DTO <typeparamref name="TResult"/>.
     /// </summary>
     /// <param name="map">The <see cref="IMappingExpression{TParam, TResult}"/> used to define the mapping configuration.</param>
-    protected override void MapFields(IMappingExpression<TParam, TResult> map)
-        => map.ConvertUsing((source, destionation) =>
+    protected override void MapFields(IMappingExpression<TParam, TResult?> map)
+        => map.ConvertUsing(static (source, destionation) =>
         {
             if (!Enum.IsDefined(typeof(TParam), source))
-                return null;
+                return default;
 
             destionation ??= new TResult();
             destionation.Id = Convert.ToUInt32(source, CultureInfo.InvariantCulture);
-            destionation.Value = source.GetDescription();
+            destionation.Value = source.GetDescription() ?? source.ToString();
 
             return destionation;
         });

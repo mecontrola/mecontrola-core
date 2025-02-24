@@ -9,7 +9,7 @@ namespace MeControla.Core.Extensions.QueryableSorts;
 /// </summary>
 internal static class SortParser
 {
-    private static readonly string SORTDIRECTION_DESC = SortDirection.Descending.GetDescription();
+    private static readonly string SORTDIRECTION_DESC = SortDirection.Descending.GetDescription()!;
 
     /// <summary>
     /// Parses the sortBy string into a list of SortExpression objects.
@@ -25,7 +25,7 @@ internal static class SortParser
             var trimmedParam = param.Trim();
             var parts = trimmedParam.Split('_');
             var fieldName = parts[0];
-            var direction = GetSortDirection(parts.ElementAtOrDefault(1));
+            var direction = GetSortDirection(parts.ElementAtOrDefault(1) ?? string.Empty);
 
             yield return new SortExpression(fieldName, direction);
         }

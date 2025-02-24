@@ -14,15 +14,17 @@
  * limitations under the License.
  ***********************************************************************************/
 
-using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using NetCoreCodeAnalysis = System.Diagnostics.CodeAnalysis;
 
 namespace MeControla.Core.Repositories;
 
@@ -33,262 +35,1011 @@ namespace MeControla.Core.Repositories;
 public interface IDbContext : IDisposable, IAsyncDisposable, IInfrastructure<IServiceProvider>, IResettableService
 {
     /// <summary>
-    /// Gets the <see cref="ChangeTracker"/> that provides access to information about entity tracking and change management in the context.
-    /// </summary>
-    ChangeTracker ChangeTracker { get; }
-    /// <summary>
-    /// Gets the <see cref="DatabaseFacade"/> that provides access to database-related operations such as transactions and command execution.
+    /// Provides access to database related information and operations for this context.
     /// </summary>
     DatabaseFacade Database { get; }
+
     /// <summary>
-    /// Gets the <see cref="DbContextId"/> that uniquely identifies this context instance.
+    ///     Provides access to information and operations for entity instances this context is tracking.
     /// </summary>
+    /// <remarks>
+    ///     See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see> for more information and examples.
+    /// </remarks>
+    ChangeTracker ChangeTracker { get; }
+
+    /// <summary>
+    ///     The metadata about the shape of entities, the relationships between them, and how they map to the database.
+    ///     May not include all the information necessary to initialize the database.
+    /// </summary>
+    /// <remarks>
+    ///     See <see href="https://aka.ms/efcore-docs-modeling">Modeling entity types and relationships</see> for more information and examples.
+    /// </remarks>
+    IModel Model { get; }
+
+    /// <summary>
+    ///     A unique identifier for the context instance and pool lease, if any.
+    /// </summary>
+    /// <remarks>
+    ///     This identifier is primarily intended as a correlation ID for logging and debugging such
+    ///     that it is easy to identify that multiple events are using the same or different context instances.
+    /// </remarks>
     DbContextId ContextId { get; }
 
     /// <summary>
-    /// Adds the specified entity to the context in the Added state so that it will be inserted into the database when <see cref="SaveChanges()"/> is called.
+    ///     Creates a <see cref="DbSet{TEntity}" /> that can be used to query and save instances of <typeparamref name="TEntity" />.
     /// </summary>
-    /// <param name="entity">The entity to be added.</param>
-    EntityEntry Add([NotNull] object entity);
+    /// <remarks>
+    ///     <para>
+    ///         Entity Framework Core does not support multiple parallel operations being run on the same DbContext instance. This
+    ///         includes both parallel execution of async queries and any explicit concurrent use from multiple threads.
+    ///         Therefore, always await async calls immediately, or use separate DbContext instances for operations that execute
+    ///         in parallel. See <see href="https://aka.ms/efcore-docs-threading">Avoiding DbContext threading issues</see> for more information
+    ///         and examples.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-query">Querying data with EF Core</see> and
+    ///         <see href="https://aka.ms/efcore-docs-change-tracking">Changing tracking</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <typeparam name="TEntity">The type of entity for which a set should be returned.</typeparam>
+    /// <returns>A set for the given entity type.</returns>
+#pragma warning disable CA1716 // Identifiers should not match keywords
+    DbSet<TEntity> Set<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes)] TEntity>() where TEntity : class;
+#pragma warning restore CA1716 // Identifiers should not match keywords
 
     /// <summary>
-    /// Adds the specified entity of type <typeparamref name="TEntity"/> to the context in the Added state.
+    ///     Creates a <see cref="DbSet{TEntity}" /> for a shared-type entity type that can be used to query and save
+    ///     instances of <typeparamref name="TEntity" />.
     /// </summary>
-    /// <typeparam name="TEntity">The type of the entity to be added.</typeparam>
-    /// <param name="entity">The entity to add.</param>
-    EntityEntry<TEntity> Add<TEntity>([NotNull] TEntity entity) where TEntity : class;
+    /// <remarks>
+    ///     <para>
+    ///         Shared-type entity types are typically used for the join entity in many-to-many relationships.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-query">Querying data with EF Core</see>,
+    ///         <see href="https://aka.ms/efcore-docs-change-tracking">Changing tracking</see>, and
+    ///         <see href="https://aka.ms/efcore-docs-shared-types">Shared entity types</see>  for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="name">The name for the shared-type entity type to use.</param>
+    /// <typeparam name="TEntity">The type of entity for which a set should be returned.</typeparam>
+    /// <returns>A set for the given entity type.</returns>
+#pragma warning disable CA1716 // Identifiers should not match keywords
+    DbSet<TEntity> Set<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes)] TEntity>(string name) where TEntity : class;
+#pragma warning restore CA1716 // Identifiers should not match keywords
 
     /// <summary>
-    /// Asynchronously adds the specified entity to the context and schedules it for insertion into the database when <see cref="SaveChangesAsync(CancellationToken)"/> is called.
+    ///     Saves all changes made in this context to the database.
     /// </summary>
-    /// <param name="entity">The entity to be added.</param>
-    /// <param name="cancellationToken">The cancellation token to observe during the operation.</param>
-    ValueTask<EntityEntry> AddAsync([NotNull] object entity, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Asynchronously adds the specified entity of type <typeparamref name="TEntity"/> to the context.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the entity to be added.</typeparam>
-    /// <param name="entity">The entity to add.</param>
-    /// <param name="cancellationToken">The cancellation token to observe during the operation.</param>
-    ValueTask<EntityEntry<TEntity>> AddAsync<TEntity>([NotNull] TEntity entity, CancellationToken cancellationToken = default) where TEntity : class;
-
-    /// <summary>
-    /// Adds the given entities to the context. The entities will be tracked by the context and inserted into the database when SaveChanges is called.
-    /// </summary>
-    /// <param name="entities">An array of entities to add.</param>
-    void AddRange([NotNull] params object[] entities);
-
-    /// <summary>
-    /// Adds the given entities to the context. The entities will be tracked by the context and inserted into the database when SaveChanges is called.
-    /// </summary>
-    /// <param name="entities">An enumerable of entities to add.</param>
-    void AddRange([NotNull] IEnumerable<object> entities);
-
-    /// <summary>
-    /// Asynchronously adds the given entities to the context. The entities will be tracked by the context and inserted into the database when SaveChanges is called.
-    /// </summary>
-    /// <param name="entities">An enumerable of entities to add.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task AddRangeAsync([NotNull] IEnumerable<object> entities, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Asynchronously adds the given entities to the context. The entities will be tracked by the context and inserted into the database when SaveChanges is called.
-    /// </summary>
-    /// <param name="entities">An array of entities to add.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task AddRangeAsync([NotNull] params object[] entities);
-
-    /// <summary>
-    /// Attaches the given entity to the context. The entity will be tracked by the context and no insert, update, or delete operations will be performed.
-    /// </summary>
-    /// <param name="entity">The entity to attach.</param>
-    /// <returns>An EntityEntry for the attached entity.</returns>
-    EntityEntry Attach([NotNull] object entity);
-
-    /// <summary>
-    /// Attaches the given entity to the context. The entity will be tracked by the context and no insert, update, or delete operations will be performed.
-    /// </summary>
-    /// <param name="entity">The entity to attach.</param>
-    /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    /// <returns>An EntityEntry for the attached entity.</returns>
-    EntityEntry<TEntity> Attach<TEntity>([NotNull] TEntity entity) where TEntity : class;
-
-    /// <summary>
-    /// Attaches the given entities to the context. The entities will be tracked by the context and no insert, update, or delete operations will be performed.
-    /// </summary>
-    /// <param name="entities">An enumerable of entities to attach.</param>
-    void AttachRange([NotNull] IEnumerable<object> entities);
-
-    /// <summary>
-    /// Attaches the given entities to the context. The entities will be tracked by the context and no insert, update, or delete operations will be performed.
-    /// </summary>
-    /// <param name="entities">An array of entities to attach.</param>
-    void AttachRange([NotNull] params object[] entities);
-
-    /// <summary>
-    /// Gets the EntityEntry for the given entity. This provides access to change tracking information.
-    /// </summary>
-    /// <param name="entity">The entity to track.</param>
-    /// <returns>An EntityEntry for the given entity.</returns>
-    EntityEntry Entry([NotNull] object entity);
-
-    /// <summary>
-    /// Gets the EntityEntry for the given entity. This provides access to change tracking information.
-    /// </summary>
-    /// <param name="entity">The entity to track.</param>
-    /// <returns>An EntityEntry for the given entity.</returns>
-    EntityEntry<TEntity> Entry<TEntity>([NotNull] TEntity entity) where TEntity : class;
-
-    /// <summary>
-    /// Determines whether the specified object is equal to the current object.
-    /// </summary>
-    /// <param name="obj">The object to compare with the current object.</param>
-    /// <returns>True if the specified object is equal to the current object; otherwise, false.</returns>
-    bool Equals(object obj);
-
-    /// <summary>
-    /// Finds an entity by its primary key values. Returns null if the entity is not found.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the entity to find.</typeparam>
-    /// <param name="keyValues">The primary key values of the entity.</param>
-    /// <returns>The entity found, or null if not found.</returns>
-    TEntity Find<[NetCoreCodeAnalysis.DynamicallyAccessedMembers(NetCoreCodeAnalysis.DynamicallyAccessedMemberTypes.PublicMethods)] TEntity>([CanBeNull] params object[] keyValues) where TEntity : class;
-
-    /// <summary>
-    /// Finds an entity by its primary key values and type. Returns null if the entity is not found.
-    /// </summary>
-    /// <param name="entityType">The type of the entity to find.</param>
-    /// <param name="keyValues">The primary key values of the entity.</param>
-    /// <returns>The entity found, or null if not found.</returns>
-    object Find([NetCoreCodeAnalysis.DynamicallyAccessedMembers(NetCoreCodeAnalysis.DynamicallyAccessedMemberTypes.PublicMethods), NotNull] Type entityType, [CanBeNull] params object[] keyValues);
-
-    /// <summary>
-    /// Asynchronously finds an entity by its primary key values and type. Returns null if the entity is not found.
-    /// </summary>
-    /// <param name="entityType">The type of the entity to find.</param>
-    /// <param name="keyValues">The primary key values of the entity.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A ValueTask representing the entity found, or null if not found.</returns>
-    ValueTask<object> FindAsync([NetCoreCodeAnalysis.DynamicallyAccessedMembers(NetCoreCodeAnalysis.DynamicallyAccessedMemberTypes.PublicMethods), NotNull] Type entityType, [CanBeNull] object[] keyValues, CancellationToken cancellationToken);
-
-    /// <summary>
-    /// Asynchronously finds an entity by its primary key values and type. Returns null if the entity is not found.
-    /// </summary>
-    /// <param name="entityType">The type of the entity to find.</param>
-    /// <param name="keyValues">The primary key values of the entity.</param>
-    /// <returns>A ValueTask representing the entity found, or null if not found.</returns>
-    ValueTask<object> FindAsync([NetCoreCodeAnalysis.DynamicallyAccessedMembers(NetCoreCodeAnalysis.DynamicallyAccessedMemberTypes.PublicMethods), NotNull] Type entityType, [CanBeNull] params object[] keyValues);
-
-    /// <summary>
-    /// Asynchronously finds an entity by its primary key values. Returns null if the entity is not found.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the entity to find.</typeparam>
-    /// <param name="keyValues">The primary key values of the entity.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A ValueTask representing the entity found, or null if not found.</returns>
-    ValueTask<TEntity> FindAsync<[NetCoreCodeAnalysis.DynamicallyAccessedMembers(NetCoreCodeAnalysis.DynamicallyAccessedMemberTypes.PublicMethods)] TEntity>([CanBeNull] object[] keyValues, CancellationToken cancellationToken) where TEntity : class;
-
-    /// <summary>
-    /// Asynchronously finds an entity by its primary key values. Returns null if the entity is not found.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the entity to find.</typeparam>
-    /// <param name="keyValues">The primary key values of the entity.</param>
-    /// <returns>A ValueTask representing the entity found, or null if not found.</returns>
-    ValueTask<TEntity> FindAsync<[NetCoreCodeAnalysis.DynamicallyAccessedMembers(NetCoreCodeAnalysis.DynamicallyAccessedMemberTypes.PublicMethods)] TEntity>([CanBeNull] params object[] keyValues) where TEntity : class;
-
-    /// <summary>
-    /// Serves as the default hash function for the context.
-    /// </summary>
-    /// <returns>A hash code for the current object.</returns>
-    int GetHashCode();
-
-    /// <summary>
-    /// Removes the given entity from the context. The entity will be deleted from the database when SaveChanges is called.
-    /// </summary>
-    /// <param name="entity">The entity to remove.</param>
-    /// <returns>An EntityEntry for the removed entity.</returns>
-    EntityEntry Remove([NotNull] object entity);
-
-    /// <summary>
-    /// Removes the given entity from the context. The entity will be deleted from the database when SaveChanges is called.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    /// <param name="entity">The entity to remove.</param>
-    /// <returns>An EntityEntry for the removed entity.</returns>
-    EntityEntry<TEntity> Remove<TEntity>([NotNull] TEntity entity) where TEntity : class;
-
-    /// <summary>
-    /// Removes the given entities from the context. The entities will be deleted from the database when SaveChanges is called.
-    /// </summary>
-    /// <param name="entities">An enumerable of entities to remove.</param>
-    void RemoveRange([NotNull] IEnumerable<object> entities);
-
-    /// <summary>
-    /// Removes the given entities from the context. The entities will be deleted from the database when SaveChanges is called.
-    /// </summary>
-    /// <param name="entities">An array of entities to remove.</param>
-    void RemoveRange([NotNull] params object[] entities);
-
-    /// <summary>
-    /// Saves all changes made in this context to the database.
-    /// </summary>
-    /// <param name="acceptAllChangesOnSuccess">Indicates whether <see cref="ChangeTracker.AcceptAllChanges()"/> is called after the changes are sent successfully to the database.</param>
-    /// <returns>The number of state entries written to the database.</returns>
-    int SaveChanges(bool acceptAllChangesOnSuccess);
-
-    /// <summary>
-    /// Saves all changes made in this context to the database.
-    /// </summary>
-    /// <returns>The number of state entries written to the database.</returns>
+    /// <remarks>
+    ///     <para>
+    ///         This method will automatically call <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.DetectChanges" />
+    ///         to discover any changes to entity instances before saving to the underlying database. This can be disabled via
+    ///         <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.AutoDetectChangesEnabled" />.
+    ///     </para>
+    ///     <para>
+    ///         Entity Framework Core does not support multiple parallel operations being run on the same DbContext instance. This
+    ///         includes both parallel execution of async queries and any explicit concurrent use from multiple threads.
+    ///         Therefore, always await async calls immediately, or use separate DbContext instances for operations that execute
+    ///         in parallel. See <see href="https://aka.ms/efcore-docs-threading">Avoiding DbContext threading issues</see> for more information
+    ///         and examples.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-saving-data">Saving data in EF Core</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <returns>
+    ///     The number of state entries written to the database.
+    /// </returns>
+    /// <exception cref="DbUpdateException">
+    ///     An error is encountered while saving to the database.
+    /// </exception>
+    /// <exception cref="DbUpdateConcurrencyException">
+    ///     A concurrency violation is encountered while saving to the database.
+    ///     A concurrency violation occurs when an unexpected number of rows are affected during save.
+    ///     This is usually because the data in the database has been modified since it was loaded into memory.
+    /// </exception>
     int SaveChanges();
 
     /// <summary>
-    /// Asynchronously saves all changes made in this context to the database.
+    ///     Saves all changes made in this context to the database.
     /// </summary>
-    /// <param name="acceptAllChangesOnSuccess">Indicates whether <see cref="ChangeTracker.AcceptAllChanges()"/> is called after the changes are sent successfully to the database.</param>
-    /// <param name="cancellationToken">The cancellation token to observe during the operation.</param>
-    /// <returns>The number of state entries written to the database.</returns>
-    Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default);
+    /// <remarks>
+    ///     <para>
+    ///         This method will automatically call <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.DetectChanges" />
+    ///         to discover any changes to entity instances before saving to the underlying database. This can be disabled via
+    ///         <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.AutoDetectChangesEnabled" />.
+    ///     </para>
+    ///     <para>
+    ///         Entity Framework Core does not support multiple parallel operations being run on the same DbContext instance. This
+    ///         includes both parallel execution of async queries and any explicit concurrent use from multiple threads.
+    ///         Therefore, always await async calls immediately, or use separate DbContext instances for operations that execute
+    ///         in parallel. See <see href="https://aka.ms/efcore-docs-threading">Avoiding DbContext threading issues</see> for more information
+    ///         and examples.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-saving-data">Saving data in EF Core</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="acceptAllChangesOnSuccess">
+    ///     Indicates whether <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.AcceptAllChanges" />
+    ///     is called after the changes have been sent successfully to the database.
+    /// </param>
+    /// <returns>
+    ///     The number of state entries written to the database.
+    /// </returns>
+    /// <exception cref="DbUpdateException">
+    ///     An error is encountered while saving to the database.
+    /// </exception>
+    /// <exception cref="DbUpdateConcurrencyException">
+    ///     A concurrency violation is encountered while saving to the database.
+    ///     A concurrency violation occurs when an unexpected number of rows are affected during save.
+    ///     This is usually because the data in the database has been modified since it was loaded into memory.
+    /// </exception>
+    int SaveChanges(bool acceptAllChangesOnSuccess);
 
     /// <summary>
-    /// Asynchronously saves all changes made in this context to the database.
+    ///     Saves all changes made in this context to the database.
     /// </summary>
-    /// <param name="cancellationToken">The cancellation token to observe during the operation.</param>
-    /// <returns>The number of state entries written to the database.</returns>
+    /// <remarks>
+    ///     <para>
+    ///         This method will automatically call <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.DetectChanges" />
+    ///         to discover any changes to entity instances before saving to the underlying database. This can be disabled via
+    ///         <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.AutoDetectChangesEnabled" />.
+    ///     </para>
+    ///     <para>
+    ///         Entity Framework Core does not support multiple parallel operations being run on the same DbContext instance. This
+    ///         includes both parallel execution of async queries and any explicit concurrent use from multiple threads.
+    ///         Therefore, always await async calls immediately, or use separate DbContext instances for operations that execute
+    ///         in parallel. See <see href="https://aka.ms/efcore-docs-threading">Avoiding DbContext threading issues</see> for more
+    ///         information and examples.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-saving-data">Saving data in EF Core</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous save operation. The task result contains the
+    ///     number of state entries written to the database.
+    /// </returns>
+    /// <exception cref="DbUpdateException">
+    ///     An error is encountered while saving to the database.
+    /// </exception>
+    /// <exception cref="DbUpdateConcurrencyException">
+    ///     A concurrency violation is encountered while saving to the database.
+    ///     A concurrency violation occurs when an unexpected number of rows are affected during save.
+    ///     This is usually because the data in the database has been modified since it was loaded into memory.
+    /// </exception>
+    /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Returns a string representation of the current context.
+    ///     Saves all changes made in this context to the database.
     /// </summary>
-    /// <returns>A string that represents the current object.</returns>
-    string ToString();
+    /// <remarks>
+    ///     <para>
+    ///         This method will automatically call <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.DetectChanges" />
+    ///         to discover any changes to entity instances before saving to the underlying database. This can be disabled via
+    ///         <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.AutoDetectChangesEnabled" />.
+    ///     </para>
+    ///     <para>
+    ///         Entity Framework Core does not support multiple parallel operations being run on the same DbContext instance. This
+    ///         includes both parallel execution of async queries and any explicit concurrent use from multiple threads.
+    ///         Therefore, always await async calls immediately, or use separate DbContext instances for operations that execute
+    ///         in parallel. See <see href="https://aka.ms/efcore-docs-threading">Avoiding DbContext threading issues</see> for more
+    ///         information and examples.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-saving-data">Saving data in EF Core</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="acceptAllChangesOnSuccess">
+    ///     Indicates whether <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.AcceptAllChanges" /> is called after
+    ///     the changes have been sent successfully to the database.
+    /// </param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous save operation. The task result contains the
+    ///     number of state entries written to the database.
+    /// </returns>
+    /// <exception cref="DbUpdateException">
+    ///     An error is encountered while saving to the database.
+    /// </exception>
+    /// <exception cref="DbUpdateConcurrencyException">
+    ///     A concurrency violation is encountered while saving to the database.
+    ///     A concurrency violation occurs when an unexpected number of rows are affected during save.
+    ///     This is usually because the data in the database has been modified since it was loaded into memory.
+    /// </exception>
+    /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+    Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Updates the given entity in the context. The entity will be updated in the database when SaveChanges is called.
+    ///     Begins tracking the given entity, and any other reachable entities that are
+    ///     not already being tracked, in the <see cref="EntityState.Added" /> state such that they will
+    ///     be inserted into the database when <see cref="SaveChanges()" /> is called.
     /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="entity">The entity to add.</param>
+    /// <returns>
+    ///     The <see cref="EntityEntry" /> for the entity. The entry provides
+    ///     access to change tracking information and operations for the entity.
+    /// </returns>
+    EntityEntry Add(object entity);
+
+    /// <summary>
+    ///     Begins tracking the given entity, and any other reachable entities that are
+    ///     not already being tracked, in the <see cref="EntityState.Added" /> state such that
+    ///     they will be inserted into the database when <see cref="SaveChanges()" /> is called.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    /// <param name="entity">The entity to add.</param>
+    /// <returns>
+    ///     The <see cref="EntityEntry{TEntity}" /> for the entity. The entry provides
+    ///     access to change tracking information and operations for the entity.
+    /// </returns>
+    EntityEntry<TEntity> Add<TEntity>([NotNull] TEntity entity) where TEntity : class;
+
+    /// <summary>
+    ///     Begins tracking the given entity, and any other reachable entities that are
+    ///     not already being tracked, in the <see cref="EntityState.Added" /> state such that they will
+    ///     be inserted into the database when <see cref="SaveChanges()" /> is called.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
+    ///     </para>
+    ///     <para>
+    ///         This method is async only to allow special value generators, such as the one used by
+    ///         'Microsoft.EntityFrameworkCore.Metadata.SqlServerValueGenerationStrategy.SequenceHiLo',
+    ///         to access the database asynchronously. For all other cases the non async method should be used.
+    ///     </para>
+    ///     <para>
+    ///         Entity Framework Core does not support multiple parallel operations being run on the same DbContext instance. This
+    ///         includes both parallel execution of async queries and any explicit concurrent use from multiple threads.
+    ///         Therefore, always await async calls immediately, or use separate DbContext instances for operations that execute
+    ///         in parallel. See <see href="https://aka.ms/efcore-docs-threading">Avoiding DbContext threading issues</see>
+    ///         for more information and examples.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="entity">The entity to add.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous Add operation. The task result contains the
+    ///     <see cref="EntityEntry" /> for the entity. The entry provides access to change tracking
+    ///     information and operations for the entity.
+    /// </returns>
+    /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+    ValueTask<EntityEntry> AddAsync([NotNull] object entity, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Begins tracking the given entity, and any other reachable entities that are
+    ///     not already being tracked, in the <see cref="EntityState.Added" /> state such that they will
+    ///     be inserted into the database when <see cref="SaveChanges()" /> is called.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         This method is async only to allow special value generators, such as the one used by
+    ///         'Microsoft.EntityFrameworkCore.Metadata.SqlServerValueGenerationStrategy.SequenceHiLo',
+    ///         to access the database asynchronously. For all other cases the non async method should be used.
+    ///     </para>
+    ///     <para>
+    ///         Entity Framework Core does not support multiple parallel operations being run on the same DbContext instance. This
+    ///         includes both parallel execution of async queries and any explicit concurrent use from multiple threads.
+    ///         Therefore, always await async calls immediately, or use separate DbContext instances for operations that execute
+    ///         in parallel. See <see href="https://aka.ms/efcore-docs-threading">Avoiding DbContext threading issues</see>
+    ///         for more information and examples.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    /// <param name="entity">The entity to add.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous Add operation. The task result contains the
+    ///     <see cref="EntityEntry{TEntity}" /> for the entity. The entry provides access to change tracking
+    ///     information and operations for the entity.
+    /// </returns>
+    /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+    ValueTask<EntityEntry<TEntity>> AddAsync<TEntity>([NotNull] TEntity entity, CancellationToken cancellationToken = default) where TEntity : class;
+
+    /// <summary>
+    ///     Begins tracking the given entities, and any other reachable entities that are
+    ///     not already being tracked, in the <see cref="EntityState.Added" /> state such that they will
+    ///     be inserted into the database when <see cref="SaveChanges()" /> is called.
+    /// </summary>
+    /// <remarks>
+    ///     See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see>
+    ///     and <see href="https://aka.ms/efcore-docs-attach-range">Using AddRange, UpdateRange, AttachRange, and RemoveRange</see>
+    ///     for more information and examples.
+    /// </remarks>
+    /// <param name="entities">The entities to add.</param>
+    void AddRange([NotNull] params object[] entities);
+
+    /// <summary>
+    ///     Begins tracking the given entities, and any other reachable entities that are
+    ///     not already being tracked, in the <see cref="EntityState.Added" /> state such that they will
+    ///     be inserted into the database when <see cref="SaveChanges()" /> is called.
+    /// </summary>
+    /// <remarks>
+    ///     See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see>
+    ///     and <see href="https://aka.ms/efcore-docs-attach-range">Using AddRange, UpdateRange, AttachRange, and RemoveRange</see>
+    ///     for more information and examples.
+    /// </remarks>
+    /// <param name="entities">The entities to add.</param>
+    void AddRange([NotNull] IEnumerable<object> entities);
+
+    /// <summary>
+    ///     Begins tracking the given entity, and any other reachable entities that are
+    ///     not already being tracked, in the <see cref="EntityState.Added" /> state such that they will
+    ///     be inserted into the database when <see cref="SaveChanges()" /> is called.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         This method is async only to allow special value generators, such as the one used by
+    ///         'Microsoft.EntityFrameworkCore.Metadata.SqlServerValueGenerationStrategy.SequenceHiLo',
+    ///         to access the database asynchronously. For all other cases the non async method should be used.
+    ///     </para>
+    ///     <para>
+    ///         Entity Framework Core does not support multiple parallel operations being run on the same DbContext instance. This
+    ///         includes both parallel execution of async queries and any explicit concurrent use from multiple threads.
+    ///         Therefore, always await async calls immediately, or use separate DbContext instances for operations that execute
+    ///         in parallel. See <see href="https://aka.ms/efcore-docs-threading">Avoiding DbContext threading issues</see>
+    ///         for more information and examples.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see>
+    ///         and <see href="https://aka.ms/efcore-docs-attach-range">Using AddRange, UpdateRange, AttachRange, and RemoveRange</see>
+    ///         for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="entities">The entities to add.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous operation.
+    /// </returns>
+    /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+    Task AddRangeAsync([NotNull] IEnumerable<object> entities, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Begins tracking the given entity, and any other reachable entities that are
+    ///     not already being tracked, in the <see cref="EntityState.Added" /> state such that they will
+    ///     be inserted into the database when <see cref="SaveChanges()" /> is called.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         This method is async only to allow special value generators, such as the one used by
+    ///         'Microsoft.EntityFrameworkCore.Metadata.SqlServerValueGenerationStrategy.SequenceHiLo',
+    ///         to access the database asynchronously. For all other cases the non async method should be used.
+    ///     </para>
+    ///     <para>
+    ///         Entity Framework Core does not support multiple parallel operations being run on the same DbContext instance. This
+    ///         includes both parallel execution of async queries and any explicit concurrent use from multiple threads.
+    ///         Therefore, always await async calls immediately, or use separate DbContext instances for operations that execute
+    ///         in parallel. See <see href="https://aka.ms/efcore-docs-threading">Avoiding DbContext threading issues</see>
+    ///         for more information and examples.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see>
+    ///         and <see href="https://aka.ms/efcore-docs-attach-range">Using AddRange, UpdateRange, AttachRange, and RemoveRange</see>
+    ///         for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="entities">The entities to add.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    Task AddRangeAsync([NotNull] params object[] entities);
+
+    /// <summary>
+    ///     Begins tracking the given entity and entries reachable from the given entity using
+    ///     the <see cref="EntityState.Unchanged" /> state by default, but see below for cases
+    ///     when a different state will be used.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Generally, no database interaction will be performed until <see cref="SaveChanges()" /> is called.
+    ///     </para>
+    ///     <para>
+    ///         A recursive search of the navigation properties will be performed to find reachable entities
+    ///         that are not already being tracked by the context. All entities found will be tracked
+    ///         by the context.
+    ///     </para>
+    ///     <para>
+    ///         For entity types with generated keys if an entity has its primary key value set
+    ///         then it will be tracked in the <see cref="EntityState.Unchanged" /> state. If the primary key
+    ///         value is not set then it will be tracked in the <see cref="EntityState.Added" /> state.
+    ///         This helps ensure only new entities will be inserted.
+    ///         An entity is considered to have its primary key value set if the primary key property is set
+    ///         to anything other than the CLR default for the property type.
+    ///     </para>
+    ///     <para>
+    ///         For entity types without generated keys, the state set is always <see cref="EntityState.Unchanged" />.
+    ///     </para>
+    ///     <para>
+    ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="entity">The entity to attach.</param>
+    /// <returns>
+    ///     The <see cref="EntityEntry" /> for the entity. The entry provides
+    ///     access to change tracking information and operations for the entity.
+    /// </returns>
+    EntityEntry Attach([NotNull] object entity);
+
+    /// <summary>
+    ///     Begins tracking the given entity and entries reachable from the given entity using
+    ///     the <see cref="EntityState.Unchanged" /> state by default, but see below for cases
+    ///     when a different state will be used.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Generally, no database interaction will be performed until <see cref="SaveChanges()" /> is called.
+    ///     </para>
+    ///     <para>
+    ///         A recursive search of the navigation properties will be performed to find reachable entities
+    ///         that are not already being tracked by the context. All entities found will be tracked
+    ///         by the context.
+    ///     </para>
+    ///     <para>
+    ///         For entity types with generated keys if an entity has its primary key value set
+    ///         then it will be tracked in the <see cref="EntityState.Unchanged" /> state. If the primary key
+    ///         value is not set then it will be tracked in the <see cref="EntityState.Added" /> state.
+    ///         This helps ensure only new entities will be inserted.
+    ///         An entity is considered to have its primary key value set if the primary key property is set
+    ///         to anything other than the CLR default for the property type.
+    ///     </para>
+    ///     <para>
+    ///         For entity types without generated keys, the state set is always <see cref="EntityState.Unchanged" />.
+    ///     </para>
+    ///     <para>
+    ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    /// <param name="entity">The entity to attach.</param>
+    /// <returns>
+    ///     The <see cref="EntityEntry{TEntity}" /> for the entity. The entry provides
+    ///     access to change tracking information and operations for the entity.
+    /// </returns>
+    EntityEntry<TEntity> Attach<TEntity>(TEntity entity) where TEntity : class;
+
+    /// <summary>
+    ///     Begins tracking the given entities and entries reachable from the given entities using
+    ///     the <see cref="EntityState.Unchanged" /> state by default, but see below for cases
+    ///     when a different state will be used.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Generally, no database interaction will be performed until <see cref="SaveChanges()" /> is called.
+    ///     </para>
+    ///     <para>
+    ///         A recursive search of the navigation properties will be performed to find reachable entities
+    ///         that are not already being tracked by the context. All entities found will be tracked
+    ///         by the context.
+    ///     </para>
+    ///     <para>
+    ///         For entity types with generated keys if an entity has its primary key value set
+    ///         then it will be tracked in the <see cref="EntityState.Unchanged" /> state. If the primary key
+    ///         value is not set then it will be tracked in the <see cref="EntityState.Added" /> state.
+    ///         This helps ensure only new entities will be inserted.
+    ///         An entity is considered to have its primary key value set if the primary key property is set
+    ///         to anything other than the CLR default for the property type.
+    ///     </para>
+    ///     <para>
+    ///         For entity types without generated keys, the state set is always <see cref="EntityState.Unchanged" />.
+    ///     </para>
+    ///     <para>
+    ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see>
+    ///         and <see href="https://aka.ms/efcore-docs-attach-range">Using AddRange, UpdateRange, AttachRange, and RemoveRange</see>
+    ///         for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="entities">The entities to attach.</param>
+    void AttachRange([NotNull] IEnumerable<object> entities);
+
+    /// <summary>
+    ///     Begins tracking the given entities and entries reachable from the given entities using
+    ///     the <see cref="EntityState.Unchanged" /> state by default, but see below for cases
+    ///     when a different state will be used.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Generally, no database interaction will be performed until <see cref="SaveChanges()" /> is called.
+    ///     </para>
+    ///     <para>
+    ///         A recursive search of the navigation properties will be performed to find reachable entities
+    ///         that are not already being tracked by the context. All entities found will be tracked
+    ///         by the context.
+    ///     </para>
+    ///     <para>
+    ///         For entity types with generated keys if an entity has its primary key value set
+    ///         then it will be tracked in the <see cref="EntityState.Unchanged" /> state. If the primary key
+    ///         value is not set then it will be tracked in the <see cref="EntityState.Added" /> state.
+    ///         This helps ensure only new entities will be inserted.
+    ///         An entity is considered to have its primary key value set if the primary key property is set
+    ///         to anything other than the CLR default for the property type.
+    ///     </para>
+    ///     <para>
+    ///         For entity types without generated keys, the state set is always <see cref="EntityState.Unchanged" />.
+    ///     </para>
+    ///     <para>
+    ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see>
+    ///         and <see href="https://aka.ms/efcore-docs-attach-range">Using AddRange, UpdateRange, AttachRange, and RemoveRange</see>
+    ///         for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="entities">The entities to attach.</param>
+    void AttachRange([NotNull] params object[] entities);
+
+    /// <summary>
+    ///     Begins tracking the given entity and entries reachable from the given entity using
+    ///     the <see cref="EntityState.Modified" /> state by default, but see below for cases
+    ///     when a different state will be used.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Generally, no database interaction will be performed until <see cref="SaveChanges()" /> is called.
+    ///     </para>
+    ///     <para>
+    ///         A recursive search of the navigation properties will be performed to find reachable entities
+    ///         that are not already being tracked by the context. All entities found will be tracked
+    ///         by the context.
+    ///     </para>
+    ///     <para>
+    ///         For entity types with generated keys if an entity has its primary key value set
+    ///         then it will be tracked in the <see cref="EntityState.Modified" /> state. If the primary key
+    ///         value is not set then it will be tracked in the <see cref="EntityState.Added" /> state.
+    ///         This helps ensure new entities will be inserted, while existing entities will be updated.
+    ///         An entity is considered to have its primary key value set if the primary key property is set
+    ///         to anything other than the CLR default for the property type.
+    ///     </para>
+    ///     <para>
+    ///         For entity types without generated keys, the state set is always <see cref="EntityState.Modified" />.
+    ///     </para>
+    ///     <para>
+    ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
     /// <param name="entity">The entity to update.</param>
-    /// <returns>An EntityEntry for the updated entity.</returns>
+    /// <returns>
+    ///     The <see cref="EntityEntry" /> for the entity. The entry provides
+    ///     access to change tracking information and operations for the entity.
+    /// </returns>
     EntityEntry Update([NotNull] object entity);
 
     /// <summary>
-    /// Updates the given entity in the context. The entity will be updated in the database when SaveChanges is called.
+    ///     Begins tracking the given entity and entries reachable from the given entity using
+    ///     the <see cref="EntityState.Modified" /> state by default, but see below for cases
+    ///     when a different state will be used.
     /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Generally, no database interaction will be performed until <see cref="SaveChanges()" /> is called.
+    ///     </para>
+    ///     <para>
+    ///         A recursive search of the navigation properties will be performed to find reachable entities
+    ///         that are not already being tracked by the context. All entities found will be tracked
+    ///         by the context.
+    ///     </para>
+    ///     <para>
+    ///         For entity types with generated keys if an entity has its primary key value set
+    ///         then it will be tracked in the <see cref="EntityState.Modified" /> state. If the primary key
+    ///         value is not set then it will be tracked in the <see cref="EntityState.Added" /> state.
+    ///         This helps ensure new entities will be inserted, while existing entities will be updated.
+    ///         An entity is considered to have its primary key value set if the primary key property is set
+    ///         to anything other than the CLR default for the property type.
+    ///     </para>
+    ///     <para>
+    ///         For entity types without generated keys, the state set is always <see cref="EntityState.Modified" />.
+    ///     </para>
+    ///     <para>
+    ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     /// <param name="entity">The entity to update.</param>
-    /// <returns>An EntityEntry for the updated entity.</returns>
+    /// <returns>
+    ///     The <see cref="EntityEntry{TEntity}" /> for the entity. The entry provides
+    ///     access to change tracking information and operations for the entity.
+    /// </returns>
     EntityEntry<TEntity> Update<TEntity>([NotNull] TEntity entity) where TEntity : class;
 
     /// <summary>
-    /// Updates the given entities in the context. The entities will be updated in the database when SaveChanges is called.
+    ///     Begins tracking the given entities and entries reachable from the given entities using
+    ///     the <see cref="EntityState.Modified" /> state by default, but see below for cases
+    ///     when a different state will be used.
     /// </summary>
-    /// <param name="entities">An enumerable of entities to update.</param>
+    /// <remarks>
+    ///     <para>
+    ///         Generally, no database interaction will be performed until <see cref="SaveChanges()" /> is called.
+    ///     </para>
+    ///     <para>
+    ///         A recursive search of the navigation properties will be performed to find reachable entities
+    ///         that are not already being tracked by the context. All entities found will be tracked
+    ///         by the context.
+    ///     </para>
+    ///     <para>
+    ///         For entity types with generated keys if an entity has its primary key value set
+    ///         then it will be tracked in the <see cref="EntityState.Modified" /> state. If the primary key
+    ///         value is not set then it will be tracked in the <see cref="EntityState.Added" /> state.
+    ///         This helps ensure new entities will be inserted, while existing entities will be updated.
+    ///         An entity is considered to have its primary key value set if the primary key property is set
+    ///         to anything other than the CLR default for the property type.
+    ///     </para>
+    ///     <para>
+    ///         For entity types without generated keys, the state set is always <see cref="EntityState.Modified" />.
+    ///     </para>
+    ///     <para>
+    ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see>
+    ///         and <see href="https://aka.ms/efcore-docs-attach-range">Using AddRange, UpdateRange, AttachRange, and RemoveRange</see>
+    ///         for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="entities">The entities to update.</param>
     void UpdateRange([NotNull] IEnumerable<object> entities);
 
     /// <summary>
-    /// Updates the given entities in the context. The entities will be updated in the database when SaveChanges is called.
+    ///     Begins tracking the given entities and entries reachable from the given entities using
+    ///     the <see cref="EntityState.Modified" /> state by default, but see below for cases
+    ///     when a different state will be used.
     /// </summary>
-    /// <param name="entities">An array of entities to update.</param>
+    /// <remarks>
+    ///     <para>
+    ///         Generally, no database interaction will be performed until <see cref="SaveChanges()" /> is called.
+    ///     </para>
+    ///     <para>
+    ///         A recursive search of the navigation properties will be performed to find reachable entities
+    ///         that are not already being tracked by the context. All entities found will be tracked
+    ///         by the context.
+    ///     </para>
+    ///     <para>
+    ///         For entity types with generated keys if an entity has its primary key value set
+    ///         then it will be tracked in the <see cref="EntityState.Modified" /> state. If the primary key
+    ///         value is not set then it will be tracked in the <see cref="EntityState.Added" /> state.
+    ///         This helps ensure new entities will be inserted, while existing entities will be updated.
+    ///         An entity is considered to have its primary key value set if the primary key property is set
+    ///         to anything other than the CLR default for the property type.
+    ///     </para>
+    ///     <para>
+    ///         For entity types without generated keys, the state set is always <see cref="EntityState.Modified" />.
+    ///     </para>
+    ///     <para>
+    ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see>
+    ///         and <see href="https://aka.ms/efcore-docs-attach-range">Using AddRange, UpdateRange, AttachRange, and RemoveRange</see>
+    ///         for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="entities">The entities to update.</param>
     void UpdateRange([NotNull] params object[] entities);
+
+    /// <summary>
+    ///     Begins tracking the given entity in the <see cref="EntityState.Deleted" /> state such that it will
+    ///     be removed from the database when <see cref="SaveChanges()" /> is called.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         If the entity is already tracked in the <see cref="EntityState.Added" /> state then the context will
+    ///         stop tracking the entity (rather than marking it as <see cref="EntityState.Deleted" />) since the
+    ///         entity was previously added to the context and does not exist in the database.
+    ///     </para>
+    ///     <para>
+    ///         Any other reachable entities that are not already being tracked will be tracked in the same way that
+    ///         they would be if <see cref="Attach(object)" /> was called before calling this method.
+    ///         This allows any cascading actions to be applied when <see cref="SaveChanges()" /> is called.
+    ///     </para>
+    ///     <para>
+    ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="entity">The entity to remove.</param>
+    /// <returns>
+    ///     The <see cref="EntityEntry" /> for the entity. The entry provides
+    ///     access to change tracking information and operations for the entity.
+    /// </returns>
+    EntityEntry Remove([NotNull] object entity);
+
+    /// <summary>
+    ///     Begins tracking the given entity in the <see cref="EntityState.Deleted" /> state such that it will
+    ///     be removed from the database when <see cref="SaveChanges()" /> is called.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         If the entity is already tracked in the <see cref="EntityState.Added" /> state then the context will
+    ///         stop tracking the entity (rather than marking it as <see cref="EntityState.Deleted" />) since the
+    ///         entity was previously added to the context and does not exist in the database.
+    ///     </para>
+    ///     <para>
+    ///         Any other reachable entities that are not already being tracked will be tracked in the same way that
+    ///         they would be if <see cref="Attach{TEntity}(TEntity)" /> was called before calling this method.
+    ///         This allows any cascading actions to be applied when <see cref="SaveChanges()" /> is called.
+    ///     </para>
+    ///     <para>
+    ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    /// <param name="entity">The entity to remove.</param>
+    /// <returns>
+    ///     The <see cref="EntityEntry{TEntity}" /> for the entity. The entry provides
+    ///     access to change tracking information and operations for the entity.
+    /// </returns>
+    EntityEntry<TEntity> Remove<TEntity>([NotNull] TEntity entity) where TEntity : class;
+
+    /// <summary>
+    ///     Begins tracking the given entity in the <see cref="EntityState.Deleted" /> state such that it will
+    ///     be removed from the database when <see cref="SaveChanges()" /> is called.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         If any of the entities are already tracked in the <see cref="EntityState.Added" /> state then the context will
+    ///         stop tracking those entities (rather than marking them as <see cref="EntityState.Deleted" />) since those
+    ///         entities were previously added to the context and do not exist in the database.
+    ///     </para>
+    ///     <para>
+    ///         Any other reachable entities that are not already being tracked will be tracked in the same way that
+    ///         they would be if <see cref="AttachRange(IEnumerable{object})" /> was called before calling this method.
+    ///         This allows any cascading actions to be applied when <see cref="SaveChanges()" /> is called.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see>
+    ///         and <see href="https://aka.ms/efcore-docs-attach-range">Using AddRange, UpdateRange, AttachRange, and RemoveRange</see>
+    ///         for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="entities">The entities to remove.</param>
+    void RemoveRange([NotNull] IEnumerable<object> entities);
+
+    /// <summary>
+    ///     Begins tracking the given entity in the <see cref="EntityState.Deleted" /> state such that it will
+    ///     be removed from the database when <see cref="SaveChanges()" /> is called.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         If any of the entities are already tracked in the <see cref="EntityState.Added" /> state then the context will
+    ///         stop tracking those entities (rather than marking them as <see cref="EntityState.Deleted" />) since those
+    ///         entities were previously added to the context and do not exist in the database.
+    ///     </para>
+    ///     <para>
+    ///         Any other reachable entities that are not already being tracked will be tracked in the same way that
+    ///         they would be if <see cref="AttachRange(object[])" /> was called before calling this method.
+    ///         This allows any cascading actions to be applied when <see cref="SaveChanges()" /> is called.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see>
+    ///         and <see href="https://aka.ms/efcore-docs-attach-range">Using AddRange, UpdateRange, AttachRange, and RemoveRange</see>
+    ///         for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="entities">The entities to remove.</param>
+    void RemoveRange([NotNull] params object[] entities);
+
+    /// <summary>
+    ///     Finds an entity with the given primary key values. If an entity with the given primary key values
+    ///     is being tracked by the context, then it is returned immediately without making a request to the
+    ///     database. Otherwise, a query is made to the database for an entity with the given primary key values
+    ///     and this entity, if found, is attached to the context and returned. If no entity is found, then
+    ///     null is returned.
+    /// </summary>
+    /// <remarks>
+    ///     See <see href="https://aka.ms/efcore-docs-find">Using Find and FindAsync</see> for more information and examples.
+    /// </remarks>
+    /// <typeparam name="TEntity">The type of entity to find.</typeparam>
+    /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
+    /// <returns>The entity found, or <see langword="null" />.</returns>
+    TEntity? Find<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes)] TEntity>(params object?[]? keyValues) where TEntity : class;
+
+    /// <summary>
+    ///     Finds an entity with the given primary key values. If an entity with the given primary key values
+    ///     is being tracked by the context, then it is returned immediately without making a request to the
+    ///     database. Otherwise, a query is made to the database for an entity with the given primary key values
+    ///     and this entity, if found, is attached to the context and returned. If no entity is found, then
+    ///     null is returned.
+    /// </summary>
+    /// <remarks>
+    ///     See <see href="https://aka.ms/efcore-docs-find">Using Find and FindAsync</see> for more information and examples.
+    /// </remarks>
+    /// <param name="entityType">The type of entity to find.</param>
+    /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
+    /// <returns>The entity found, or <see langword="null" />.</returns>
+    object? Find([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes)] Type entityType, params object?[]? keyValues);
+
+    /// <summary>
+    ///     Finds an entity with the given primary key values. If an entity with the given primary key values
+    ///     is being tracked by the context, then it is returned immediately without making a request to the
+    ///     database. Otherwise, a query is made to the database for an entity with the given primary key values
+    ///     and this entity, if found, is attached to the context and returned. If no entity is found, then
+    ///     null is returned.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Entity Framework Core does not support multiple parallel operations being run on the same DbContext instance. This
+    ///         includes both parallel execution of async queries and any explicit concurrent use from multiple threads.
+    ///         Therefore, always await async calls immediately, or use separate DbContext instances for operations that execute
+    ///         in parallel. See <see href="https://aka.ms/efcore-docs-threading">Avoiding DbContext threading issues</see>
+    ///         for more information and examples.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-find">Using Find and FindAsync</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <typeparam name="TEntity">The type of entity to find.</typeparam>
+    /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
+    /// <returns>The entity found, or <see langword="null" />.</returns>
+    ValueTask<TEntity?> FindAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes)] TEntity>(params object?[]? keyValues) where TEntity : class;
+
+    /// <summary>
+    ///     Finds an entity with the given primary key values. If an entity with the given primary key values
+    ///     is being tracked by the context, then it is returned immediately without making a request to the
+    ///     database. Otherwise, a query is made to the database for an entity with the given primary key values
+    ///     and this entity, if found, is attached to the context and returned. If no entity is found, then
+    ///     null is returned.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Entity Framework Core does not support multiple parallel operations being run on the same DbContext instance. This
+    ///         includes both parallel execution of async queries and any explicit concurrent use from multiple threads.
+    ///         Therefore, always await async calls immediately, or use separate DbContext instances for operations that execute
+    ///         in parallel. See <see href="https://aka.ms/efcore-docs-threading">Avoiding DbContext threading issues</see>
+    ///         for more information and examples.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-find">Using Find and FindAsync</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="entityType">The type of entity to find.</param>
+    /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
+    /// <returns>The entity found, or <see langword="null" />.</returns>
+    ValueTask<object?> FindAsync([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes)] Type entityType, params object?[]? keyValues);
+
+    /// <summary>
+    ///     Finds an entity with the given primary key values. If an entity with the given primary key values
+    ///     is being tracked by the context, then it is returned immediately without making a request to the
+    ///     database. Otherwise, a query is made to the database for an entity with the given primary key values
+    ///     and this entity, if found, is attached to the context and returned. If no entity is found, then
+    ///     null is returned.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Entity Framework Core does not support multiple parallel operations being run on the same DbContext instance. This
+    ///         includes both parallel execution of async queries and any explicit concurrent use from multiple threads.
+    ///         Therefore, always await async calls immediately, or use separate DbContext instances for operations that execute
+    ///         in parallel. See <see href="https://aka.ms/efcore-docs-threading">Avoiding DbContext threading issues</see>
+    ///         for more information and examples.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-find">Using Find and FindAsync</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <typeparam name="TEntity">The type of entity to find.</typeparam>
+    /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+    /// <returns>The entity found, or <see langword="null" />.</returns>
+    /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+    ValueTask<TEntity?> FindAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes)] TEntity>(object?[]? keyValues, CancellationToken cancellationToken) where TEntity : class;
+
+    /// <summary>
+    ///     Finds an entity with the given primary key values. If an entity with the given primary key values
+    ///     is being tracked by the context, then it is returned immediately without making a request to the
+    ///     database. Otherwise, a query is made to the database for an entity with the given primary key values
+    ///     and this entity, if found, is attached to the context and returned. If no entity is found, then
+    ///     null is returned.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Entity Framework Core does not support multiple parallel operations being run on the same DbContext instance. This
+    ///         includes both parallel execution of async queries and any explicit concurrent use from multiple threads.
+    ///         Therefore, always await async calls immediately, or use separate DbContext instances for operations that execute
+    ///         in parallel. See <see href="https://aka.ms/efcore-docs-threading">Avoiding DbContext threading issues</see>
+    ///         for more information and examples.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-find">Using Find and FindAsync</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="entityType">The type of entity to find.</param>
+    /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+    /// <returns>The entity found, or <see langword="null" />.</returns>
+    /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+    ValueTask<object?> FindAsync([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes)] Type entityType, object?[]? keyValues, CancellationToken cancellationToken);
+
+    /// <summary>
+    ///     Gets an <see cref="EntityEntry{TEntity}" /> for the given entity. The entry provides
+    ///     access to change tracking information and operations for the entity.
+    /// </summary>
+    /// <remarks>
+    ///     See <see href="https://aka.ms/efcore-docs-entity-entries">Accessing tracked entities in EF Core</see> for more information and
+    ///     examples.
+    /// </remarks>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    /// <param name="entity">The entity to get the entry for.</param>
+    /// <returns>The entry for the given entity.</returns>
+    EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
+
+    /// <summary>
+    ///     Gets an <see cref="EntityEntry" /> for the given entity. The entry provides
+    ///     access to change tracking information and operations for the entity.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         This method may be called on an entity that is not tracked. You can then
+    ///         set the <see cref="EntityEntry.State" /> property on the returned entry
+    ///         to have the context begin tracking the entity in the specified state.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-entity-entries">Accessing tracked entities in EF Core</see> for more information and
+    ///         examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="entity">The entity to get the entry for.</param>
+    /// <returns>The entry for the given entity.</returns>
+    EntityEntry Entry(object entity);
+
+    /// <summary>
+    ///     Creates a queryable for given query expression.
+    /// </summary>
+    /// <remarks>
+    ///     See <see href="https://aka.ms/efcore-docs-query">Querying data with EF Core</see> for more information and examples.
+    /// </remarks>
+    /// <typeparam name="TResult">The result type of the query expression.</typeparam>
+    /// <param name="expression">The query expression to create.</param>
+    /// <returns>An <see cref="IQueryable{T}" /> representing the query.</returns>
+    IQueryable<TResult> FromExpression<TResult>(Expression<Func<IQueryable<TResult>>> expression);
+
+    internal const DynamicallyAccessedMemberTypes DynamicallyAccessedMemberTypes = System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors
+                                                                                 | System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.NonPublicConstructors
+                                                                                 | System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicProperties
+                                                                                 | System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicFields
+                                                                                 | System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.NonPublicProperties
+                                                                                 | System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.NonPublicFields
+                                                                                 | System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.Interfaces;
 }

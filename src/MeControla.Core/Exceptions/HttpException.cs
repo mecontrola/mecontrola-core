@@ -29,7 +29,7 @@ namespace MeControla.Core.Exceptions;
 /// <param name="statusCode">The HTTP status code associated with the exception.</param>
 /// <param name="message">The error message that describes the exception.</param>
 /// <param name="innerException">The inner exception that caused this exception, or <c>null</c> if there is no inner exception.</param>
-public abstract class HttpException(HttpStatusCode statusCode, string message, Exception innerException)
+public abstract class HttpException(HttpStatusCode statusCode, string message, Exception? innerException)
     : Exception(message, innerException)
 {
     /// <summary>

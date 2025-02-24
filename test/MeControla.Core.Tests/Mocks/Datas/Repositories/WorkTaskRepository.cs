@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace MeControla.Core.Tests.Mocks.Datas.Repositories;
 
 public sealed class WorkTaskRepository(IDbAppContext context)
-    : BaseFilterAsyncRepository<WorkTask, WorkTaskFilter>(context, context.WorkTasks), IWorkTaskRepository
+    : BaseFilterAsyncRepository<WorkTask, WorkTaskFilter>(context), IWorkTaskRepository
 {
     public async override Task<IList<WorkTask>> FindFilterAllAsync(WorkTaskFilter filter, CancellationToken cancellationToken)
     {

@@ -43,6 +43,9 @@ public class DateTimeConverter(string dateFormat) : JsonConverter<DateTime>
     public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var value = reader.GetString();
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(value);
+
         return DateTime.ParseExact(value, dateFormat, CultureInfo.InvariantCulture);
     }
 

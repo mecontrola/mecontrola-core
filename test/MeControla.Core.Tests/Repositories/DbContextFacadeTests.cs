@@ -96,6 +96,8 @@ public class DbContextFacadeTests : BaseRepository
 
         await repository.RemoveAsync(UserMock.CreateUser3(), cancellationToken);
 
+        context.SaveChanges();
+
         dbContextFacade.CommitTransaction();
 
         var actual = await repository.FindAsync(DataMock.INT_ID_3, cancellationToken);
@@ -113,6 +115,8 @@ public class DbContextFacadeTests : BaseRepository
         await dbContextFacade.BeginTransactionAsync(cancellationToken);
 
         await repository.RemoveAsync(UserMock.CreateUser3(), cancellationToken);
+
+        await context.SaveChangesAsync(cancellationToken);
 
         await dbContextFacade.CommitTransactionAsync(cancellationToken);
 

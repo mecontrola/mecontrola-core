@@ -30,7 +30,7 @@ public interface IDbContextFacade
     /// <summary>
     /// Gets the current database transaction.
     /// </summary>
-    IDbContextTransaction CurrentTransaction { get; }
+    IDbContextTransaction? CurrentTransaction { get; }
 
     /// <summary>
     /// Gets or sets the behavior for automatic transaction handling.
@@ -45,7 +45,7 @@ public interface IDbContextFacade
     /// <summary>
     /// Gets the name of the database provider.
     /// </summary>
-    string ProviderName { get; }
+    string? ProviderName { get; }
 
     /// <summary>
     /// Retrieves the current database connection.
@@ -95,7 +95,7 @@ public interface IDbContextFacade
     /// Creates a new execution strategy.
     /// </summary>
     /// <returns>An <see cref="IExecutionStrategy"/> for executing database commands.</returns>
-    IExecutionStrategy CreateExecutionStrategy();
+    IExecutionStrategy? CreateExecutionStrategy();
 
     /// <summary>
     /// Ensures that the database is created.
@@ -152,5 +152,5 @@ public interface IDbContextFacade
     /// Returns a string that represents the current object.
     /// </summary>
     /// <returns>A string that represents the current object.</returns>
-    string ToString();
+    string? ToString();
 }

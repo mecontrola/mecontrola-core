@@ -114,7 +114,7 @@ public class BaseManyAsyncRepository<[DynamicallyAccessedMembers(DynamicallyAcce
         var rootId = local?.RootId ?? 0;
         var targetId = local?.TargetId ?? 0;
 
-        if (rootId != 0 && targetId != 0)
+        if (local is not null && rootId != 0 && targetId != 0)
             Context.Entry(local).State = EntityState.Detached;
 
         Context.Entry(entity).State = entityState;

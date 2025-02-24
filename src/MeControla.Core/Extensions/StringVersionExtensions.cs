@@ -42,14 +42,14 @@ public static class StringVersionExtensions
 #if !DEBUG
     [System.Diagnostics.DebuggerStepThrough]
 #endif
-    public static Version GetVersion(this string value)
+    public static Version? GetVersion(this string value)
     {
         if (value.IsNullOrWhiteSpace())
             return null;
 
         var match = VersionRegex.Match(value);
         return match.Success
-             ? new(match.GetValueOrDefault(REGEX_VERSION_KEY))
+             ? new(match.GetValueOrDefault(REGEX_VERSION_KEY)!)
              : null;
     }
 }

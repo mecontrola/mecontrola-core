@@ -48,9 +48,9 @@ public static class EnumExtensions
     /// var description = Status.Success.GetDescription(); // Returns "Operation completed successfully"
     /// </code>
     /// </example>
-    public static string GetDescription(this Enum value)
+    public static string? GetDescription(this Enum value)
         => value.GetType()
                 .GetField(value.ToString())
-                .GetCustomAttribute<DescriptionAttribute>()?
-                .Description ?? null;
+               ?.GetCustomAttribute<DescriptionAttribute>()
+               ?.Description ?? null;
 }

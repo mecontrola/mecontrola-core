@@ -44,9 +44,9 @@ internal static class FilterParser
             throw new ArgumentException($"Invalid filter format: {filter}.");
 
         return new FilterExpression(
-            match.GetValueOrDefault(REGEX_PROPERTY_KEY),
-            match.GetValueOrDefault(REGEX_OPERATION_KEY, EqualFilterStrategy.Name),
-            match.GetValueOrDefault(REGEX_VALUE_KEY)
+            match.GetValueOrDefault(REGEX_PROPERTY_KEY)!,
+            match.GetValueOrDefault(REGEX_OPERATION_KEY, EqualFilterStrategy.Name)!,
+            match.GetValueOrDefault(REGEX_VALUE_KEY)!
         );
     }
 }
