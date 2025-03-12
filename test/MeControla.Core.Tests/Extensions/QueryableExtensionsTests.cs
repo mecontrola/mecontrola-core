@@ -102,7 +102,7 @@ public class QueryableExtensionsTests
         result.Should().HaveCount(3);
     }
 
-    [Fact(DisplayName = "ApplyFilters - Filtra corretamente com operador lt")]
+    [Fact(DisplayName = "[QueryableExtensions.SetFilterBy] Deve filtra corretamente com operador lt")]
     public void ApplyFilters_ShouldFilterWithLtOperator()
     {
         var filters = "age[lt]=30";
@@ -185,6 +185,18 @@ public class QueryableExtensionsTests
 
         result.Should().HaveCount(3);
         result.First().Name.Should().Be("John");
+    }
+
+    [Fact(DisplayName = "[QueryableExtensions.SetFilterBy] Deve filtar corretamente filtrando mais de um campo.")]
+    public void DeveGerarExecaoQuandoMaisumFiltro()
+    {
+        var filters = "name[eq]=Johnathan,age[gt]=30";
+
+        var result = query.SetFilterBy(filters);
+
+        result.Should().HaveCount(1);
+        result.First().Name.Should().Be("Johnathan");
+        result.First().Age.Should().Be(35);
     }
 
     [Fact(DisplayName = "[QueryableExtensions.SetFilterBy] Deve lançar exceção para operador inválido.")]
